@@ -1,0 +1,56 @@
+{
+  "name": "youtube-live-chat-flow",
+  "version": "0.0.1",
+  "author": {
+    "name": "fiahfy",
+    "email": "d.fiahfy@gmail.com",
+    "url": "http://fiahfy.blogspot.com/"
+  },
+  "dependencies": {
+    "color": "^3.0.0",
+    "vue": "^2.5.16",
+    "vuetify": "^1.0.17",
+    "vuex": "^3.0.1",
+    "vuex-persistedstate": "^2.5.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^8.2.3",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.5.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "copy-webpack-plugin": "^4.5.1",
+    "css-loader": "^0.28.11",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "eslint-plugin-vue": "^4.5.0",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "vue-loader": "^15.0.5",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^4.0.1",
+    "webpack-chrome-extension-reloader": "^0.6.6",
+    "webpack-cli": "^2.0.14"
+  },
+  "homepage": "http://fiahfy.blogspot.com/",
+  "keywords": [
+    "chrome extension",
+    "youtube"
+  ],
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fiahfy/youtube-live-chat-flow"
+  },
+  "scripts": {
+    "archive": "NODE_ENV=production npm run build && mkdir -p dist && zip -r dist/app.zip app",
+    "build": "webpack",
+    "lint": "eslint src --ext .js",
+    "watch": "webpack -w --config webpack.config.dev.babel.js"
+  }
+}
