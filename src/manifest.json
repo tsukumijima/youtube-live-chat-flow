@@ -3,24 +3,24 @@
   "description": "Comments Flowing on Youtube Live Chat.",
   "manifest_version": 2,
   "icons": {
-    "48": "img/icon-48.png"
+    "48": "assets/icon-48.png"
   },
   "background": {
-    "scripts": ["js/background.js"]
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {
       "run_at": "document_end",
-      "matches": ["https://*.youtube.com/*"],
+      "matches": ["https://www.youtube.com/live_chat*"],
       "all_frames": true,
       "js": [
-        "js/content-scripts.js"
+        "content-scripts.js"
       ]
     }
   ],
   "browser_action": {
-    "default_icon": "img/icon-48.png",
-    "default_popup": "html/popup.html"
+    "default_icon": "assets/icon-48.png",
+    "default_popup": "assets/popup.html"
   },
   "permissions": [
     "tabs",

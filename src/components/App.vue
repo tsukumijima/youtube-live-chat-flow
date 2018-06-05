@@ -31,7 +31,7 @@
         </v-layout>
         <v-layout row>
           <v-flex xs6>
-            <v-subheader class="pl-0">Text Rows</v-subheader>
+            <v-subheader class="pl-0">Rows</v-subheader>
           </v-flex>
           <v-flex xs6>
             <v-text-field
@@ -42,7 +42,7 @@
         </v-layout>
         <v-layout row>
           <v-flex xs6>
-            <v-subheader class="pl-0">Speed</v-subheader>
+            <v-subheader class="pl-0">Speed<small class="pl-1">(sec)</small></v-subheader>
           </v-flex>
           <v-flex xs6>
             <v-text-field
@@ -112,6 +112,6 @@ export default {
 
 <style scoped>
 .application {
-  min-width: 256px;
+  min-width: 300px;
 }
 </style>

@@ -1,6 +1,8 @@
+import Package from '~~/package.json'
+
 class Logger {
   log (msg, ...args) {
-    let message = '[youtube-live-chat-flow] '
+    let message = `[${Package.name}] `
     let params = args
     if (typeof msg === 'string') {
       message += msg

@@ -10,13 +10,13 @@ export default {
   target: 'web',
   context: `${__dirname}/src`,
   entry: {
-    background: './js/background',
-    'content-scripts': './js/content-scripts',
-    popup: './js/popup'
+    background: './background',
+    'content-scripts': './content-scripts',
+    popup: './popup'
   },
   output: {
     path: `${__dirname}/app/`,
-    filename: 'js/[name].js'
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -40,7 +40,7 @@ export default {
         test: /\.(jpg|gif|png|svg)$/,
         loader: 'file-loader',
         options: {
-          name: 'img/[name].[ext]'
+          name: 'assets/[name].[ext]'
         }
       }
     ]
@@ -61,8 +61,8 @@ export default {
       }
     }]),
     new HtmlWebpackPlugin({
-      template: './html/popup.html',
-      filename: './html/popup.html',
+      template: './assets/popup.html',
+      filename: './assets/popup.html',
       chunks: ['popup']
     }),
     new VueLoaderPlugin()
@@ -70,6 +70,8 @@ export default {
   resolve: {
     extensions: ['.js', '.json', '.vue'],
     alias: {
+      '~~': `${__dirname}/`,
+      '~': `${__dirname}/src/`,
       vue$: 'vue/dist/vue.esm.js'
     }
   }

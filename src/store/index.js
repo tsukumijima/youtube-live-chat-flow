@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
-import storage from '../utils/storage'
+import storage from '~/utils/storage'
 
 Vue.use(Vuex)
 
@@ -10,7 +10,7 @@ export const defaultState = {
   color: 'white',
   textShadow: '1px 1px 2px #333',
   rows: 12,
-  speed: 5
+  speed: 6
 }
 
 export default new Vuex.Store({
@@ -26,10 +26,12 @@ export default new Vuex.Store({
       } catch (e) {}
     },
     async sendUpdates () {
+      console.log('sendUpdates')
       chrome.runtime.sendMessage({})
     },
     async setEnabled ({ commit, dispatch }, { enabled }) {
       commit('setEnabled', { enabled })
+      console.log('setEnabled')
       dispatch('sendUpdates')
     },
     async setColor ({ commit, dispatch }, { color }) {
