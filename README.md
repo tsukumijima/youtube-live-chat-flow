@@ -1,9 +1,9 @@
 # Youtube Live Chat Flow
 
-> This application is Chrome Extension for highlighting comments on Youtube Live Chat and Youtube Gaming.
+> Chrome Extension for flowing comments on Youtube Live Chat.
 
 ## Features
-* Highlight owner, moderator and member comments
+* Flow comments
 
 ## Installation
 1. Download `.zip` file from [releases page](https://github.com/fiahfy/youtube-live-chat-flow/releases).

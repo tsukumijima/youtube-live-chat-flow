@@ -34,8 +34,8 @@
     "vue-loader": "^15.0.5",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.0.1",
-    "webpack-chrome-extension-reloader": "^0.6.6",
-    "webpack-cli": "^2.0.14"
+    "webpack-chrome-extension-reloader": "^0.8.3",
+    "webpack-cli": "^3.0.2"
   },
   "homepage": "http://fiahfy.blogspot.com/",
   "keywords": [
