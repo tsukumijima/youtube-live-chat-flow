@@ -1,9 +1,9 @@
 # Youtube Live Chat Flow
 
-> Chrome Extension for flowing comments on Youtube Live Chat.
+> Chrome Extension for comment flow on Youtube Live Chat.
 
 ## Features
-* Flow comments
+* Comment flow over a video.
 
 ## Installation
 1. Download `.zip` file from [releases page](https://github.com/fiahfy/youtube-live-chat-flow/releases).
