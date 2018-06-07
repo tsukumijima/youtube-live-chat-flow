@@ -37,6 +37,9 @@
             <v-text-field
               v-model="rows"
               placeholder="12"
+              type="number"
+              min="1"
+              max="20"
             />
           </v-flex>
         </v-layout>
@@ -48,15 +51,26 @@
             <v-text-field
               v-model="speed"
               placeholder="5"
+              type="number"
+              min="1"
+              max="10"
+              step="0.1"
             />
           </v-flex>
         </v-layout>
+        <v-btn
+          flat
+          block
+          @click="reset"
+        >Reset</v-btn>
       </v-container>
     </v-content>
   </v-app>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   computed: {
     enabled: {
@@ -64,7 +78,7 @@ export default {
         return this.$store.state.enabled
       },
       set (value) {
-        this.$store.dispatch('setEnabled', { enabled: value })
+        this.$store.commit('setEnabled', { enabled: value })
       }
     },
     color: {
@@ -72,7 +86,7 @@ export default {
         return this.$store.state.color
       },
       set (value) {
-        this.$store.dispatch('setColor', { color: value })
+        this.$store.commit('setColor', { color: value })
       }
     },
     textShadow: {
@@ -80,7 +94,7 @@ export default {
         return this.$store.state.textShadow
       },
       set (value) {
-        this.$store.dispatch('setTextShadow', { textShadow: value })
+        this.$store.commit('setTextShadow', { textShadow: value })
       }
     },
     rows: {
@@ -88,7 +102,7 @@ export default {
         return this.$store.state.rows
       },
       set (value) {
-        this.$store.dispatch('setRows', { rows: value })
+        this.$store.commit('setRows', { rows: value })
       }
     },
     speed: {
@@ -96,12 +110,17 @@ export default {
         return this.$store.state.speed
       },
       set (value) {
-        this.$store.dispatch('setSpeed', { speed: value })
+        this.$store.commit('setSpeed', { speed: value })
       }
     }
   },
   async mounted () {
-    await this.$store.dispatch('init')
+    await this.$store.dispatch('initialize')
+  },
+  methods: {
+    ...mapActions({
+      reset: 'reset'
+    })
   }
 }
 </script>

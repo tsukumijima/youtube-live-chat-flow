@@ -1,5 +1,6 @@
 {
   "name": "youtube-live-chat-flow",
+  "description": "Comment Flow on Youtube Live Chat",
   "version": "0.0.1",
   "author": {
     "name": "fiahfy",
@@ -7,11 +8,9 @@
     "url": "http://fiahfy.blogspot.com/"
   },
   "dependencies": {
-    "color": "^3.0.0",
     "vue": "^2.5.16",
     "vuetify": "^1.0.17",
-    "vuex": "^3.0.1",
-    "vuex-persistedstate": "^2.5.2"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -40,6 +39,9 @@
   "homepage": "http://fiahfy.blogspot.com/",
   "keywords": [
     "chrome extension",
+    "vue",
+    "vuetify",
+    "webpack",
     "youtube"
   ],
   "private": true,
@@ -50,7 +52,8 @@
   "scripts": {
     "archive": "NODE_ENV=production npm run build && mkdir -p dist && zip -r dist/app.zip app",
     "build": "webpack",
-    "lint": "eslint src --ext .js",
-    "watch": "webpack -w --config webpack.config.dev.babel.js"
+    "dev": "webpack -w --config webpack.config.dev.babel.js",
+    "lint": "eslint src --ext .js,.vue",
+    "test": "npm run lint"
   }
 }

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import createPersistedState from 'vuex-persistedstate'
 import storage from '~/utils/storage'
 
 Vue.use(Vuex)
@@ -18,46 +17,21 @@ export default new Vuex.Store({
     ...defaultState
   },
   actions: {
-    async init ({ commit }) {
-      const items = await storage.get('vuex')
-      try {
-        const values = JSON.parse(items['vuex'])
-        commit('setValues', { values })
-      } catch (e) {}
+    async initialize ({ commit }) {
+      const allState = await storage.get()
+      commit('setAllState', { allState })
     },
-    async sendUpdates () {
-      console.log('sendUpdates')
+    sendUpdates () {
       chrome.runtime.sendMessage({})
     },
-    async setEnabled ({ commit, dispatch }, { enabled }) {
-      commit('setEnabled', { enabled })
-      console.log('setEnabled')
-      dispatch('sendUpdates')
-    },
-    async setColor ({ commit, dispatch }, { color }) {
-      commit('setColor', { color })
-      dispatch('sendUpdates')
-    },
-    async setTextShadow ({ commit, dispatch }, { textShadow }) {
-      commit('setTextShadow', { textShadow })
-      dispatch('sendUpdates')
-    },
-    async setRows ({ commit, dispatch }, { rows }) {
-      commit('setRows', { rows })
-      dispatch('sendUpdates')
-    },
-    async setSpeed ({ commit, dispatch }, { speed }) {
-      commit('setSpeed', { speed })
-      dispatch('sendUpdates')
+    reset ({ commit }) {
+      commit('setAllState', { allState: defaultState })
     }
   },
   mutations: {
-    setValues (state, { values }) {
+    setAllState (state, { allState }) {
       Object.keys(state).forEach((key) => {
-        const value = values[key]
-        if (typeof value !== 'undefined') {
-          state[key] = values[key]
-        }
+        state[key] = allState[key]
       })
     },
     setEnabled (state, { enabled }) {
@@ -77,12 +51,13 @@ export default new Vuex.Store({
     }
   },
   plugins: [
-    createPersistedState({
-      storage: {
-        getItem: (key) => null,
-        setItem: (key, value) => storage.set({ [key]: value }),
-        removeItem: (key) => storage.remove(key)
-      }
-    })
+    (store) => {
+      store.subscribe(async (mutation) => {
+        await storage.set(store.state)
+        const r = await storage.get()
+        console.log(r)
+        store.dispatch('sendUpdates')
+      })
+    }
   ]
 })

@@ -9,14 +9,10 @@ let state
 let data = []
 
 const loadState = async () => {
-  const items = await storage.get('vuex')
-  try {
-    state = {
-      ...defaultState,
-      ...JSON.parse(items['vuex'])
-    }
-  } catch (e) {
-    state = defaultState
+  const items = await storage.get()
+  state = {
+    ...defaultState,
+    ...items
   }
 }
 
