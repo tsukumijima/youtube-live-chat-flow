@@ -14,7 +14,7 @@
           <v-flex xs6>
             <v-text-field
               v-model="color"
-              placeholder="white"
+              :placeholder="defaults.color"
             />
           </v-flex>
         </v-layout>
@@ -25,7 +25,22 @@
           <v-flex xs6>
             <v-text-field
               v-model="textShadow"
-              placeholder="1px 1px 2px #333"
+              :placeholder="defaults.textShadow"
+            />
+          </v-flex>
+        </v-layout>
+        <v-layout row>
+          <v-flex xs6>
+            <v-subheader class="pl-0">Opacity</v-subheader>
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-model="opacity"
+              :placeholder="defaults.opacity"
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
             />
           </v-flex>
         </v-layout>
@@ -36,7 +51,7 @@
           <v-flex xs6>
             <v-text-field
               v-model="rows"
-              placeholder="12"
+              :placeholder="defaults.rows"
               type="number"
               min="1"
               max="20"
@@ -50,7 +65,7 @@
           <v-flex xs6>
             <v-text-field
               v-model="speed"
-              placeholder="5"
+              :placeholder="defaults.speed"
               type="number"
               min="1"
               max="10"
@@ -70,47 +85,61 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { defaults } from '~/store/settings'
 
 export default {
+  data () {
+    return {
+      defaults
+    }
+  },
   computed: {
     enabled: {
       get () {
-        return this.$store.state.enabled
+        return this.$store.state.settings.enabled
       },
       set (value) {
-        this.$store.commit('setEnabled', { enabled: value })
+        this.$store.commit('settings/setEnabled', { enabled: value })
       }
     },
     color: {
       get () {
-        return this.$store.state.color
+        return this.$store.state.settings.color
       },
       set (value) {
-        this.$store.commit('setColor', { color: value })
+        this.$store.commit('settings/setColor', { color: value })
       }
     },
     textShadow: {
       get () {
-        return this.$store.state.textShadow
+        return this.$store.state.settings.textShadow
       },
       set (value) {
-        this.$store.commit('setTextShadow', { textShadow: value })
+        this.$store.commit('settings/setTextShadow', { textShadow: value })
+      }
+    },
+    opacity: {
+      get () {
+        return this.$store.state.settings.opacity
+      },
+      set (value) {
+        this.$store.commit('settings/setOpacity', { opacity: value })
       }
     },
     rows: {
       get () {
-        return this.$store.state.rows
+        return this.$store.state.settings.rows
       },
       set (value) {
-        this.$store.commit('setRows', { rows: value })
+        this.$store.commit('settings/setRows', { rows: value })
       }
     },
     speed: {
       get () {
-        return this.$store.state.speed
+        return this.$store.state.settings.speed
       },
       set (value) {
-        this.$store.commit('setSpeed', { speed: value })
+        this.$store.commit('settings/setSpeed', { speed: value })
       }
     }
   },

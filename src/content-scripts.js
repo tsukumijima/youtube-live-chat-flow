@@ -1,23 +1,23 @@
-import { defaultState } from './store'
+import { defaults } from './store/settings'
 import storage from './utils/storage'
 import logger from './utils/logger'
 
 logger.log('content script loaded')
 
 let observer
-let state
+let settings
 let data = []
 
 const loadState = async () => {
-  const items = await storage.get()
-  state = {
-    ...defaultState,
-    ...items
+  const state = await storage.get()
+  settings = {
+    ...defaults,
+    ...state.settings
   }
 }
 
 const flow = (node) => {
-  if (!state.enabled) {
+  if (!settings.enabled) {
     return
   }
 
@@ -32,7 +32,7 @@ const flow = (node) => {
 
   const container = doc.querySelector('.html5-video-container')
   const video = doc.querySelector('.video-stream.html5-main-video')
-  const rows = state.rows
+  const rows = settings.rows
   const height = video.offsetHeight / rows
   const fontSize = height * 0.8
 
@@ -45,15 +45,15 @@ const flow = (node) => {
     display: inline-block;
     font-size: ${fontSize}px;
     font-weight: bold;
-    color: ${state.color};
-    text-shadow: ${state.textShadow};
+    color: ${settings.color};
+    text-shadow: ${settings.textShadow};
   `)
 
   container.appendChild(div)
 
   const width = container.offsetWidth
   const commentWidth = div.offsetWidth
-  const millis = state.speed * 1000
+  const millis = settings.speed * 1000
 
   const now = Date.now()
 
@@ -94,7 +94,7 @@ const flow = (node) => {
 
   const top = (height * (index % rows))
   const depth = Math.floor(index / rows)
-  const opacity = 1 - 0.2 * depth
+  const opacity = settings.opacity * (1 - 0.2 * depth)
 
   div.setAttribute('style', div.getAttribute('style') + `
     top: ${top}px;
