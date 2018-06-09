@@ -30,7 +30,7 @@ const getColor = (authorType) => {
   }
 }
 
-const hasAvatar = (authorType) => {
+const hasAuthority = (authorType) => {
   switch (authorType) {
     case 'owner':
     case 'moderator':
@@ -61,7 +61,7 @@ const flow = (node) => {
   const fontSize = height * 0.8
   const millis = settings.speed * 1000
   const color = getColor(authorType)
-  const avatar = hasAvatar(authorType)
+  const authority = hasAuthority(authorType)
 
   const element = doc.createElement('div')
   element.setAttribute('style', `
@@ -70,7 +70,7 @@ const flow = (node) => {
     display: flex;
     align-items: center;
   `)
-  if (avatar) {
+  if (authority) {
     const img = doc.createElement('img')
     img.src = src
     img.setAttribute('style', `
@@ -140,8 +140,8 @@ const flow = (node) => {
     data[index].push(message)
   }
 
-  const top = (height * (index % settings.rows))
-  const depth = Math.floor(index / settings.rows)
+  const top = height * (0.1 + (index % settings.rows))
+  const depth = authority ? 0 : Math.floor(index / settings.rows)
   const opacity = settings.opacity * (1 - 0.2 * depth)
 
   element.setAttribute('style', element.getAttribute('style') + `
