@@ -5,16 +5,66 @@
         <v-switch
           v-model="enabled"
           label="Enabled"
+          hide-details
         />
-        <v-subheader class="pl-0">Comment</v-subheader>
-        <v-layout row>
+        <v-subheader class="pl-0">Color</v-subheader>
+        <v-layout
+          row
+          align-center
+        >
           <v-flex xs6>
-            <v-subheader class="pl-0">Color</v-subheader>
+            <v-subheader>Guest</v-subheader>
           </v-flex>
           <v-flex xs6>
             <v-text-field
               v-model="color"
               :placeholder="defaults.color"
+              hide-details
+            />
+          </v-flex>
+        </v-layout>
+        <v-layout
+          row
+          align-center
+        >
+          <v-flex xs6>
+            <v-subheader>Owner</v-subheader>
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-model="ownerColor"
+              :placeholder="defaults.ownerColor"
+              hide-details
+            />
+          </v-flex>
+        </v-layout>
+        <v-layout
+          row
+          align-center
+        >
+          <v-flex xs6>
+            <v-subheader>Moderator</v-subheader>
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-model="moderatorColor"
+              :placeholder="defaults.moderatorColor"
+              hide-details
+            />
+          </v-flex>
+        </v-layout>
+        <v-layout
+          row
+          align-center
+        >
+          <v-flex xs6>
+            <v-subheader>Member</v-subheader>
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-model="memberColor"
+              :placeholder="defaults.memberColor"
+              hide-details
             />
           </v-flex>
         </v-layout>
@@ -26,6 +76,7 @@
             <v-text-field
               v-model="textShadow"
               :placeholder="defaults.textShadow"
+              hide-details
             />
           </v-flex>
         </v-layout>
@@ -41,6 +92,7 @@
               min="0"
               max="1"
               step="0.01"
+              hide-details
             />
           </v-flex>
         </v-layout>
@@ -55,6 +107,7 @@
               type="number"
               min="1"
               max="20"
+              hide-details
             />
           </v-flex>
         </v-layout>
@@ -70,10 +123,12 @@
               min="1"
               max="10"
               step="0.1"
+              hide-details
             />
           </v-flex>
         </v-layout>
         <v-btn
+          class="mt-3"
           flat
           block
           @click="reset"
@@ -108,6 +163,30 @@ export default {
       },
       set (value) {
         this.$store.commit('settings/setColor', { color: value })
+      }
+    },
+    ownerColor: {
+      get () {
+        return this.$store.state.settings.ownerColor
+      },
+      set (value) {
+        this.$store.commit('settings/setOwnerColor', { ownerColor: value })
+      }
+    },
+    moderatorColor: {
+      get () {
+        return this.$store.state.settings.moderatorColor
+      },
+      set (value) {
+        this.$store.commit('settings/setModeratorColor', { moderatorColor: value })
+      }
+    },
+    memberColor: {
+      get () {
+        return this.$store.state.settings.memberColor
+      },
+      set (value) {
+        this.$store.commit('settings/setMemberColor', { memberColor: value })
       }
     },
     textShadow: {
