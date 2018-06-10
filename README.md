@@ -16,7 +16,7 @@
 1. Download `.zip` file from [releases page](https://github.com/fiahfy/youtube-live-chat-flow/releases).
 2. Unzip this file.
 3. Open URL `chrome://extensions/` by Google Chrome.
-4. Drag & drop `app` directory.
+4. Drag & drop `youtube-live-chat-flow.crx` file.
 
 
 ## Development

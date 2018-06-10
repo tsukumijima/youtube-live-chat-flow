@@ -1,7 +1,7 @@
 {
   "name": "youtube-live-chat-flow",
   "description": "Message Flow on Youtube Live Chat",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "fiahfy",
     "email": "d.fiahfy@gmail.com",
@@ -20,6 +20,7 @@
     "babel-preset-env": "^1.5.1",
     "babel-preset-stage-0": "^6.24.1",
     "copy-webpack-plugin": "^4.5.1",
+    "crx": "^3.2.1",
     "css-loader": "^0.28.11",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
@@ -50,10 +51,10 @@
     "url": "https://github.com/fiahfy/youtube-live-chat-flow"
   },
   "scripts": {
-    "archive": "NODE_ENV=production npm run build && mkdir -p dist && zip -r dist/app.zip app",
     "build": "webpack",
     "dev": "webpack -w --config webpack.config.dev.babel.js",
     "lint": "eslint src --ext .js,.vue",
+    "package": "NODE_ENV=production npm run build && mkdir -p dist && crx pack app -o dist/youtube-live-chat-flow.crx",
     "test": "npm run lint"
   }
 }
