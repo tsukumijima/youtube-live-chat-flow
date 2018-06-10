@@ -9,13 +9,13 @@ export default new Vuex.Store({
   actions: {
     async initialize ({ commit }) {
       const state = await storage.get()
-      commit('setSettings', { settings: { ...defaults, ...state.settings } })
-    },
-    sendUpdates () {
-      chrome.runtime.sendMessage({ id: 'stateChanged' })
+      commit('setSettings', { settings: state.settings })
     },
     reset ({ commit }) {
       commit('setSettings', { settings: defaults })
+    },
+    sendUpdates () {
+      chrome.runtime.sendMessage({ id: 'stateChanged' })
     }
   },
   mutations: {

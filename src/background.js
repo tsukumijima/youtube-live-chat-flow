@@ -6,13 +6,6 @@ import iconOff from './assets/icon-off-48.png'
 
 logger.log('background script loaded')
 
-const getSettings = async () => {
-  return {
-    ...defaults,
-    ...(await storage.get()).settings
-  }
-}
-
 const sendMessage = (data) => {
   chrome.tabs.query({}, (tabs) => {
     tabs.forEach((tab) => {
@@ -22,37 +15,47 @@ const sendMessage = (data) => {
 }
 
 const updateIcon = async () => {
-  const settings = await getSettings()
+  const settings = (await storage.get()).settings
   const path = settings.enabled ? iconOn : iconOff
   chrome.browserAction.setIcon({ path })
+}
+
+const initialize = async () => {
+  const state = {
+    settings: defaults,
+    ...(await storage.get())
+  }
+  await storage.set(state)
+
+  await updateIcon()
 }
 
 chrome.browserAction.onClicked.addListener(async (tab) => {
   logger.log('chrome.browserAction.onClicked')
 
-  const settings = await getSettings()
+  const settings = (await storage.get()).settings
   settings.enabled = !settings.enabled
   await storage.set({ settings })
 
-  updateIcon()
+  await updateIcon()
   sendMessage({ id: 'stateChanged' })
 })
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   logger.log('chrome.runtime.onMessage: %o', message)
 
   const { id } = message
   switch (id) {
     case 'contentLoaded':
-      updateIcon()
+      await updateIcon()
       break
     case 'stateChanged':
-      updateIcon()
+      await updateIcon()
       sendMessage({ id: 'stateChanged' })
       break
   }
 })
 
 ;(async () => {
-  await updateIcon()
+  await initialize()
 })()

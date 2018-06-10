@@ -1,4 +1,3 @@
-import { defaults } from './store/settings'
 import storage from './utils/storage'
 import logger from './utils/logger'
 
@@ -9,15 +8,8 @@ let settings
 let data = []
 const doc = (parent || window).document
 
-const getSettings = async () => {
-  return {
-    ...defaults,
-    ...(await storage.get()).settings
-  }
-}
-
 const loadSettings = async () => {
-  settings = await getSettings()
+  settings = (await storage.get()).settings
 }
 
 const getColor = (authorType) => {

@@ -1,0 +1,23 @@
+os: osx
+osx_image: xcode9.3
+
+language: node_js
+node_js: 8
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+script:
+  - yarn test
+  - yarn archive
+
+deploy:
+  provider: releases
+  file: dist/app.zip
+  skip_cleanup: true
+
+branches:
+  only:
+    - master
