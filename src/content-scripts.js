@@ -46,7 +46,7 @@ const flow = (node) => {
   }
 
   const authorType = node.getAttribute('author-type')
-  const text = node.querySelector('#message').innerText
+  const html = node.querySelector('#message').innerHTML
   const src = node.querySelector('#img').src
 
   const container = doc.querySelector('.html5-video-container')
@@ -59,6 +59,7 @@ const flow = (node) => {
   const authority = hasAuthority(authorType)
 
   const element = doc.createElement('div')
+  element.classList.add('ylcf-message')
   element.setAttribute('style', `
     position: absolute;
     left: 0;
@@ -85,7 +86,17 @@ const flow = (node) => {
     color: ${color};
     text-shadow: ${settings.textShadow};
   `)
-  span.innerText = text
+  span.innerHTML = html
+  Array.from(span.childNodes).map((node) => {
+    if (!node.tagName || node.tagName.toLowerCase() !== 'img') {
+      return node
+    }
+    node.setAttribute('style', `
+      height: ${fontSize}px;
+      vertical-align: bottom;
+    `)
+    return node
+  })
   element.appendChild(span)
 
   container.appendChild(element)
@@ -145,7 +156,7 @@ const flow = (node) => {
   `)
 
   animation.onfinish = () => {
-    element.parentNode.removeChild(element)
+    element.remove()
     data[index].shift()
   }
   if (!video.paused) {
@@ -153,9 +164,17 @@ const flow = (node) => {
   }
 }
 
+const clear = () => {
+  data = []
+  Array.from(doc.querySelectorAll('.ylcf-message')).forEach((element) => {
+    element.remove()
+  })
+}
+
 const initialize = async () => {
   logger.log('initialize')
 
+  clear()
   await loadSettings()
 
   if (observer) {
