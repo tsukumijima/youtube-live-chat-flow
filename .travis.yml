@@ -15,6 +15,7 @@ script:
 
 deploy:
   provider: releases
+  api_key: $GH_TOKEN
   file: dist/app.zip
   skip_cleanup: true
 
