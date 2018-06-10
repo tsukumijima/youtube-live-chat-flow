@@ -18,37 +18,8 @@
           <v-flex xs6>
             <v-text-field
               v-model="color"
-              :placeholder="defaults.color"
-              hide-details
-            />
-          </v-flex>
-        </v-layout>
-        <v-layout
-          row
-          align-center
-        >
-          <v-flex xs6>
-            <v-subheader>Owner</v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="ownerColor"
-              :placeholder="defaults.ownerColor"
-              hide-details
-            />
-          </v-flex>
-        </v-layout>
-        <v-layout
-          row
-          align-center
-        >
-          <v-flex xs6>
-            <v-subheader>Moderator</v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="moderatorColor"
-              :placeholder="defaults.moderatorColor"
+              class="color"
+              type="color"
               hide-details
             />
           </v-flex>
@@ -63,7 +34,40 @@
           <v-flex xs6>
             <v-text-field
               v-model="memberColor"
-              :placeholder="defaults.memberColor"
+              class="color"
+              type="color"
+              hide-details
+            />
+          </v-flex>
+        </v-layout>
+        <v-layout
+          row
+          align-center
+        >
+          <v-flex xs6>
+            <v-subheader>Moderator</v-subheader>
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-model="moderatorColor"
+              class="color"
+              type="color"
+              hide-details
+            />
+          </v-flex>
+        </v-layout>
+        <v-layout
+          row
+          align-center
+        >
+          <v-flex xs6>
+            <v-subheader>Owner</v-subheader>
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-model="ownerColor"
+              class="color"
+              type="color"
               hide-details
             />
           </v-flex>
@@ -129,6 +133,7 @@
         </v-layout>
         <v-btn
           class="mt-3"
+          color="primary"
           flat
           block
           @click="reset"
@@ -165,12 +170,12 @@ export default {
         this.$store.commit('settings/setColor', { color: value })
       }
     },
-    ownerColor: {
+    memberColor: {
       get () {
-        return this.$store.state.settings.ownerColor
+        return this.$store.state.settings.memberColor
       },
       set (value) {
-        this.$store.commit('settings/setOwnerColor', { ownerColor: value })
+        this.$store.commit('settings/setMemberColor', { memberColor: value })
       }
     },
     moderatorColor: {
@@ -181,12 +186,12 @@ export default {
         this.$store.commit('settings/setModeratorColor', { moderatorColor: value })
       }
     },
-    memberColor: {
+    ownerColor: {
       get () {
-        return this.$store.state.settings.memberColor
+        return this.$store.state.settings.ownerColor
       },
       set (value) {
-        this.$store.commit('settings/setMemberColor', { memberColor: value })
+        this.$store.commit('settings/setOwnerColor', { ownerColor: value })
       }
     },
     textShadow: {
@@ -226,6 +231,9 @@ export default {
     await this.$store.dispatch('initialize')
   },
   methods: {
+    close () {
+      window.close()
+    },
     ...mapActions({
       reset: 'reset'
     })
@@ -239,6 +247,12 @@ export default {
 
 <style scoped>
 .application {
-  min-width: 300px;
+  min-width: 480px;
+}
+.color >>> .input-group__details {
+  display: none;
+}
+.color >>> input {
+  cursor: pointer;
 }
 </style>

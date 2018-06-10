@@ -12,7 +12,7 @@ export default {
   entry: {
     background: './background',
     'content-scripts': './content-scripts',
-    popup: './popup'
+    options: './options'
   },
   output: {
     path: `${__dirname}/app/`,
@@ -61,9 +61,9 @@ export default {
       }
     }]),
     new HtmlWebpackPlugin({
-      template: './assets/popup.html',
-      filename: './assets/popup.html',
-      chunks: ['popup']
+      template: './assets/options.html',
+      filename: './assets/options.html',
+      chunks: ['options']
     }),
     new VueLoaderPlugin()
   ],

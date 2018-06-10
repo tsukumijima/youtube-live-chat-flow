@@ -9,12 +9,15 @@ let settings
 let data = []
 const doc = (parent || window).document
 
-const loadState = async () => {
-  const state = await storage.get()
-  settings = {
+const getSettings = async () => {
+  return {
     ...defaults,
-    ...state.settings
+    ...(await storage.get()).settings
   }
+}
+
+const loadSettings = async () => {
+  settings = await getSettings()
 }
 
 const getColor = (authorType) => {
@@ -161,6 +164,8 @@ const flow = (node) => {
 const initialize = async () => {
   logger.log('initialize')
 
+  await loadSettings()
+
   if (observer) {
     observer.disconnect()
   }
@@ -182,6 +187,8 @@ const initialize = async () => {
   const video = doc.querySelector('.video-stream.html5-main-video')
   video.addEventListener('pause', callback)
   video.addEventListener('play', callback)
+
+  chrome.runtime.sendMessage({ id: 'contentLoaded' })
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -189,12 +196,11 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   const { id } = message
   switch (id) {
     case 'stateChanged':
-      await loadState()
+      await loadSettings()
       break
   }
-});
+})
 
-(async () => {
-  await loadState()
-  initialize(location.href)
+;(async () => {
+  await initialize(location.href)
 })()

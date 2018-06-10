@@ -19,8 +19,11 @@
     }
   ],
   "browser_action": {
-    "default_icon": "assets/icon-48.png",
-    "default_popup": "assets/popup.html"
+    "default_icon": "assets/icon-48.png"
+  },
+  "options_ui": {
+    "page": "assets/options.html",
+    "open_in_tab": false
   },
   "permissions": [
     "tabs",

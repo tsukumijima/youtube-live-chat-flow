@@ -4,10 +4,10 @@ export const defaults = {
   opacity: '0.8',
   rows: '12',
   speed: '6',
-  color: 'white',
-  ownerColor: '#ff9',
-  moderatorColor: '#99f',
-  memberColor: '#9f9'
+  color: '#ffffff',
+  memberColor: '#99ff99',
+  moderatorColor: '#9999ff',
+  ownerColor: '#ffff99'
 }
 
 export default {
@@ -22,14 +22,14 @@ export default {
     setColor (state, { color }) {
       state.color = color
     },
-    setOwnerColor (state, { ownerColor }) {
-      state.ownerColor = ownerColor
+    setMemberColor (state, { memberColor }) {
+      state.memberColor = memberColor
     },
     setModeratorColor (state, { moderatorColor }) {
       state.moderatorColor = moderatorColor
     },
-    setMemberColor (state, { memberColor }) {
-      state.memberColor = memberColor
+    setOwnerColor (state, { ownerColor }) {
+      state.ownerColor = ownerColor
     },
     setTextShadow (state, { textShadow }) {
       state.textShadow = textShadow
