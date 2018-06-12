@@ -202,6 +202,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   switch (id) {
     case 'stateChanged':
       await loadSettings()
+      if (!settings.enabled) {
+        clear()
+      }
       break
     case 'urlChanged':
       clear()
