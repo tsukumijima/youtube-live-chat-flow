@@ -26,8 +26,6 @@ const initialize = async () => {
     ...(await storage.get())
   }
   await storage.set(state)
-
-  await updateIcon()
 }
 
 chrome.browserAction.onClicked.addListener(async (tab) => {
@@ -39,6 +37,13 @@ chrome.browserAction.onClicked.addListener(async (tab) => {
 
   await updateIcon()
   sendMessage({ id: 'stateChanged' })
+})
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  logger.log('chrome.tabs.onUpdated: %o', changeInfo)
+  if (changeInfo.url) {
+    sendMessage({ id: 'urlChanged' })
+  }
 })
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
