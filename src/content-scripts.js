@@ -3,10 +3,8 @@ import logger from './utils/logger'
 
 logger.log('content script loaded')
 
-let observer
 let settings
 let data = []
-const doc = (parent || window).document
 
 const loadSettings = async () => {
   settings = (await storage.get()).settings
@@ -49,8 +47,12 @@ const flow = (node) => {
   const html = node.querySelector('#message').innerHTML
   const src = node.querySelector('#img').src
 
-  const container = doc.querySelector('.html5-video-container')
-  const video = doc.querySelector('.video-stream.html5-main-video')
+  const container = parent.document.querySelector('.html5-video-container')
+  const video = parent.document.querySelector('.video-stream.html5-main-video')
+
+  if (video.paused) {
+    return
+  }
 
   const height = video.offsetHeight / settings.rows
   const fontSize = height * 0.8
@@ -58,7 +60,7 @@ const flow = (node) => {
   const color = getColor(authorType)
   const authority = hasAuthority(authorType)
 
-  const element = doc.createElement('div')
+  const element = parent.document.createElement('div')
   element.classList.add('ylcf-message')
   element.setAttribute('style', `
     position: absolute;
@@ -67,7 +69,7 @@ const flow = (node) => {
     align-items: center;
   `)
   if (authority) {
-    const img = doc.createElement('img')
+    const img = parent.document.createElement('img')
     img.src = src
     img.setAttribute('style', `
       height: ${fontSize}px;
@@ -76,7 +78,7 @@ const flow = (node) => {
     `)
     element.appendChild(img)
   }
-  const span = doc.createElement('span')
+  const span = parent.document.createElement('span')
   span.setAttribute('style', `
     height: ${fontSize}px;
     line-height: ${fontSize}px;
@@ -102,27 +104,20 @@ const flow = (node) => {
   container.appendChild(element)
 
   const keyframes = [
-    { transform: `translate(${video.offsetWidth}px, 0px)` },
+    { transform: `translate(${container.offsetWidth}px, 0px)` },
     { transform: `translate(-${element.offsetWidth}px, 0px)` }
   ]
   const animation = element.animate(keyframes, millis)
-  animation.pause()
 
   const now = Date.now()
-  const vc = (video.offsetWidth + element.offsetWidth) / millis
-
-  const message = {
-    element,
-    animation,
-    time: now
-  }
+  const vc = (container.offsetWidth + element.offsetWidth) / millis
 
   let index = data.findIndex((messages) => {
     const message = messages[messages.length - 1]
     if (!message) {
       return true
     }
-    const vt = (video.offsetWidth + message.element.offsetWidth) / millis
+    const vt = (container.offsetWidth + message.element.offsetWidth) / millis
 
     const t1 = now - message.time
     const d1 = vt * t1
@@ -130,14 +125,20 @@ const flow = (node) => {
       return false
     }
 
-    const t2 = t1 + video.offsetWidth / vc
+    const t2 = t1 + container.offsetWidth / vc
     const d2 = vt * t2
-    if (d2 < video.offsetWidth + message.element.offsetWidth) {
+    if (d2 < container.offsetWidth + message.element.offsetWidth) {
       return false
     }
 
     return true
   })
+
+  const message = {
+    element,
+    animation,
+    time: now
+  }
 
   if (index === -1) {
     data.push([message])
@@ -159,14 +160,10 @@ const flow = (node) => {
     element.remove()
     data[index].shift()
   }
-  if (!video.paused) {
-    animation.play()
-  }
 }
 
 const clear = () => {
-  data = []
-  Array.from(doc.querySelectorAll('.ylcf-message')).forEach((element) => {
+  Array.from(parent.document.querySelectorAll('.ylcf-message')).forEach((element) => {
     element.remove()
   })
 }
@@ -174,14 +171,10 @@ const clear = () => {
 const initialize = async () => {
   logger.log('initialize')
 
-  clear()
   await loadSettings()
 
-  if (observer) {
-    observer.disconnect()
-  }
   const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
-  observer = new MutationObserver((mutations) => {
+  const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       const nodes = Array.from(mutation.addedNodes)
       nodes.forEach((node) => {
@@ -195,7 +188,7 @@ const initialize = async () => {
     data.reduce((carry, messages) => [...carry, ...messages.map((message) => message.animation)], [])
       .forEach((animation) => animation[e.type]())
   }
-  const video = doc.querySelector('.video-stream.html5-main-video')
+  const video = parent.document.querySelector('.video-stream.html5-main-video')
   video.addEventListener('pause', callback)
   video.addEventListener('play', callback)
 
@@ -203,15 +196,22 @@ const initialize = async () => {
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  logger.log('onMessage: %o', message)
+  logger.log('onMessage', message, sender, sendResponse)
+
   const { id } = message
   switch (id) {
     case 'stateChanged':
       await loadSettings()
+      if (!settings.enabled) {
+        clear()
+      }
+      break
+    case 'urlChanged':
+      clear()
       break
   }
 })
 
 ;(async () => {
-  await initialize(location.href)
+  await initialize()
 })()

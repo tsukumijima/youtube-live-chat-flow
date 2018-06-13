@@ -13,9 +13,7 @@
       "run_at": "document_end",
       "matches": ["https://www.youtube.com/live_chat*"],
       "all_frames": true,
-      "js": [
-        "content-scripts.js"
-      ]
+      "js": ["content-scripts.js"]
     }
   ],
   "browser_action": {
