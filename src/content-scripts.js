@@ -196,7 +196,7 @@ const initialize = async () => {
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  logger.log('onMessage: %o', message)
+  logger.log('onMessage', message, sender, sendResponse)
 
   const { id } = message
   switch (id) {
