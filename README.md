@@ -25,6 +25,6 @@
 # install dependencies
 yarn
 
-# watch files changed
-yarn watch
+# watch files changed and reload extension
+yarn dev
 ```
