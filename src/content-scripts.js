@@ -50,6 +50,10 @@ const flow = (node) => {
   const container = parent.document.querySelector('.html5-video-container')
   const video = parent.document.querySelector('.video-stream.html5-main-video')
 
+  if (video.paused) {
+    return
+  }
+
   const height = video.offsetHeight / settings.rows
   const fontSize = height * 0.8
   const millis = settings.speed * 1000
@@ -100,27 +104,20 @@ const flow = (node) => {
   container.appendChild(element)
 
   const keyframes = [
-    { transform: `translate(${video.offsetWidth}px, 0px)` },
+    { transform: `translate(${container.offsetWidth}px, 0px)` },
     { transform: `translate(-${element.offsetWidth}px, 0px)` }
   ]
   const animation = element.animate(keyframes, millis)
-  animation.pause()
 
   const now = Date.now()
-  const vc = (video.offsetWidth + element.offsetWidth) / millis
-
-  const message = {
-    element,
-    animation,
-    time: now
-  }
+  const vc = (container.offsetWidth + element.offsetWidth) / millis
 
   let index = data.findIndex((messages) => {
     const message = messages[messages.length - 1]
     if (!message) {
       return true
     }
-    const vt = (video.offsetWidth + message.element.offsetWidth) / millis
+    const vt = (container.offsetWidth + message.element.offsetWidth) / millis
 
     const t1 = now - message.time
     const d1 = vt * t1
@@ -128,14 +125,20 @@ const flow = (node) => {
       return false
     }
 
-    const t2 = t1 + video.offsetWidth / vc
+    const t2 = t1 + container.offsetWidth / vc
     const d2 = vt * t2
-    if (d2 < video.offsetWidth + message.element.offsetWidth) {
+    if (d2 < container.offsetWidth + message.element.offsetWidth) {
       return false
     }
 
     return true
   })
+
+  const message = {
+    element,
+    animation,
+    time: now
+  }
 
   if (index === -1) {
     data.push([message])
@@ -156,9 +159,6 @@ const flow = (node) => {
   animation.onfinish = () => {
     element.remove()
     data[index].shift()
-  }
-  if (!video.paused) {
-    animation.play()
   }
 }
 
