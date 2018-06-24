@@ -7,7 +7,8 @@ export const defaults = {
   color: '#ffffff',
   memberColor: '#99ff99',
   moderatorColor: '#9999ff',
-  ownerColor: '#ffff99'
+  ownerColor: '#ffff99',
+  paidColor: '#ffcc99'
 }
 
 export default {

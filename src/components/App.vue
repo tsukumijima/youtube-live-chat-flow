@@ -72,6 +72,22 @@
             />
           </v-flex>
         </v-layout>
+        <v-layout
+          row
+          align-center
+        >
+          <v-flex xs6>
+            <v-subheader>Super Chat</v-subheader>
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-model="paidColor"
+              class="color"
+              type="color"
+              hide-details
+            />
+          </v-flex>
+        </v-layout>
         <v-layout row>
           <v-flex xs6>
             <v-subheader class="pl-0">Text Shadow</v-subheader>
@@ -192,6 +208,14 @@ export default {
       },
       set (value) {
         this.$store.commit('settings/setOwnerColor', { ownerColor: value })
+      }
+    },
+    paidColor: {
+      get () {
+        return this.$store.state.settings.paidColor
+      },
+      set (value) {
+        this.$store.commit('settings/setPaidColor', { paidColor: value })
       }
     },
     textShadow: {
