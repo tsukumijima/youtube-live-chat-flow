@@ -20,6 +20,15 @@ const updateIcon = async () => {
   chrome.browserAction.setIcon({ path })
 }
 
+const toggleEnabled = async () => {
+  const settings = (await storage.get()).settings
+  settings.enabled = !settings.enabled
+  await storage.set({ settings })
+
+  await updateIcon()
+  sendMessageAll({ id: 'stateChanged' })
+}
+
 const initialize = async () => {
   const state = {
     settings: defaults,
@@ -31,12 +40,7 @@ const initialize = async () => {
 chrome.browserAction.onClicked.addListener(async (tab) => {
   logger.log('chrome.browserAction.onClicked', tab)
 
-  const settings = (await storage.get()).settings
-  settings.enabled = !settings.enabled
-  await storage.set({ settings })
-
-  await updateIcon()
-  sendMessageAll({ id: 'stateChanged' })
+  await toggleEnabled()
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -58,6 +62,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     case 'stateChanged':
       await updateIcon()
       sendMessageAll({ id: 'stateChanged' })
+      break
+    case 'toggled':
+      toggleEnabled()
       break
   }
 })

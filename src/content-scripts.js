@@ -198,10 +198,38 @@ const clear = () => {
   })
 }
 
+const setupControlButton = () => {
+  let button = parent.document.querySelector('.ylcf-button')
+  if (!button) {
+    button = document.createElement('button')
+    button.classList.add('ytp-button')
+    button.classList.add('ylcf-button')
+    button.setAttribute('title', 'Chat Flow')
+
+    const controls = parent.document.querySelector('.ytp-right-controls')
+    controls.prepend(button)
+  }
+  button.innerHTML = settings.enabled ? `
+    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="-8 -8 40 40">
+      <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z" fill="#ffffff" />
+    </svg>
+  ` : `
+    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="-8 -8 40 40">
+      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#ffffff" />
+      <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+  `
+  button.onclick = () => {
+    chrome.runtime.sendMessage({ id: 'toggled' })
+  }
+}
+
 const initialize = async () => {
   logger.log('initialize')
 
   await loadSettings()
+
+  setupControlButton()
 
   const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
   const observer = new MutationObserver((mutations) => {
@@ -232,11 +260,13 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   switch (id) {
     case 'stateChanged':
       await loadSettings()
+      setupControlButton()
       if (!settings.enabled) {
         clear()
       }
       break
     case 'urlChanged':
+      setupControlButton()
       clear()
       break
   }
