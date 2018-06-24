@@ -34,59 +34,56 @@ const hasAuthority = (authorType) => {
   }
 }
 
-const flow = (node) => {
-  if (!settings.enabled) {
-    return
-  }
-
-  if (node.tagName.toLowerCase() !== 'yt-live-chat-text-message-renderer') {
+const createElement = (node, height) => {
+  const tags = [
+    'yt-live-chat-text-message-renderer',
+    'yt-live-chat-paid-message-renderer'
+  ]
+  if (!tags.includes(node.tagName.toLowerCase())) {
     return
   }
 
   const authorType = node.getAttribute('author-type')
   const html = node.querySelector('#message').innerHTML
   const src = node.querySelector('#img').src
+  const purchase = node.querySelector('#purchase-amount') && node.querySelector('#purchase-amount').innerText
 
-  const container = parent.document.querySelector('.html5-video-container')
-  const video = parent.document.querySelector('.video-stream.html5-main-video')
-
-  if (video.paused) {
-    return
-  }
-
-  const height = video.offsetHeight / settings.rows
   const fontSize = height * 0.8
-  const millis = settings.speed * 1000
-  const color = getColor(authorType)
+  const color = purchase ? settings.paidColor : getColor(authorType)
   const authority = hasAuthority(authorType)
 
   const element = parent.document.createElement('div')
   element.classList.add('ylcf-message')
   element.setAttribute('style', `
-    position: absolute;
-    left: 0;
-    display: flex;
     align-items: center;
+    color: ${color};
+    display: flex;
+    font-size: ${fontSize}px;
+    font-weight: bold;
+    height: ${fontSize}px;
+    left: 0;
+    line-height: ${fontSize}px;
+    position: absolute;
+    text-shadow: ${settings.textShadow};
+    vertical-align: bottom;
+    white-space: nowrap;
   `)
-  if (authority) {
+
+  if (authority || purchase) {
+    element.classList.add('has-auth')
     const img = parent.document.createElement('img')
     img.src = src
     img.setAttribute('style', `
-      height: ${fontSize}px;
       border-radius: ${fontSize}px;
+      height: ${fontSize}px;
+      margin-right: 0.2em;
       object-fit: cover;
     `)
     element.appendChild(img)
   }
+
   const span = parent.document.createElement('span')
   span.setAttribute('style', `
-    height: ${fontSize}px;
-    line-height: ${fontSize}px;
-    white-space: nowrap;
-    font-size: ${fontSize}px;
-    font-weight: bold;
-    color: ${color};
-    text-shadow: ${settings.textShadow};
   `)
   span.innerHTML = html
   Array.from(span.childNodes).map((node) => {
@@ -101,8 +98,41 @@ const flow = (node) => {
   })
   element.appendChild(span)
 
+  if (purchase) {
+    const textSize = fontSize * 0.5
+    const span = parent.document.createElement('span')
+    span.setAttribute('style', `
+      font-size: ${textSize}px;
+      line-height: initial;
+      margin-left: 0.5em;
+    `)
+    span.innerText = purchase
+    element.appendChild(span)
+  }
+
+  return element
+}
+
+const flow = (node) => {
+  if (!settings.enabled) {
+    return
+  }
+
+  const video = parent.document.querySelector('.video-stream.html5-main-video')
+  if (video.paused) {
+    return
+  }
+
+  const height = video.offsetHeight / settings.rows
+  const element = createElement(node, height)
+  if (!element) {
+    return
+  }
+
+  const container = parent.document.querySelector('.html5-video-container')
   container.appendChild(element)
 
+  const millis = settings.speed * 1000
   const keyframes = [
     { transform: `translate(${container.offsetWidth}px, 0px)` },
     { transform: `translate(-${element.offsetWidth}px, 0px)` }
@@ -147,8 +177,8 @@ const flow = (node) => {
     data[index].push(message)
   }
 
-  const top = height * (0.1 + (index % settings.rows))
-  const depth = authority ? 0 : Math.floor(index / settings.rows)
+  const top = element.offsetHeight * (0.1 + (index % settings.rows))
+  const depth = element.classList.contains('has-auth') ? 0 : Math.floor(index / settings.rows)
   const opacity = settings.opacity * (1 - 0.2 * depth)
 
   element.setAttribute('style', element.getAttribute('style') + `
@@ -168,10 +198,38 @@ const clear = () => {
   })
 }
 
+const setupControlButton = () => {
+  let button = parent.document.querySelector('.ylcf-button')
+  if (!button) {
+    button = document.createElement('button')
+    button.classList.add('ytp-button')
+    button.classList.add('ylcf-button')
+    button.setAttribute('title', 'Chat Flow')
+
+    const controls = parent.document.querySelector('.ytp-right-controls')
+    controls.prepend(button)
+  }
+  button.innerHTML = settings.enabled ? `
+    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="-8 -8 40 40">
+      <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z" fill="#ffffff" />
+    </svg>
+  ` : `
+    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="-8 -8 40 40">
+      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#ffffff" />
+      <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+  `
+  button.onclick = () => {
+    chrome.runtime.sendMessage({ id: 'toggled' })
+  }
+}
+
 const initialize = async () => {
   logger.log('initialize')
 
   await loadSettings()
+
+  setupControlButton()
 
   const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
   const observer = new MutationObserver((mutations) => {
@@ -202,11 +260,13 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   switch (id) {
     case 'stateChanged':
       await loadSettings()
+      setupControlButton()
       if (!settings.enabled) {
         clear()
       }
       break
     case 'urlChanged':
+      setupControlButton()
       clear()
       break
   }
