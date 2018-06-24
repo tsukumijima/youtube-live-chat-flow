@@ -13,13 +13,11 @@ script:
   - yarn test
   - yarn package
 
+if: tag IS present
+
 deploy:
   provider: releases
   api_key: $GH_TOKEN
   file_glob: true
   file: dist/*
   skip_cleanup: true
-
-branches:
-  only:
-    - master
