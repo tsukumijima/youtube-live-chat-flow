@@ -204,7 +204,6 @@ const setupControlButton = () => {
     button = document.createElement('button')
     button.classList.add('ytp-button')
     button.classList.add('ylcf-button')
-    button.setAttribute('title', 'Chat Flow')
 
     const controls = parent.document.querySelector('.ytp-right-controls')
     controls.prepend(button)
