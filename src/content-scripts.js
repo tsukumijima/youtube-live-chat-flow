@@ -177,7 +177,7 @@ const flow = (node) => {
     data[index].push(message)
   }
 
-  const top = element.offsetHeight * (0.1 + (index % settings.rows))
+  const top = height * (0.1 + (index % settings.rows))
   const depth = element.classList.contains('has-auth') ? 0 : Math.floor(index / settings.rows)
   const opacity = settings.opacity * (1 - 0.2 * depth)
 
