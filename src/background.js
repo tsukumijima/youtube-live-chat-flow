@@ -2,7 +2,9 @@ import { defaults } from './store/settings'
 import Storage from './utils/storage'
 import Logger from './utils/logger'
 import iconOff from './assets/icon-off32.png'
-import iconOn from './assets/icon32.png'
+import iconOn from './assets/icon-on32.png'
+import './assets/icon32.png'
+import './assets/icon48.png'
 
 const toggleEnabled = async () => {
   const settings = (await Storage.get()).settings
