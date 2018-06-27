@@ -1,26 +1,26 @@
-class Storage {
-  get (keys) {
+export default class Storage {
+  static get (keys) {
     return new Promise((resolve) => {
       chrome.storage.local.get(keys, (result) => {
         resolve(result)
       })
     })
   }
-  set (items) {
+  static set (items) {
     return new Promise((resolve) => {
       chrome.storage.local.set(items, () => {
         resolve()
       })
     })
   }
-  remove (keys) {
+  static remove (keys) {
     return new Promise((resolve) => {
       chrome.storage.local.remove(keys, () => {
         resolve()
       })
     })
   }
-  clear () {
+  static clear () {
     return new Promise((resolve) => {
       chrome.storage.local.clear(() => {
         resolve()
@@ -28,5 +28,3 @@ class Storage {
     })
   }
 }
-
-export default new Storage()

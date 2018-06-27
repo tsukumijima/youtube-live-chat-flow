@@ -1,13 +1,11 @@
-import storage from './utils/storage'
-import logger from './utils/logger'
-
-logger.log('content script loaded')
+import Storage from './utils/storage'
+import Logger from './utils/logger'
 
 let settings
 let data = []
 
 const loadSettings = async () => {
-  settings = (await storage.get()).settings
+  settings = (await Storage.get()).settings
 }
 
 const getColor = (authorType) => {
@@ -179,7 +177,7 @@ const flow = (node) => {
 
   const top = height * (0.1 + (index % settings.rows))
   const depth = element.classList.contains('has-auth') ? 0 : Math.floor(index / settings.rows)
-  const opacity = settings.opacity * (1 - 0.2 * depth)
+  const opacity = settings.opacity ** (depth + 1)
 
   element.setAttribute('style', element.getAttribute('style') + `
     top: ${top}px;
@@ -192,7 +190,7 @@ const flow = (node) => {
   }
 }
 
-const clear = () => {
+const clearMessages = () => {
   Array.from(parent.document.querySelectorAll('.ylcf-message')).forEach((element) => {
     element.remove()
   })
@@ -219,18 +217,35 @@ const setupControlButton = () => {
     </svg>
   `
   button.onclick = () => {
-    chrome.runtime.sendMessage({ id: 'toggled' })
+    chrome.runtime.sendMessage({ id: 'controlButtonClicked' })
   }
 }
 
-const initialize = async () => {
-  logger.log('initialize')
+const removeControlButton = () => {
+  parent.document.querySelector('.ylcf-button').remove()
+}
+
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  Logger.log('onMessage', message, sender, sendResponse)
+
+  const { id } = message
+  switch (id) {
+    case 'stateChanged':
+      await loadSettings()
+      setupControlButton()
+      if (!settings.enabled) {
+        clearMessages()
+      }
+      break
+  }
+})
+
+;(async () => {
+  Logger.log('content script loaded')
 
   await loadSettings()
-
   setupControlButton()
 
-  const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       const nodes = Array.from(mutation.addedNodes)
@@ -239,6 +254,7 @@ const initialize = async () => {
       })
     })
   })
+  const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
   observer.observe(items, { childList: true })
 
   const callback = (e) => {
@@ -249,28 +265,16 @@ const initialize = async () => {
   video.addEventListener('pause', callback)
   video.addEventListener('play', callback)
 
-  chrome.runtime.sendMessage({ id: 'contentLoaded' })
-}
+  onunload = () => {
+    Logger.log('content script unloaded')
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  logger.log('onMessage', message, sender, sendResponse)
+    clearMessages()
 
-  const { id } = message
-  switch (id) {
-    case 'stateChanged':
-      await loadSettings()
-      setupControlButton()
-      if (!settings.enabled) {
-        clear()
-      }
-      break
-    case 'urlChanged':
-      setupControlButton()
-      clear()
-      break
+    video.removeEventListener('pause', callback)
+    video.removeEventListener('play', callback)
+
+    observer.disconnect()
+
+    removeControlButton()
   }
-})
-
-;(async () => {
-  await initialize()
 })()

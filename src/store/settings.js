@@ -3,7 +3,7 @@ export const defaults = {
   textShadow: '1px 1px 2px #333',
   opacity: '0.8',
   rows: '12',
-  speed: '6',
+  speed: '5',
   color: '#ffffff',
   memberColor: '#99ff99',
   moderatorColor: '#9999ff',
