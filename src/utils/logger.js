@@ -1,7 +1,11 @@
 import Package from '~~/package.json'
 
-class Logger {
-  log (msg, ...args) {
+export default class Logger {
+  static log (msg, ...args) {
+    if (process.env.NODE_ENV === 'production') {
+      return
+    }
+
     let message = `[${Package.name}] `
     let params = args
     if (typeof msg === 'string') {
@@ -10,11 +14,6 @@ class Logger {
       message += '%o'
       params.unshift(msg)
     }
-    if (process.env.NODE_ENV === 'production') {
-      return
-    }
     console.log(message, ...params)
   }
 }
-
-export default new Logger()
