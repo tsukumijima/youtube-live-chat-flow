@@ -199,33 +199,28 @@ const clearMessages = () => {
 const setupControlButton = () => {
   let button = parent.document.querySelector('.ylcf-button')
   if (!button) {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+    path.setAttribute('d', 'M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z')
+    path.setAttribute('fill', '#fff')
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    svg.setAttribute('viewBox', '-6 -6 36 36')
+    svg.setAttribute('width', '100%')
+    svg.setAttribute('height', '100%')
+    svg.append(path)
+
     button = document.createElement('button')
-    button.classList.add('ytp-button')
     button.classList.add('ylcf-button')
+    button.classList.add('ytp-button')
+    button.onclick = () => {
+      chrome.runtime.sendMessage({ id: 'controlButtonClicked' })
+    }
+    button.append(svg)
 
     const controls = parent.document.querySelector('.ytp-right-controls')
     controls.prepend(button)
   }
-  button.innerHTML = settings.enabled ? `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 40 40">
-      <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z" fill="#ffffff" />
-    </svg>
-  ` : `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 40 40">
-      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#ffffff" />
-    </svg>
-  `
-
-  button.onclick = () => {
-    chrome.runtime.sendMessage({ id: 'controlButtonClicked' })
-  }
-
-  // Make SVG responseve
-  setTimeout(() => {
-    const svg = button.querySelector('svg')
-    svg.setAttribute('width', '100%')
-    svg.setAttribute('height', '100%')
-  })
+  button.setAttribute('aria-pressed', settings.enabled)
 }
 
 const removeControlButton = () => {
