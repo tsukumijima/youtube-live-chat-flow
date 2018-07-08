@@ -1,8 +1,11 @@
-import Storage from './utils/storage'
 import Logger from './utils/logger'
+import Storage from './utils/storage'
 
+const className = 'ylcf-button'
+
+let enabled = false
 let settings
-let data = []
+const data = []
 
 const loadSettings = async () => {
   settings = (await Storage.get()).settings
@@ -112,7 +115,7 @@ const createElement = (node, height) => {
 }
 
 const flow = (node) => {
-  if (!settings.enabled) {
+  if (!enabled) {
     return
   }
 
@@ -197,20 +200,20 @@ const clearMessages = () => {
 }
 
 const setupControlButton = () => {
-  let button = parent.document.querySelector('.ylcf-button')
+  let button = parent.document.querySelector(`.${className}`)
   if (!button) {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
     path.setAttribute('d', 'M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z')
     path.setAttribute('fill', '#fff')
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svg.setAttribute('viewBox', '-6 -6 36 36')
+    svg.setAttribute('viewBox', '-8 -8 40 40')
     svg.setAttribute('width', '100%')
     svg.setAttribute('height', '100%')
     svg.append(path)
 
     button = document.createElement('button')
-    button.classList.add('ylcf-button')
+    button.classList.add(className)
     button.classList.add('ytp-button')
     button.onclick = () => {
       chrome.runtime.sendMessage({ id: 'controlButtonClicked' })
@@ -220,22 +223,23 @@ const setupControlButton = () => {
     const controls = parent.document.querySelector('.ytp-right-controls')
     controls.prepend(button)
   }
-  button.setAttribute('aria-pressed', settings.enabled)
+  button.setAttribute('aria-pressed', enabled)
 }
 
 const removeControlButton = () => {
-  parent.document.querySelector('.ylcf-button').remove()
+  parent.document.querySelector(`.${className}`).remove()
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   Logger.log('onMessage', message, sender, sendResponse)
 
-  const { id } = message
+  const { id, data } = message
   switch (id) {
     case 'stateChanged':
+      enabled = data.enabled
       await loadSettings()
       setupControlButton()
-      if (!settings.enabled) {
+      if (!enabled) {
         clearMessages()
       }
       break
@@ -279,4 +283,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
     removeControlButton()
   }
+
+  chrome.runtime.sendMessage({ id: 'contentLoaded' })
 })()
