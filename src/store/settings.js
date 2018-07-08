@@ -1,5 +1,4 @@
 export const defaults = {
-  enabled: true,
   textShadow: '1px 1px 2px #333',
   opacity: '0.8',
   rows: '12',
@@ -17,9 +16,6 @@ export default {
     ...defaults
   },
   mutations: {
-    setEnabled (state, { enabled }) {
-      state.enabled = enabled
-    },
     setColor (state, { color }) {
       state.color = color
     },

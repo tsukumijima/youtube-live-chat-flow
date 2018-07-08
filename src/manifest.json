@@ -3,7 +3,9 @@
   "description": "Messages Flow on YouTube Live Chat",
   "manifest_version": 2,
   "icons": {
-    "48": "assets/icon48.png"
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
   },
   "background": {
     "scripts": ["background.js"],
@@ -17,7 +19,7 @@
       "js": ["content-scripts.js"]
     }
   ],
-  "browser_action": {
+  "page_action": {
     "default_icon": "assets/icon48.png"
   },
   "options_ui": {

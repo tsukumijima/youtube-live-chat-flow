@@ -2,11 +2,6 @@
   <v-app>
     <v-content>
       <v-container fluid>
-        <v-switch
-          v-model="enabled"
-          label="Enabled"
-          hide-details
-        />
         <v-subheader class="pl-0">Color</v-subheader>
         <v-layout
           row
@@ -170,14 +165,6 @@ export default {
     }
   },
   computed: {
-    enabled: {
-      get () {
-        return this.$store.state.settings.enabled
-      },
-      set (value) {
-        this.$store.commit('settings/setEnabled', { enabled: value })
-      }
-    },
     color: {
       get () {
         return this.$store.state.settings.color
@@ -273,10 +260,15 @@ export default {
 .application {
   min-width: 480px;
 }
-.color >>> .input-group__details {
-  display: none;
+.color >>> .v-input__slot:before {
+  height: 0;
+}
+.color >>> .v-input__slot:after {
+  height: 0;
 }
 .color >>> input {
   cursor: pointer;
+  height: 32px;
+  padding: 0;
 }
 </style>

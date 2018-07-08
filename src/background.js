@@ -1,51 +1,61 @@
 import { defaults } from './store/settings'
-import Storage from './utils/storage'
 import Logger from './utils/logger'
+import Storage from './utils/storage'
 import iconOff from './assets/icon-off48.png'
 import iconOn from './assets/icon-on48.png'
+import './assets/icon16.png'
 import './assets/icon48.png'
+import './assets/icon128.png'
 
-const toggleEnabled = async () => {
-  const settings = (await Storage.get()).settings
-  settings.enabled = !settings.enabled
-  await Storage.set({ settings })
+const enabled = {}
+
+const initialize = async () => {
+  const state = {
+    settings: defaults,
+    ...(await Storage.get())
+  }
+  await Storage.set(state)
 }
 
-const updateIcon = async () => {
-  const settings = (await Storage.get()).settings
-  const path = settings.enabled ? iconOn : iconOff
-  chrome.browserAction.setIcon({ path })
+const setIcon = (tabId) => {
+  const path = enabled[tabId] ? iconOn : iconOff
+  chrome.pageAction.setIcon({ tabId, path })
 }
 
-const sendMessageAll = (data) => {
-  chrome.tabs.query({}, (tabs) => {
-    tabs.forEach((tab) => {
-      chrome.tabs.sendMessage(tab.id, data)
-    })
-  })
+const sendMessage = (tabId) => {
+  chrome.tabs.sendMessage(tabId, { id: 'stateChanged', data: { enabled: enabled[tabId] } })
 }
 
-chrome.browserAction.onClicked.addListener(async (tab) => {
-  Logger.log('chrome.browserAction.onClicked', tab)
+chrome.pageAction.onClicked.addListener((tab) => {
+  Logger.log('chrome.pageAction.onClicked', tab)
 
-  await toggleEnabled()
-  await updateIcon()
-  sendMessageAll({ id: 'stateChanged' })
+  enabled[tab.id] = !enabled[tab.id]
+  setIcon(tab.id)
+  sendMessage(tab.id)
 })
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   Logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
 
   const { id } = message
+  const { tab } = sender
   switch (id) {
-    case 'stateChanged':
-      await updateIcon()
-      sendMessageAll({ id: 'stateChanged' })
+    case 'contentLoaded':
+      chrome.pageAction.show(tab.id)
+      setIcon(tab.id)
+      sendMessage(tab.id)
       break
     case 'controlButtonClicked':
-      await toggleEnabled()
-      await updateIcon()
-      sendMessageAll({ id: 'stateChanged' })
+      enabled[tab.id] = !enabled[tab.id]
+      setIcon(tab.id)
+      sendMessage(tab.id)
+      break
+    case 'stateChanged':
+      chrome.tabs.query({}, (tabs) => {
+        tabs.forEach((tab) => {
+          sendMessage(tab.id)
+        })
+      })
       break
   }
 })
@@ -53,12 +63,5 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 ;(async () => {
   Logger.log('background script loaded')
 
-  const state = {
-    settings: defaults,
-    ...(await Storage.get())
-  }
-  await Storage.set(state)
-
-  await updateIcon()
-  sendMessageAll({ id: 'stateChanged' })
+  await initialize()
 })()
