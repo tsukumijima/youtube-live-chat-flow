@@ -9,14 +9,6 @@ import './assets/icon128.png'
 
 const enabled = {}
 
-const initialize = async () => {
-  const state = {
-    settings: defaults,
-    ...(await Storage.get())
-  }
-  await Storage.set(state)
-}
-
 const setIcon = (tabId) => {
   const path = enabled[tabId] ? iconOn : iconOff
   chrome.pageAction.setIcon({ tabId, path })
@@ -32,6 +24,16 @@ chrome.pageAction.onClicked.addListener((tab) => {
   enabled[tab.id] = !enabled[tab.id]
   setIcon(tab.id)
   sendMessage(tab.id)
+})
+
+chrome.runtime.onInstalled.addListener(async (details) => {
+  Logger.log('chrome.runtime.onInstalled', details)
+
+  const state = {
+    settings: defaults,
+    ...(await Storage.get())
+  }
+  await Storage.set(state)
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -60,8 +62,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 })
 
-;(async () => {
+;(() => {
   Logger.log('background script loaded')
-
-  await initialize()
 })()
