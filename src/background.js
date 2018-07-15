@@ -15,7 +15,7 @@ const setIcon = (tabId) => {
 }
 
 const sendMessage = (tabId) => {
-  chrome.tabs.sendMessage(tabId, { id: 'stateChanged', data: { enabled: enabled[tabId] } })
+  chrome.tabs.sendMessage(tabId, { id: 'enabledChanged', data: { enabled: enabled[tabId] } })
 }
 
 chrome.pageAction.onClicked.addListener((tab) => {
@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'stateChanged':
       chrome.tabs.query({}, (tabs) => {
         tabs.forEach((tab) => {
-          sendMessage(tab.id)
+          chrome.tabs.sendMessage(tab.id, { id: 'stateChanged' })
         })
       })
       break
