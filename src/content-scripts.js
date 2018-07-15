@@ -172,11 +172,18 @@ const flow = (node) => {
   }
 
   if (index === -1) {
-    data.push([message])
-    index = data.length - 1
-  } else {
-    data[index].push(message)
+    index = data.length
   }
+
+  if (index > settings.rows - 1 && settings.overflow === 'hidden') {
+    element.remove()
+    return
+  }
+
+  if (!data[index]) {
+    data[index] = []
+  }
+  data[index].push(message)
 
   const top = height * (0.1 + (index % settings.rows))
   const depth = element.classList.contains('has-auth') ? 0 : Math.floor(index / settings.rows)
@@ -199,7 +206,7 @@ const clearMessages = () => {
   })
 }
 
-const setupControlButton = () => {
+const setupControlButton = (enabled) => {
   let button = parent.document.querySelector(`.${className}`)
   if (!button) {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
@@ -231,58 +238,59 @@ const removeControlButton = () => {
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  Logger.log('onMessage', message, sender, sendResponse)
+  Logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
 
   const { id, data } = message
   switch (id) {
-    case 'stateChanged':
+    case 'enabledChanged':
       enabled = data.enabled
-      await loadSettings()
-      setupControlButton()
+      setupControlButton(enabled)
       if (!enabled) {
         clearMessages()
       }
       break
+    case 'stateChanged':
+      await loadSettings()
+      break
   }
 })
 
-;(async () => {
+;(() => {
   Logger.log('content script loaded')
 
-  await loadSettings()
-  setupControlButton()
+  document.addEventListener('DOMContentLoaded', async () => {
+    await loadSettings()
 
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      const nodes = Array.from(mutation.addedNodes)
-      nodes.forEach((node) => {
-        flow(node)
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        const nodes = Array.from(mutation.addedNodes)
+        nodes.forEach((node) => {
+          flow(node)
+        })
       })
     })
+    const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
+    observer.observe(items, { childList: true })
+
+    const callback = (e) => {
+      data.reduce((carry, messages) => [...carry, ...messages.map((message) => message.animation)], [])
+        .forEach((animation) => animation[e.type]())
+    }
+    const video = parent.document.querySelector('.video-stream.html5-main-video')
+    video.addEventListener('pause', callback)
+    video.addEventListener('play', callback)
+
+    chrome.runtime.sendMessage({ id: 'contentLoaded' })
+
+    document.addEventListener('unload', () => {
+      clearMessages()
+
+      video.removeEventListener('pause', callback)
+      video.removeEventListener('play', callback)
+
+      observer.disconnect()
+
+      removeControlButton()
+    })
   })
-  const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
-  observer.observe(items, { childList: true })
-
-  const callback = (e) => {
-    data.reduce((carry, messages) => [...carry, ...messages.map((message) => message.animation)], [])
-      .forEach((animation) => animation[e.type]())
-  }
-  const video = parent.document.querySelector('.video-stream.html5-main-video')
-  video.addEventListener('pause', callback)
-  video.addEventListener('play', callback)
-
-  onunload = () => {
-    Logger.log('content script unloaded')
-
-    clearMessages()
-
-    video.removeEventListener('pause', callback)
-    video.removeEventListener('play', callback)
-
-    observer.disconnect()
-
-    removeControlButton()
-  }
-
-  chrome.runtime.sendMessage({ id: 'contentLoaded' })
 })()

@@ -142,6 +142,20 @@
             />
           </v-flex>
         </v-layout>
+        <v-layout row>
+          <v-flex xs6>
+            <v-subheader class="pl-0">Message Overflow</v-subheader>
+          </v-flex>
+          <v-flex xs6>
+            <v-select
+              v-model="overflow"
+              :items="overflows"
+              item-text="text"
+              item-value="value"
+              return-object
+            />
+          </v-flex>
+        </v-layout>
         <v-btn
           class="mt-3"
           color="primary"
@@ -161,7 +175,11 @@ import { defaults } from '~/store/settings'
 export default {
   data () {
     return {
-      defaults
+      defaults,
+      overflows: [
+        { text: 'Hidden', value: 'hidden' },
+        { text: 'Overlay', value: 'overlay' }
+      ]
     }
   },
   computed: {
@@ -235,6 +253,14 @@ export default {
       },
       set (value) {
         this.$store.commit('settings/setSpeed', { speed: value })
+      }
+    },
+    overflow: {
+      get () {
+        return { value: this.$store.state.settings.overflow }
+      },
+      set (value) {
+        this.$store.commit('settings/setOverflow', { overflow: value.value })
       }
     }
   },
