@@ -12,7 +12,7 @@ export default new Vuex.Store({
       commit('setSettings', { settings: state.settings })
     },
     reset ({ commit }) {
-      commit('setSettings', { settings: defaults })
+      commit('setSettings', { settings: { ...defaults } })
     },
     sendUpdates () {
       chrome.runtime.sendMessage({ id: 'stateChanged' })

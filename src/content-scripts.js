@@ -1,7 +1,10 @@
 import Logger from './utils/logger'
 import Storage from './utils/storage'
 
-const className = 'ylcf-button'
+const ClassName = {
+  button: 'ylcf-button',
+  message: 'ylcf-message'
+}
 
 let enabled = false
 let settings
@@ -54,7 +57,7 @@ const createElement = (node, height) => {
   const authority = hasAuthority(authorType)
 
   const element = parent.document.createElement('div')
-  element.classList.add('ylcf-message')
+  element.classList.add(ClassName.message)
   element.setAttribute('style', `
     align-items: center;
     color: ${color};
@@ -84,8 +87,6 @@ const createElement = (node, height) => {
   }
 
   const span = parent.document.createElement('span')
-  span.setAttribute('style', `
-  `)
   span.innerHTML = html
   Array.from(span.childNodes).map((node) => {
     if (!node.tagName || node.tagName.toLowerCase() !== 'img') {
@@ -201,13 +202,13 @@ const flow = (node) => {
 }
 
 const clearMessages = () => {
-  Array.from(parent.document.querySelectorAll('.ylcf-message')).forEach((element) => {
+  Array.from(parent.document.querySelectorAll(`.${ClassName.message}`)).forEach((element) => {
     element.remove()
   })
 }
 
 const setupControlButton = (enabled) => {
-  let button = parent.document.querySelector(`.${className}`)
+  let button = parent.document.querySelector(`.${ClassName.button}`)
   if (!button) {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
     path.setAttribute('d', 'M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z')
@@ -220,7 +221,7 @@ const setupControlButton = (enabled) => {
     svg.append(path)
 
     button = document.createElement('button')
-    button.classList.add(className)
+    button.classList.add(ClassName.button)
     button.classList.add('ytp-button')
     button.onclick = () => {
       chrome.runtime.sendMessage({ id: 'controlButtonClicked' })
@@ -234,7 +235,7 @@ const setupControlButton = (enabled) => {
 }
 
 const removeControlButton = () => {
-  parent.document.querySelector(`.${className}`).remove()
+  parent.document.querySelector(`.${ClassName.button}`).remove()
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -282,7 +283,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
     chrome.runtime.sendMessage({ id: 'contentLoaded' })
 
-    document.addEventListener('unload', () => {
+    window.addEventListener('unload', () => {
       clearMessages()
 
       video.removeEventListener('pause', callback)
