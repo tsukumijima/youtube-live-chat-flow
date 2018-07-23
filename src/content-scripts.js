@@ -120,6 +120,10 @@ const flow = (node) => {
     return
   }
 
+  if (document.hidden) {
+    return
+  }
+
   const video = parent.document.querySelector('.video-stream.html5-main-video')
   if (video.paused) {
     return
