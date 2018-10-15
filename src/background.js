@@ -15,7 +15,10 @@ const setIcon = (tabId) => {
 }
 
 const sendMessage = (tabId) => {
-  chrome.tabs.sendMessage(tabId, { id: 'enabledChanged', data: { enabled: enabled[tabId] } })
+  chrome.tabs.sendMessage(tabId, {
+    id: 'enabledChanged',
+    data: { enabled: enabled[tabId] }
+  })
 }
 
 chrome.pageAction.onClicked.addListener((tab) => {
@@ -61,7 +64,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break
   }
 })
-
 ;(() => {
   Logger.log('background script loaded')
 })()

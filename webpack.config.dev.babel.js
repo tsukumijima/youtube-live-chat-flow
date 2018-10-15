@@ -3,8 +3,5 @@ import config from './webpack.config.babel'
 
 export default {
   ...config,
-  plugins: [
-    ...config.plugins,
-    new WebpackChromeExtensionReloaderPlugin()
-  ]
+  plugins: [...config.plugins, new WebpackChromeExtensionReloaderPlugin()]
 }

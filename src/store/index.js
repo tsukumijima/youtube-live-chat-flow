@@ -7,19 +7,19 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   actions: {
-    async initialize ({ commit }) {
+    async initialize({ commit }) {
       const state = await storage.get()
       commit('setSettings', { settings: state.settings })
     },
-    reset ({ commit }) {
+    reset({ commit }) {
       commit('setSettings', { settings: { ...defaults } })
     },
-    sendUpdates () {
+    sendUpdates() {
       chrome.runtime.sendMessage({ id: 'stateChanged' })
     }
   },
   mutations: {
-    setSettings (state, { settings }) {
+    setSettings(state, { settings }) {
       state.settings = settings
     }
   },
@@ -28,7 +28,7 @@ export default new Vuex.Store({
   },
   plugins: [
     (store) => {
-      store.subscribe(async (mutation) => {
+      store.subscribe(async () => {
         await storage.set(store.state)
         store.dispatch('sendUpdates')
       })

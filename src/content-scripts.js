@@ -50,7 +50,9 @@ const createElement = (node, height) => {
   const authorType = node.getAttribute('author-type')
   const html = node.querySelector('#message').innerHTML
   const src = node.querySelector('#img').src
-  const purchase = node.querySelector('#purchase-amount') && node.querySelector('#purchase-amount').innerText
+  const purchase =
+    node.querySelector('#purchase-amount') &&
+    node.querySelector('#purchase-amount').innerText
 
   const fontSize = height * 0.8
   const color = purchase ? settings.paidColor : getColor(authorType)
@@ -58,7 +60,9 @@ const createElement = (node, height) => {
 
   const element = parent.document.createElement('div')
   element.classList.add(ClassName.message)
-  element.setAttribute('style', `
+  element.setAttribute(
+    'style',
+    `
     align-items: center;
     color: ${color};
     display: flex;
@@ -71,18 +75,22 @@ const createElement = (node, height) => {
     text-shadow: ${settings.textShadow};
     vertical-align: bottom;
     white-space: nowrap;
-  `)
+  `
+  )
 
   if (authority || purchase) {
     element.classList.add('has-auth')
     const img = parent.document.createElement('img')
     img.src = src
-    img.setAttribute('style', `
+    img.setAttribute(
+      'style',
+      `
       border-radius: ${fontSize}px;
       height: ${fontSize}px;
       margin-right: 0.2em;
       object-fit: cover;
-    `)
+    `
+    )
     element.appendChild(img)
   }
 
@@ -92,10 +100,13 @@ const createElement = (node, height) => {
     if (!node.tagName || node.tagName.toLowerCase() !== 'img') {
       return node
     }
-    node.setAttribute('style', `
+    node.setAttribute(
+      'style',
+      `
       height: ${fontSize}px;
       vertical-align: bottom;
-    `)
+    `
+    )
     return node
   })
   element.appendChild(span)
@@ -103,11 +114,14 @@ const createElement = (node, height) => {
   if (purchase) {
     const textSize = fontSize * 0.5
     const span = parent.document.createElement('span')
-    span.setAttribute('style', `
+    span.setAttribute(
+      'style',
+      `
       font-size: ${textSize}px;
       line-height: initial;
       margin-left: 0.5em;
-    `)
+    `
+    )
     span.innerText = purchase
     element.appendChild(span)
   }
@@ -191,13 +205,19 @@ const flow = (node) => {
   data[index].push(message)
 
   const top = height * (0.1 + (index % settings.rows))
-  const depth = element.classList.contains('has-auth') ? 0 : Math.floor(index / settings.rows)
+  const depth = element.classList.contains('has-auth')
+    ? 0
+    : Math.floor(index / settings.rows)
   const opacity = settings.opacity ** (depth + 1)
 
-  element.setAttribute('style', element.getAttribute('style') + `
+  element.setAttribute(
+    'style',
+    element.getAttribute('style') +
+      `
     top: ${top}px;
     opacity: ${opacity};
-  `)
+  `
+  )
 
   animation.onfinish = () => {
     element.remove()
@@ -206,16 +226,21 @@ const flow = (node) => {
 }
 
 const clearMessages = () => {
-  Array.from(parent.document.querySelectorAll(`.${ClassName.message}`)).forEach((element) => {
-    element.remove()
-  })
+  Array.from(parent.document.querySelectorAll(`.${ClassName.message}`)).forEach(
+    (element) => {
+      element.remove()
+    }
+  )
 }
 
 const setupControlButton = (enabled) => {
   let button = parent.document.querySelector(`.${ClassName.button}`)
   if (!button) {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-    path.setAttribute('d', 'M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z')
+    path.setAttribute(
+      'd',
+      'M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z'
+    )
     path.setAttribute('fill', '#fff')
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
@@ -259,7 +284,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break
   }
 })
-
 ;(() => {
   Logger.log('content script loaded')
 
@@ -274,14 +298,25 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         })
       })
     })
-    const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
+    const items = document.querySelector(
+      '#items.yt-live-chat-item-list-renderer'
+    )
     observer.observe(items, { childList: true })
 
     const callback = (e) => {
-      data.reduce((carry, messages) => [...carry, ...messages.map((message) => message.animation)], [])
+      data
+        .reduce(
+          (carry, messages) => [
+            ...carry,
+            ...messages.map((message) => message.animation)
+          ],
+          []
+        )
         .forEach((animation) => animation[e.type]())
     }
-    const video = parent.document.querySelector('.video-stream.html5-main-video')
+    const video = parent.document.querySelector(
+      '.video-stream.html5-main-video'
+    )
     video.addEventListener('pause', callback)
     video.addEventListener('play', callback)
 
