@@ -173,7 +173,7 @@ import { mapActions } from 'vuex'
 import { defaults } from '~/store/settings'
 
 export default {
-  data () {
+  data() {
     return {
       defaults,
       overflows: [
@@ -184,91 +184,93 @@ export default {
   },
   computed: {
     color: {
-      get () {
+      get() {
         return this.$store.state.settings.color
       },
-      set (value) {
+      set(value) {
         this.$store.commit('settings/setColor', { color: value })
       }
     },
     memberColor: {
-      get () {
+      get() {
         return this.$store.state.settings.memberColor
       },
-      set (value) {
+      set(value) {
         this.$store.commit('settings/setMemberColor', { memberColor: value })
       }
     },
     moderatorColor: {
-      get () {
+      get() {
         return this.$store.state.settings.moderatorColor
       },
-      set (value) {
-        this.$store.commit('settings/setModeratorColor', { moderatorColor: value })
+      set(value) {
+        this.$store.commit('settings/setModeratorColor', {
+          moderatorColor: value
+        })
       }
     },
     ownerColor: {
-      get () {
+      get() {
         return this.$store.state.settings.ownerColor
       },
-      set (value) {
+      set(value) {
         this.$store.commit('settings/setOwnerColor', { ownerColor: value })
       }
     },
     paidColor: {
-      get () {
+      get() {
         return this.$store.state.settings.paidColor
       },
-      set (value) {
+      set(value) {
         this.$store.commit('settings/setPaidColor', { paidColor: value })
       }
     },
     textShadow: {
-      get () {
+      get() {
         return this.$store.state.settings.textShadow
       },
-      set (value) {
+      set(value) {
         this.$store.commit('settings/setTextShadow', { textShadow: value })
       }
     },
     opacity: {
-      get () {
+      get() {
         return this.$store.state.settings.opacity
       },
-      set (value) {
+      set(value) {
         this.$store.commit('settings/setOpacity', { opacity: value })
       }
     },
     rows: {
-      get () {
+      get() {
         return this.$store.state.settings.rows
       },
-      set (value) {
+      set(value) {
         this.$store.commit('settings/setRows', { rows: value })
       }
     },
     speed: {
-      get () {
+      get() {
         return this.$store.state.settings.speed
       },
-      set (value) {
+      set(value) {
         this.$store.commit('settings/setSpeed', { speed: value })
       }
     },
     overflow: {
-      get () {
+      get() {
         return { value: this.$store.state.settings.overflow }
       },
-      set (value) {
+      set(value) {
         this.$store.commit('settings/setOverflow', { overflow: value.value })
       }
     }
   },
-  async mounted () {
+  async mounted() {
     await this.$store.dispatch('initialize')
   },
   methods: {
-    close () {
+    close() {
       window.close()
     },
     ...mapActions({
