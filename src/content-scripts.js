@@ -284,53 +284,48 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break
   }
 })
-;(() => {
-  Logger.log('content script loaded')
 
-  document.addEventListener('DOMContentLoaded', async () => {
-    await loadSettings()
+Logger.log('content script loaded')
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        const nodes = Array.from(mutation.addedNodes)
-        nodes.forEach((node) => {
-          flow(node)
-        })
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadSettings()
+
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      const nodes = Array.from(mutation.addedNodes)
+      nodes.forEach((node) => {
+        flow(node)
       })
     })
-    const items = document.querySelector(
-      '#items.yt-live-chat-item-list-renderer'
-    )
-    observer.observe(items, { childList: true })
-
-    const callback = (e) => {
-      data
-        .reduce(
-          (carry, messages) => [
-            ...carry,
-            ...messages.map((message) => message.animation)
-          ],
-          []
-        )
-        .forEach((animation) => animation[e.type]())
-    }
-    const video = parent.document.querySelector(
-      '.video-stream.html5-main-video'
-    )
-    video.addEventListener('pause', callback)
-    video.addEventListener('play', callback)
-
-    chrome.runtime.sendMessage({ id: 'contentLoaded' })
-
-    window.addEventListener('unload', () => {
-      clearMessages()
-
-      video.removeEventListener('pause', callback)
-      video.removeEventListener('play', callback)
-
-      observer.disconnect()
-
-      removeControlButton()
-    })
   })
-})()
+  const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
+  observer.observe(items, { childList: true })
+
+  const callback = (e) => {
+    data
+      .reduce(
+        (carry, messages) => [
+          ...carry,
+          ...messages.map((message) => message.animation)
+        ],
+        []
+      )
+      .forEach((animation) => animation[e.type]())
+  }
+  const video = parent.document.querySelector('.video-stream.html5-main-video')
+  video.addEventListener('pause', callback)
+  video.addEventListener('play', callback)
+
+  chrome.runtime.sendMessage({ id: 'contentLoaded' })
+
+  window.addEventListener('unload', () => {
+    clearMessages()
+
+    video.removeEventListener('pause', callback)
+    video.removeEventListener('play', callback)
+
+    observer.disconnect()
+
+    removeControlButton()
+  })
+})

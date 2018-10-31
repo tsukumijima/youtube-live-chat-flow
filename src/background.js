@@ -64,6 +64,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break
   }
 })
-;(() => {
-  Logger.log('background script loaded')
-})()
+
+Logger.log('background script loaded')
