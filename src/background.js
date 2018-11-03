@@ -7,27 +7,52 @@ import './assets/icon16.png'
 import './assets/icon48.png'
 import './assets/icon128.png'
 
-const enabled = {}
+let initialDisabled = false
+const disabledTabs = {}
 
 const setIcon = (tabId) => {
-  const path = enabled[tabId] ? iconOn : iconOff
+  const path = disabledTabs[tabId] ? iconOff : iconOn
   chrome.pageAction.setIcon({ tabId, path })
 }
 
-const sendMessage = (tabId) => {
+const contentLoaded = async (tabId) => {
+  const disabled = initialDisabled
+  disabledTabs[tabId] = disabled
+  setIcon(tabId)
   chrome.tabs.sendMessage(tabId, {
-    id: 'enabledChanged',
-    data: { enabled: enabled[tabId] }
+    id: 'disabledChanged',
+    data: { disabled }
+  })
+  const state = await Storage.get()
+  chrome.tabs.sendMessage(tabId, {
+    id: 'stateChanged',
+    data: { state }
+  })
+  chrome.pageAction.show(tabId)
+}
+
+const disabledToggled = (tabId) => {
+  const disabled = !disabledTabs[tabId]
+  initialDisabled = disabled
+  disabledTabs[tabId] = disabled
+  setIcon(tabId)
+  chrome.tabs.sendMessage(tabId, {
+    id: 'disabledChanged',
+    data: { disabled }
   })
 }
 
-chrome.pageAction.onClicked.addListener((tab) => {
-  Logger.log('chrome.pageAction.onClicked', tab)
-
-  enabled[tab.id] = !enabled[tab.id]
-  setIcon(tab.id)
-  sendMessage(tab.id)
-})
+const stateChanged = async () => {
+  const state = await Storage.get()
+  chrome.tabs.query({}, (tabs) => {
+    tabs.forEach((tab) => {
+      chrome.tabs.sendMessage(tab.id, {
+        id: 'stateChanged',
+        data: { state }
+      })
+    })
+  })
+}
 
 chrome.runtime.onInstalled.addListener(async (details) => {
   Logger.log('chrome.runtime.onInstalled', details)
@@ -46,23 +71,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const { tab } = sender
   switch (id) {
     case 'contentLoaded':
-      chrome.pageAction.show(tab.id)
-      setIcon(tab.id)
-      sendMessage(tab.id)
+      contentLoaded(tab.id)
       break
-    case 'controlButtonClicked':
-      enabled[tab.id] = !enabled[tab.id]
-      setIcon(tab.id)
-      sendMessage(tab.id)
+    case 'disabledToggled':
+      disabledToggled(tab.id)
       break
     case 'stateChanged':
-      chrome.tabs.query({}, (tabs) => {
-        tabs.forEach((tab) => {
-          chrome.tabs.sendMessage(tab.id, { id: 'stateChanged' })
-        })
-      })
+      stateChanged()
       break
   }
+})
+
+chrome.pageAction.onClicked.addListener((tab) => {
+  Logger.log('chrome.pageAction.onClicked', tab)
+  disabledToggled(tab.id)
 })
 
 Logger.log('background script loaded')

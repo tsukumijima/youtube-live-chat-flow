@@ -1,18 +1,15 @@
 import Logger from './utils/logger'
-import Storage from './utils/storage'
+
+const id = chrome.runtime.id
 
 const ClassName = {
-  button: 'ylcf-button',
-  message: 'ylcf-message'
+  button: `${id}-button`,
+  message: `${id}-message`
 }
 
-let enabled = false
+let disabled
 let settings
-const data = []
-
-const loadSettings = async () => {
-  settings = (await Storage.get()).settings
-}
+const lines = []
 
 const getColor = (authorType) => {
   switch (authorType) {
@@ -130,7 +127,7 @@ const createElement = (node, height) => {
 }
 
 const flow = (node) => {
-  if (!enabled) {
+  if (disabled) {
     return
   }
 
@@ -162,7 +159,7 @@ const flow = (node) => {
   const now = Date.now()
   const vc = (container.offsetWidth + element.offsetWidth) / millis
 
-  let index = data.findIndex((messages) => {
+  let index = lines.findIndex((messages) => {
     const message = messages[messages.length - 1]
     if (!message) {
       return true
@@ -191,7 +188,7 @@ const flow = (node) => {
   }
 
   if (index === -1) {
-    index = data.length
+    index = lines.length
   }
 
   if (index > settings.rows - 1 && settings.overflow === 'hidden') {
@@ -199,10 +196,10 @@ const flow = (node) => {
     return
   }
 
-  if (!data[index]) {
-    data[index] = []
+  if (!lines[index]) {
+    lines[index] = []
   }
-  data[index].push(message)
+  lines[index].push(message)
 
   const top = height * (0.1 + (index % settings.rows))
   const depth = element.classList.contains('has-auth')
@@ -221,7 +218,7 @@ const flow = (node) => {
 
   animation.onfinish = () => {
     element.remove()
-    data[index].shift()
+    lines[index].shift()
   }
 }
 
@@ -233,38 +230,40 @@ const clearMessages = () => {
   )
 }
 
-const setupControlButton = (enabled) => {
-  let button = parent.document.querySelector(`.${ClassName.button}`)
-  if (!button) {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-    path.setAttribute(
-      'd',
-      'M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z'
-    )
-    path.setAttribute('fill', '#fff')
+const setupControlButton = () => {
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+  path.setAttribute(
+    'd',
+    'M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z'
+  )
+  path.setAttribute('fill', '#fff')
 
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svg.setAttribute('viewBox', '-8 -8 40 40')
-    svg.setAttribute('width', '100%')
-    svg.setAttribute('height', '100%')
-    svg.append(path)
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  svg.setAttribute('viewBox', '-8 -8 40 40')
+  svg.setAttribute('width', '100%')
+  svg.setAttribute('height', '100%')
+  svg.append(path)
 
-    button = document.createElement('button')
-    button.classList.add(ClassName.button)
-    button.classList.add('ytp-button')
-    button.onclick = () => {
-      chrome.runtime.sendMessage({ id: 'controlButtonClicked' })
-    }
-    button.append(svg)
-
-    const controls = parent.document.querySelector('.ytp-right-controls')
-    controls.prepend(button)
+  const button = document.createElement('button')
+  button.classList.add(ClassName.button)
+  button.classList.add('ytp-button')
+  button.onclick = () => {
+    chrome.runtime.sendMessage({ id: 'disabledToggled' })
   }
-  button.setAttribute('aria-pressed', enabled)
+  button.append(svg)
+
+  const controls = parent.document.querySelector('.ytp-right-controls')
+  controls.prepend(button)
+}
+
+const updateControlButton = (disabled) => {
+  const button = parent.document.querySelector(`.${ClassName.button}`)
+  button.setAttribute('aria-pressed', !disabled)
 }
 
 const removeControlButton = () => {
-  parent.document.querySelector(`.${ClassName.button}`).remove()
+  const button = parent.document.querySelector(`.${ClassName.button}`)
+  button.remove()
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -272,15 +271,15 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
   const { id, data } = message
   switch (id) {
-    case 'enabledChanged':
-      enabled = data.enabled
-      setupControlButton(enabled)
-      if (!enabled) {
+    case 'disabledChanged':
+      disabled = data.disabled
+      updateControlButton(disabled)
+      if (disabled) {
         clearMessages()
       }
       break
     case 'stateChanged':
-      await loadSettings()
+      settings = data.state.settings
       break
   }
 })
@@ -288,8 +287,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 Logger.log('content script loaded')
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadSettings()
-
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       const nodes = Array.from(mutation.addedNodes)
@@ -302,7 +299,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   observer.observe(items, { childList: true })
 
   const callback = (e) => {
-    data
+    lines
       .reduce(
         (carry, messages) => [
           ...carry,
@@ -316,8 +313,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   video.addEventListener('pause', callback)
   video.addEventListener('play', callback)
 
-  chrome.runtime.sendMessage({ id: 'contentLoaded' })
-
   window.addEventListener('unload', () => {
     clearMessages()
 
@@ -328,4 +323,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     removeControlButton()
   })
+
+  setupControlButton()
+
+  chrome.runtime.sendMessage({ id: 'contentLoaded' })
 })
