@@ -31,10 +31,7 @@ export default {
       },
       {
         test: /\.css$/,
-        use: [
-          'vue-style-loader',
-          'css-loader'
-        ]
+        use: ['vue-style-loader', 'css-loader']
       },
       {
         test: /\.(jpg|gif|png|svg)$/,
@@ -51,15 +48,19 @@ export default {
         NODE_ENV: JSON.stringify(mode)
       }
     }),
-    new CopyWebpackPlugin([{
-      from: 'manifest.json',
-      transform: function (content, path) {
-        return Buffer.from(JSON.stringify({
-          ...JSON.parse(content.toString()),
-          version: process.env.npm_package_version
-        }))
+    new CopyWebpackPlugin([
+      {
+        from: 'manifest.json',
+        transform: function(content) {
+          return Buffer.from(
+            JSON.stringify({
+              ...JSON.parse(content.toString()),
+              version: process.env.npm_package_version
+            })
+          )
+        }
       }
-    }]),
+    ]),
     new HtmlWebpackPlugin({
       template: './assets/options.html',
       filename: './assets/options.html',

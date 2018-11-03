@@ -1,7 +1,7 @@
 import Package from '~~/package.json'
 
 export default class Logger {
-  static log (msg, ...args) {
+  static log(msg, ...args) {
     if (process.env.NODE_ENV === 'production') {
       return
     }
@@ -14,6 +14,6 @@ export default class Logger {
       message += '%o'
       params.unshift(msg)
     }
-    console.log(message, ...params)
+    console.log(message, ...params) // eslint-disable-line no-console
   }
 }

@@ -5,7 +5,7 @@ import store from './store'
 
 Vue.use(Vuetify)
 
-new Vue({ // eslint-disable-line no-new
+new Vue({
   el: '#app',
   store,
   components: { App },

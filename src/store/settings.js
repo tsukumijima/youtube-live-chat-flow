@@ -17,31 +17,31 @@ export default {
     ...defaults
   },
   mutations: {
-    setColor (state, { color }) {
+    setColor(state, { color }) {
       state.color = color
     },
-    setMemberColor (state, { memberColor }) {
+    setMemberColor(state, { memberColor }) {
       state.memberColor = memberColor
     },
-    setModeratorColor (state, { moderatorColor }) {
+    setModeratorColor(state, { moderatorColor }) {
       state.moderatorColor = moderatorColor
     },
-    setOwnerColor (state, { ownerColor }) {
+    setOwnerColor(state, { ownerColor }) {
       state.ownerColor = ownerColor
     },
-    setTextShadow (state, { textShadow }) {
+    setTextShadow(state, { textShadow }) {
       state.textShadow = textShadow
     },
-    setOpacity (state, { opacity }) {
+    setOpacity(state, { opacity }) {
       state.opacity = opacity
     },
-    setRows (state, { rows }) {
+    setRows(state, { rows }) {
       state.rows = rows
     },
-    setSpeed (state, { speed }) {
+    setSpeed(state, { speed }) {
       state.speed = speed
     },
-    setOverflow (state, { overflow }) {
+    setOverflow(state, { overflow }) {
       state.overflow = overflow
     }
   }

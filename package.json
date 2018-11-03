@@ -1,7 +1,7 @@
 {
   "name": "youtube-live-chat-flow",
   "description": "Message Flow on YouTube Live Chat",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": {
     "name": "fiahfy",
     "email": "d.fiahfy@gmail.com",
@@ -13,30 +13,27 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "babel-core": "^6.25.0",
-    "babel-eslint": "^8.2.3",
-    "babel-loader": "^7.1.1",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.5.1",
-    "babel-preset-stage-0": "^6.24.1",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.0.0",
+    "babel-loader": "^8.0.2",
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^1.0.0",
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "eslint-plugin-vue": "^4.5.0",
-    "file-loader": "^1.1.11",
+    "eslint": "^5.6.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-vue": "^5.0.0-beta.3",
+    "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "prettier": "^1.14.3",
     "vue-loader": "^15.0.5",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.0.1",
     "webpack-chrome-extension-reloader": "^0.8.3",
     "webpack-cli": "^3.0.2"
   },
-  "homepage": "http://fiahfy.blogspot.com/",
   "keywords": [
     "chrome extension",
     "vue",
@@ -52,7 +49,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack -w --config webpack.config.dev.babel.js",
-    "lint": "eslint src --ext .js,.vue",
+    "lint": "eslint -f codeframe --ext .js,.vue --ignore-path .gitignore .",
     "package": "NODE_ENV=production npm run build && mkdir -p dist && zip -r dist/youtube-live-chat-flow.zip app",
     "test": "npm run lint"
   }
