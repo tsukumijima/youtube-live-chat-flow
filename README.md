@@ -6,6 +6,8 @@
 
 ## Features
 * Messages flow over a video.
+* Change message color, size and speed.
+* Show avatar on messages.
 
 
 ## Screenshot
