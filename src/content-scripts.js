@@ -27,11 +27,13 @@ const getColor = (authorType) => {
 const hasAuthority = (authorType) => {
   switch (authorType) {
     case 'owner':
+      return settings.ownerAvatar
     case 'moderator':
+      return settings.moderatorAvatar
     case 'member':
-      return true
+      return settings.memberAvatar
     default:
-      return false
+      return settings.avatar
   }
 }
 
@@ -53,7 +55,7 @@ const createElement = (node, height) => {
 
   const fontSize = height * 0.8
   const color = purchase ? settings.paidColor : getColor(authorType)
-  const authority = hasAuthority(authorType)
+  const authority = purchase ? settings.paidAvatar : hasAuthority(authorType)
 
   const element = parent.document.createElement('div')
   element.classList.add(ClassName.message)
@@ -75,7 +77,7 @@ const createElement = (node, height) => {
   `
   )
 
-  if (authority || purchase) {
+  if (authority) {
     element.classList.add('has-auth')
     const img = parent.document.createElement('img')
     img.src = src
