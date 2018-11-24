@@ -130,7 +130,7 @@
         </v-layout>
         <v-subheader class="pl-0">General</v-subheader>
         <v-layout row align-center>
-          <v-flex xs6> <v-subheader>Text Shadow</v-subheader> </v-flex>
+          <v-flex xs6><v-subheader>Text Shadow</v-subheader></v-flex>
           <v-flex xs6>
             <v-text-field
               v-model="textShadow"
@@ -170,9 +170,7 @@
           </v-flex>
         </v-layout>
         <v-layout row align-center>
-          <v-flex xs6>
-            <v-subheader> Speed<small class="pl-1">(sec)</small> </v-subheader>
-          </v-flex>
+          <v-flex xs6><v-subheader>Speed</v-subheader></v-flex>
           <v-flex xs6>
             <v-text-field
               v-model="speed"
@@ -182,12 +180,13 @@
               min="1"
               max="10"
               step="0.1"
+              suffix="sec"
               hide-details
             />
           </v-flex>
         </v-layout>
         <v-layout row align-center>
-          <v-flex xs6> <v-subheader>Message Overflow</v-subheader> </v-flex>
+          <v-flex xs6><v-subheader>Message Overflow</v-subheader></v-flex>
           <v-flex xs6>
             <v-select
               v-model="overflow"
