@@ -5,127 +5,127 @@
         <v-subheader class="pl-0">Message</v-subheader>
         <v-layout row align-center>
           <v-flex xs6><v-subheader>Guest</v-subheader></v-flex>
-          <v-flex xs5>
-            <v-text-field
-              v-model="color"
-              class="color mt-0 pt-0"
-              type="color"
-              hide-details
-            />
-          </v-flex>
-          <v-flex xs1>
-            <v-tooltip top>
-              <v-btn
-                slot="activator"
-                :color="avatar ? 'primary' : 'grey darken-1'"
-                flat
-                icon
-                @click="avatar = !avatar"
-              >
-                <v-icon>account_circle</v-icon>
-              </v-btn>
-              <span>Show Avatar</span>
-            </v-tooltip>
+          <v-flex xs6>
+            <v-layout class="align-center">
+              <v-tooltip left>
+                <v-btn
+                  slot="activator"
+                  :color="avatar ? 'primary' : 'grey darken-1'"
+                  flat
+                  icon
+                  @click="avatar = !avatar"
+                >
+                  <v-icon>account_circle</v-icon>
+                </v-btn>
+                <span>Show Avatar</span>
+              </v-tooltip>
+              <v-text-field
+                v-model="color"
+                class="color mt-0 pt-0"
+                type="color"
+                hide-details
+              />
+            </v-layout>
           </v-flex>
         </v-layout>
         <v-layout row align-center>
           <v-flex xs6><v-subheader>Member</v-subheader></v-flex>
-          <v-flex xs5>
-            <v-text-field
-              v-model="memberColor"
-              class="color mt-0 pt-0"
-              type="color"
-              hide-details
-            />
-          </v-flex>
-          <v-flex xs1>
-            <v-tooltip top>
-              <v-btn
-                slot="activator"
-                :color="memberAvatar ? 'primary' : 'grey darken-1'"
-                flat
-                icon
-                @click="memberAvatar = !memberAvatar"
-              >
-                <v-icon>account_circle</v-icon>
-              </v-btn>
-              <span>Show Avatar</span>
-            </v-tooltip>
+          <v-flex xs6>
+            <v-layout class="align-center">
+              <v-tooltip left>
+                <v-btn
+                  slot="activator"
+                  :color="memberAvatar ? 'primary' : 'grey darken-1'"
+                  flat
+                  icon
+                  @click="memberAvatar = !memberAvatar"
+                >
+                  <v-icon>account_circle</v-icon>
+                </v-btn>
+                <span>Show Avatar</span>
+              </v-tooltip>
+              <v-text-field
+                v-model="memberColor"
+                class="color mt-0 pt-0"
+                type="color"
+                hide-details
+              />
+            </v-layout>
           </v-flex>
         </v-layout>
         <v-layout row align-center>
           <v-flex xs6><v-subheader>Moderator</v-subheader></v-flex>
-          <v-flex xs5>
-            <v-text-field
-              v-model="moderatorColor"
-              class="color mt-0 pt-0"
-              type="color"
-              hide-details
-            />
-          </v-flex>
-          <v-flex xs1>
-            <v-tooltip top>
-              <v-btn
-                slot="activator"
-                :color="moderatorAvatar ? 'primary' : 'grey darken-1'"
-                flat
-                icon
-                @click="moderatorAvatar = !moderatorAvatar"
-              >
-                <v-icon>account_circle</v-icon>
-              </v-btn>
-              <span>Show Avatar</span>
-            </v-tooltip>
+          <v-flex xs6>
+            <v-layout class="align-center">
+              <v-tooltip left>
+                <v-btn
+                  slot="activator"
+                  :color="moderatorAvatar ? 'primary' : 'grey darken-1'"
+                  flat
+                  icon
+                  @click="moderatorAvatar = !moderatorAvatar"
+                >
+                  <v-icon>account_circle</v-icon>
+                </v-btn>
+                <span>Show Avatar</span>
+              </v-tooltip>
+              <v-text-field
+                v-model="moderatorColor"
+                class="color mt-0 pt-0"
+                type="color"
+                hide-details
+              />
+            </v-layout>
           </v-flex>
         </v-layout>
         <v-layout row align-center>
           <v-flex xs6><v-subheader>Owner</v-subheader></v-flex>
-          <v-flex xs5>
-            <v-text-field
-              v-model="ownerColor"
-              class="color mt-0 pt-0"
-              type="color"
-              hide-details
-            />
-          </v-flex>
-          <v-flex xs1>
-            <v-tooltip top>
-              <v-btn
-                slot="activator"
-                :color="ownerAvatar ? 'primary' : 'grey darken-1'"
-                flat
-                icon
-                @click="ownerAvatar = !ownerAvatar"
-              >
-                <v-icon>account_circle</v-icon>
-              </v-btn>
-              <span>Show Avatar</span>
-            </v-tooltip>
+          <v-flex xs6>
+            <v-layout class="align-center">
+              <v-tooltip left>
+                <v-btn
+                  slot="activator"
+                  :color="ownerAvatar ? 'primary' : 'grey darken-1'"
+                  flat
+                  icon
+                  @click="ownerAvatar = !ownerAvatar"
+                >
+                  <v-icon>account_circle</v-icon>
+                </v-btn>
+                <span>Show Avatar</span>
+              </v-tooltip>
+              <v-text-field
+                v-model="ownerColor"
+                class="color mt-0 pt-0"
+                type="color"
+                hide-details
+              />
+            </v-layout>
           </v-flex>
         </v-layout>
         <v-layout row align-center>
           <v-flex xs6><v-subheader>Super Chat</v-subheader></v-flex>
-          <v-flex xs5>
-            <v-text-field
-              v-model="paidColor"
-              class="color mt-0 pt-0"
-              type="color"
-              hide-details
-            />
-          </v-flex>
-          <v-flex xs1>
-            <v-tooltip top>
-              <v-btn
-                slot="activator"
-                :color="paidAvatar ? 'primary' : 'grey darken-1'"
-                flat
-                icon
-                @click="paidAvatar = !paidAvatar"
-              >
-                <v-icon>account_circle</v-icon>
-              </v-btn>
-              <span>Show Avatar</span>
-            </v-tooltip>
+          <v-flex xs6>
+            <v-layout class="align-center">
+              <v-tooltip left>
+                <v-btn
+                  slot="activator"
+                  :color="paidAvatar ? 'primary' : 'grey darken-1'"
+                  flat
+                  icon
+                  @click="paidAvatar = !paidAvatar"
+                >
+                  <v-icon>account_circle</v-icon>
+                </v-btn>
+                <span>Show Avatar</span>
+              </v-tooltip>
+              <v-text-field
+                v-model="paidColor"
+                class="color mt-0 pt-0"
+                type="color"
+                hide-details
+              />
+            </v-layout>
           </v-flex>
         </v-layout>
         <v-subheader class="pl-0">General</v-subheader>
