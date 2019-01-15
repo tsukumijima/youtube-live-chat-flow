@@ -9,11 +9,11 @@ export const defaults = {
   ownerAvatar: true,
   paidColor: '#ffcc99',
   paidAvatar: true,
-  textShadow: '1px 1px 2px #333',
   opacity: '0.8',
   rows: '12',
   speed: '5',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  extendedStyle: 'text-shadow: 1px 1px 2px #333;'
 }
 
 export default {
@@ -52,9 +52,6 @@ export default {
     setPaidAvatar(state, { paidAvatar }) {
       state.paidAvatar = paidAvatar
     },
-    setTextShadow(state, { textShadow }) {
-      state.textShadow = textShadow
-    },
     setOpacity(state, { opacity }) {
       state.opacity = opacity
     },
@@ -66,6 +63,9 @@ export default {
     },
     setOverflow(state, { overflow }) {
       state.overflow = overflow
+    },
+    setExtendedStyle(state, { extendedStyle }) {
+      state.extendedStyle = extendedStyle
     }
   }
 }

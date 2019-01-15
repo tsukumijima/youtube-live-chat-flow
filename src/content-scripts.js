@@ -71,9 +71,9 @@ const createElement = (node, height) => {
     left: 0;
     line-height: ${fontSize}px;
     position: absolute;
-    text-shadow: ${settings.textShadow};
     vertical-align: bottom;
     white-space: nowrap;
+    ${settings.extendedStyle}
   `
   )
 
