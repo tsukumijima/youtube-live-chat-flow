@@ -50,7 +50,7 @@
     "build": "webpack",
     "dev": "webpack -w --config webpack.config.dev.babel.js",
     "lint": "eslint -f codeframe --ext .js,.vue --ignore-path .gitignore .",
-    "package": "NODE_ENV=production npm run build && mkdir -p dist && zip -r dist/youtube-live-chat-flow.zip app",
+    "package": "NODE_ENV=production npm run build && mkdir -p dist && zip -r dist/archive.zip app",
     "test": "npm run lint"
   }
 }
