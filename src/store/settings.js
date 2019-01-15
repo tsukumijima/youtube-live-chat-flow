@@ -9,6 +9,8 @@ export const defaults = {
   ownerAvatar: true,
   paidColor: '#ffcc99',
   paidAvatar: true,
+  selfColor: '#ff9999',
+  selfAvatar: true,
   opacity: '0.8',
   rows: '12',
   speed: '5',
@@ -51,6 +53,12 @@ export default {
     },
     setPaidAvatar(state, { paidAvatar }) {
       state.paidAvatar = paidAvatar
+    },
+    setSelfColor(state, { selfColor }) {
+      state.selfColor = selfColor
+    },
+    setSelfAvatar(state, { selfAvatar }) {
+      state.selfAvatar = selfAvatar
     },
     setOpacity(state, { opacity }) {
       state.opacity = opacity

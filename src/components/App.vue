@@ -128,6 +128,31 @@
             </v-layout>
           </v-flex>
         </v-layout>
+        <v-layout row align-center>
+          <v-flex xs6><v-subheader>Self</v-subheader></v-flex>
+          <v-flex xs6>
+            <v-layout class="align-center">
+              <v-tooltip left>
+                <v-btn
+                  slot="activator"
+                  :color="selfAvatar ? 'primary' : 'grey darken-1'"
+                  flat
+                  icon
+                  @click="selfAvatar = !selfAvatar"
+                >
+                  <v-icon>account_circle</v-icon>
+                </v-btn>
+                <span>Show Avatar</span>
+              </v-tooltip>
+              <v-text-field
+                v-model="selfColor"
+                class="color mt-0 pt-0"
+                type="color"
+                hide-details
+              />
+            </v-layout>
+          </v-flex>
+        </v-layout>
         <v-text-field
           v-model="opacity"
           :placeholder="defaults.opacity"
@@ -275,6 +300,22 @@ export default {
       },
       set(value) {
         this.$store.commit('settings/setPaidAvatar', { paidAvatar: value })
+      }
+    },
+    selfColor: {
+      get() {
+        return this.$store.state.settings.selfColor
+      },
+      set(value) {
+        this.$store.commit('settings/setSelfColor', { selfColor: value })
+      }
+    },
+    selfAvatar: {
+      get() {
+        return this.$store.state.settings.selfAvatar
+      },
+      set(value) {
+        this.$store.commit('settings/setSelfAvatar', { selfAvatar: value })
       }
     },
     opacity: {

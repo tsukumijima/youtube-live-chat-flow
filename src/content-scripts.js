@@ -11,6 +11,16 @@ let disabled
 let settings
 const lines = []
 
+const isMyName = (authorName) => {
+  const img = parent.document.querySelector(
+    'ytd-comments ytd-comment-simplebox-renderer yt-img-shadow img'
+  )
+  if (!img) {
+    return false
+  }
+  return authorName === img.getAttribute('alt')
+}
+
 const getColor = (authorType) => {
   switch (authorType) {
     case 'owner':
@@ -47,15 +57,25 @@ const createElement = (node, height) => {
   }
 
   const authorType = node.getAttribute('author-type')
+  const authorName = node.querySelector('#author-name').innerText
   const html = node.querySelector('#message').innerHTML
   const src = node.querySelector('#img').src
+  const myself = isMyName(authorName)
   const purchase =
     node.querySelector('#purchase-amount') &&
     node.querySelector('#purchase-amount').innerText
 
   const fontSize = height * 0.8
-  const color = purchase ? settings.paidColor : getColor(authorType)
-  const authority = purchase ? settings.paidAvatar : hasAuthority(authorType)
+  const color = myself
+    ? settings.selfColor
+    : purchase
+    ? settings.paidColor
+    : getColor(authorType, authorName)
+  const authority = myself
+    ? settings.selfAvatar
+    : purchase
+    ? settings.paidAvatar
+    : hasAuthority(authorType, authorName)
 
   const element = parent.document.createElement('div')
   element.classList.add(ClassName.message)
