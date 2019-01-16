@@ -1,4 +1,4 @@
-import Logger from './utils/logger'
+import logger from './utils/logger'
 
 const id = chrome.runtime.id
 
@@ -12,13 +12,17 @@ let settings
 const lines = []
 
 const isMyName = (authorName) => {
+  const span = document.querySelector('#input-container span#author-name')
+  if (span) {
+    return authorName === span.textContent
+  }
   const img = parent.document.querySelector(
     'ytd-comments ytd-comment-simplebox-renderer yt-img-shadow img'
   )
-  if (!img) {
-    return false
+  if (img) {
+    return authorName === img.getAttribute('alt')
   }
-  return authorName === img.getAttribute('alt')
+  return false
 }
 
 const getColor = (authorType) => {
@@ -57,13 +61,13 @@ const createElement = (node, height) => {
   }
 
   const authorType = node.getAttribute('author-type')
-  const authorName = node.querySelector('#author-name').innerText
+  const authorName = node.querySelector('#author-name').textContent
   const html = node.querySelector('#message').innerHTML
   const src = node.querySelector('#img').src
   const myself = isMyName(authorName)
   const purchase =
     node.querySelector('#purchase-amount') &&
-    node.querySelector('#purchase-amount').innerText
+    node.querySelector('#purchase-amount').textContent
 
   const fontSize = height * 0.8
   const color = myself
@@ -141,7 +145,7 @@ const createElement = (node, height) => {
       margin-left: 0.5em;
     `
     )
-    span.innerText = purchase
+    span.textContent = purchase
     element.appendChild(span)
   }
 
@@ -285,7 +289,7 @@ const removeControlButton = () => {
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  Logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
+  logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
 
   const { id, data } = message
   switch (id) {
@@ -302,7 +306,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   }
 })
 
-Logger.log('content script loaded')
+logger.log('content script loaded')
 
 document.addEventListener('DOMContentLoaded', async () => {
   const observer = new MutationObserver((mutations) => {
