@@ -1,19 +1,21 @@
 export const defaults = {
   color: '#ffffff',
   avatar: false,
-  memberColor: '#99ff99',
+  memberColor: '#66ff66',
   memberAvatar: true,
-  moderatorColor: '#9999ff',
+  moderatorColor: '#6666ff',
   moderatorAvatar: true,
-  ownerColor: '#ffff99',
+  ownerColor: '#ffff66',
   ownerAvatar: true,
-  paidColor: '#ffcc99',
+  paidColor: '#ffcc66',
   paidAvatar: true,
-  textShadow: '1px 1px 2px #333',
+  selfColor: '#ff6666',
+  selfAvatar: true,
   opacity: '0.8',
   rows: '12',
   speed: '5',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  extendedStyle: 'text-shadow: 1px 1px 2px #333;'
 }
 
 export default {
@@ -52,8 +54,11 @@ export default {
     setPaidAvatar(state, { paidAvatar }) {
       state.paidAvatar = paidAvatar
     },
-    setTextShadow(state, { textShadow }) {
-      state.textShadow = textShadow
+    setSelfColor(state, { selfColor }) {
+      state.selfColor = selfColor
+    },
+    setSelfAvatar(state, { selfAvatar }) {
+      state.selfAvatar = selfAvatar
     },
     setOpacity(state, { opacity }) {
       state.opacity = opacity
@@ -66,6 +71,9 @@ export default {
     },
     setOverflow(state, { overflow }) {
       state.overflow = overflow
+    },
+    setExtendedStyle(state, { extendedStyle }) {
+      state.extendedStyle = extendedStyle
     }
   }
 }

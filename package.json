@@ -1,7 +1,7 @@
 {
   "name": "youtube-live-chat-flow",
   "description": "Message Flow on YouTube Live Chat",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "author": {
     "name": "fiahfy",
     "email": "d.fiahfy@gmail.com",
@@ -20,18 +20,18 @@
     "@babel/runtime": "^7.0.0",
     "babel-loader": "^8.0.2",
     "copy-webpack-plugin": "^4.5.1",
-    "css-loader": "^1.0.0",
+    "css-loader": "^2.1.0",
     "eslint": "^5.6.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-prettier": "^3.0.0",
-    "eslint-plugin-vue": "^5.0.0-beta.3",
-    "file-loader": "^2.0.0",
+    "eslint-plugin-vue": "^5.0.0-beta.4",
+    "file-loader": "^3.0.1",
     "html-webpack-plugin": "^3.2.0",
     "prettier": "^1.14.3",
     "vue-loader": "^15.0.5",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.0.1",
-    "webpack-chrome-extension-reloader": "^0.8.3",
+    "webpack-chrome-extension-reloader": "^1.1.1",
     "webpack-cli": "^3.0.2"
   },
   "keywords": [
@@ -50,7 +50,7 @@
     "build": "webpack",
     "dev": "webpack -w --config webpack.config.dev.babel.js",
     "lint": "eslint -f codeframe --ext .js,.vue --ignore-path .gitignore .",
-    "package": "NODE_ENV=production npm run build && mkdir -p dist && zip -r dist/youtube-live-chat-flow.zip app",
+    "package": "NODE_ENV=production npm run build && mkdir -p dist && zip -r dist/archive.zip app",
     "test": "npm run lint"
   }
 }

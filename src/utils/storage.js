@@ -1,30 +1,33 @@
-export default class Storage {
-  static get(keys) {
-    return new Promise((resolve) => {
-      chrome.storage.local.get(keys, (result) => {
-        resolve(result)
-      })
+const get = (keys) => {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(keys, (result) => {
+      resolve(result)
     })
-  }
-  static set(items) {
-    return new Promise((resolve) => {
-      chrome.storage.local.set(items, () => {
-        resolve()
-      })
-    })
-  }
-  static remove(keys) {
-    return new Promise((resolve) => {
-      chrome.storage.local.remove(keys, () => {
-        resolve()
-      })
-    })
-  }
-  static clear() {
-    return new Promise((resolve) => {
-      chrome.storage.local.clear(() => {
-        resolve()
-      })
-    })
-  }
+  })
 }
+
+const set = (items) => {
+  return new Promise((resolve) => {
+    chrome.storage.local.set(items, () => {
+      resolve()
+    })
+  })
+}
+
+const remove = (keys) => {
+  return new Promise((resolve) => {
+    chrome.storage.local.remove(keys, () => {
+      resolve()
+    })
+  })
+}
+
+const clear = () => {
+  return new Promise((resolve) => {
+    chrome.storage.local.clear(() => {
+      resolve()
+    })
+  })
+}
+
+export default { get, set, remove, clear }

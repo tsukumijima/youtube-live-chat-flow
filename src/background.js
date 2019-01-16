@@ -1,6 +1,6 @@
 import { defaults } from './store/settings'
-import Logger from './utils/logger'
-import Storage from './utils/storage'
+import logger from './utils/logger'
+import storage from './utils/storage'
 import iconOff from './assets/icon-off48.png'
 import iconOn from './assets/icon-on48.png'
 import './assets/icon16.png'
@@ -23,7 +23,7 @@ const contentLoaded = async (tabId) => {
     id: 'disabledChanged',
     data: { disabled }
   })
-  const state = await Storage.get()
+  const state = await storage.get()
   chrome.tabs.sendMessage(tabId, {
     id: 'stateChanged',
     data: { state }
@@ -43,7 +43,7 @@ const disabledToggled = (tabId) => {
 }
 
 const stateChanged = async () => {
-  const state = await Storage.get()
+  const state = await storage.get()
   chrome.tabs.query({}, (tabs) => {
     tabs.forEach((tab) => {
       chrome.tabs.sendMessage(tab.id, {
@@ -55,17 +55,17 @@ const stateChanged = async () => {
 }
 
 chrome.runtime.onInstalled.addListener(async (details) => {
-  Logger.log('chrome.runtime.onInstalled', details)
+  logger.log('chrome.runtime.onInstalled', details)
 
   const state = {
     settings: defaults,
-    ...(await Storage.get())
+    ...(await storage.get())
   }
-  await Storage.set(state)
+  await storage.set(state)
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  Logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
+  logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
 
   const { id } = message
   const { tab } = sender
@@ -83,8 +83,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 chrome.pageAction.onClicked.addListener((tab) => {
-  Logger.log('chrome.pageAction.onClicked', tab)
+  logger.log('chrome.pageAction.onClicked', tab)
   disabledToggled(tab.id)
 })
 
-Logger.log('background script loaded')
+logger.log('background script loaded')
