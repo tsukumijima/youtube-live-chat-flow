@@ -15,7 +15,7 @@
 
 
 ## Installation
-1. Download `.zip` file from [releases page](https://github.com/fiahfy/youtube-live-chat-flow/releases).
+1. Download `archive.zip` file from [releases page](https://github.com/fiahfy/youtube-live-chat-flow/releases).
 2. Unzip this file.
 3. Open URL `chrome://extensions/` by Google Chrome.
 4. Enable developer mode.
