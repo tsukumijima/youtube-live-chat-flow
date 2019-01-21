@@ -1,5 +1,5 @@
 # YouTube Live Chat Flow
-[![Build Status](https://travis-ci.org/fiahfy/youtube-live-chat-flow.svg?branch=master)](https://travis-ci.org/fiahfy/youtube-live-chat-flow)
+[![Build Status](https://travis-ci.com/fiahfy/youtube-live-chat-flow.svg?branch=master)](https://travis-ci.com/fiahfy/youtube-live-chat-flow)
 
 > Chrome Extension for Messages Flow on YouTube Live Chat.
 
@@ -15,7 +15,7 @@
 
 
 ## Installation
-1. Download `.zip` file from [releases page](https://github.com/fiahfy/youtube-live-chat-flow/releases).
+1. Download `archive.zip` file from [releases page](https://github.com/fiahfy/youtube-live-chat-flow/releases).
 2. Unzip this file.
 3. Open URL `chrome://extensions/` by Google Chrome.
 4. Enable developer mode.
