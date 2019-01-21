@@ -16,11 +16,15 @@ const isMyName = (authorName) => {
   if (span) {
     return authorName === span.textContent
   }
-  const img = parent.document.querySelector(
-    'ytd-comments ytd-comment-simplebox-renderer yt-img-shadow img'
+  const button = parent.document.querySelector(
+    '.html5-video-player .ytp-chrome-top-buttons .ytp-watch-later-button'
   )
-  if (img) {
-    return authorName === img.getAttribute('alt')
+  if (button) {
+    // TODO: ja_JP only
+    return (
+      authorName ===
+      button.getAttribute('title').replace(' として後で再生します', '')
+    )
   }
   return false
 }
