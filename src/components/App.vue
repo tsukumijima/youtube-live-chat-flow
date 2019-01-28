@@ -180,14 +180,7 @@
           step="0.1"
           suffix="sec"
         />
-        <v-select
-          v-model="overflow"
-          :items="overflows"
-          label="Overflow"
-          item-text="text"
-          item-value="value"
-          return-object
-        />
+        <v-select v-model="overflow" :items="overflows" label="Overflow" />
         <v-textarea
           v-model="extendedStyle"
           :placeholder="defaults.extendedStyle"
@@ -344,10 +337,10 @@ export default {
     },
     overflow: {
       get() {
-        return { value: this.$store.state.settings.overflow }
+        return this.$store.state.settings.overflow
       },
       set(value) {
-        this.$store.commit('settings/setOverflow', { overflow: value.value })
+        this.$store.commit('settings/setOverflow', { overflow: value })
       }
     },
     extendedStyle: {
@@ -361,7 +354,7 @@ export default {
       }
     }
   },
-  async mounted() {
+  async created() {
     await this.$store.dispatch('initialize')
   },
   methods: {
