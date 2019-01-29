@@ -157,7 +157,7 @@ const createElement = (node, height) => {
 }
 
 const flow = (node) => {
-  if (disabled || !settings || document.hidden) {
+  if (disabled || !settings) {
     return
   }
 
