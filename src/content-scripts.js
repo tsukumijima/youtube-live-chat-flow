@@ -1,5 +1,5 @@
 import logger from './utils/logger'
-import className from './utils/class-name'
+import className from './constants/class-name'
 
 let disabled = false
 let settings = null
