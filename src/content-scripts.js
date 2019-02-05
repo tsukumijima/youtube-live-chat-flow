@@ -320,8 +320,8 @@ const addControlButton = () => {
   const button = document.createElement('button')
   button.classList.add(className.button)
   button.classList.add('ytp-button')
-  button.style.transition = 'opacity 1s'
   button.style.opacity = 0
+  button.style.transition = 'opacity 1s'
   button.onclick = () => {
     chrome.runtime.sendMessage({ id: 'disabledToggled' })
   }
