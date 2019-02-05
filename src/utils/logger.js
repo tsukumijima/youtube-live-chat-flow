@@ -1,11 +1,11 @@
-import Package from '~~/package.json'
+import pkg from '~~/package.json'
 
 const log = (msg, ...args) => {
   if (process.env.NODE_ENV === 'production') {
     return
   }
 
-  let message = `[${Package.name}] `
+  let message = `[${pkg.name}] `
   let params = args
   if (typeof msg === 'string') {
     message += msg

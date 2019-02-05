@@ -18,23 +18,26 @@ const setIcon = (tabId) => {
 const contentLoaded = async (tabId) => {
   const disabled = initialDisabled
   disabledTabs[tabId] = disabled
+
   setIcon(tabId)
+  chrome.pageAction.show(tabId)
   chrome.tabs.sendMessage(tabId, {
     id: 'disabledChanged',
     data: { disabled }
   })
+
   const state = await storage.get()
   chrome.tabs.sendMessage(tabId, {
     id: 'stateChanged',
     data: { state }
   })
-  chrome.pageAction.show(tabId)
 }
 
 const disabledToggled = (tabId) => {
   const disabled = !disabledTabs[tabId]
   initialDisabled = disabled
   disabledTabs[tabId] = disabled
+
   setIcon(tabId)
   chrome.tabs.sendMessage(tabId, {
     id: 'disabledChanged',
@@ -57,11 +60,12 @@ const stateChanged = async () => {
 chrome.runtime.onInstalled.addListener(async (details) => {
   logger.log('chrome.runtime.onInstalled', details)
 
-  const state = {
+  const state = await storage.get()
+  const newState = {
     settings: defaults,
-    ...(await storage.get())
+    ...state
   }
-  await storage.set(state)
+  await storage.set(newState)
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -84,6 +88,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 chrome.pageAction.onClicked.addListener((tab) => {
   logger.log('chrome.pageAction.onClicked', tab)
+
   disabledToggled(tab.id)
 })
 

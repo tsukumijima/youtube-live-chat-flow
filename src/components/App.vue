@@ -358,9 +358,6 @@ export default {
     await this.$store.dispatch('initialize')
   },
   methods: {
-    close() {
-      window.close()
-    },
     ...mapActions({
       reset: 'reset'
     })

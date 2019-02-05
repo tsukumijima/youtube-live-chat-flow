@@ -1,14 +1,8 @@
 import logger from './utils/logger'
+import className from './utils/class-name'
 
-const id = chrome.runtime.id
-
-const ClassName = {
-  button: `${id}-button`,
-  message: `${id}-message`
-}
-
-let disabled
-let settings
+let disabled = false
+let settings = null
 const lines = []
 
 const isMyName = (authorName) => {
@@ -64,14 +58,21 @@ const createElement = (node, height) => {
     return
   }
 
+  const html =
+    node.querySelector('#message') && node.querySelector('#message').innerHTML
+  if (!html) {
+    return
+  }
+
+  const avatarUrl = node.querySelector('#img') && node.querySelector('#img').src
   const authorType = node.getAttribute('author-type')
-  const authorName = node.querySelector('#author-name').textContent
-  const html = node.querySelector('#message').innerHTML
-  const src = node.querySelector('#img').src
-  const myself = isMyName(authorName)
+  const authorName =
+    node.querySelector('#author-name') &&
+    node.querySelector('#author-name').textContent
   const purchase =
     node.querySelector('#purchase-amount') &&
     node.querySelector('#purchase-amount').textContent
+  const myself = isMyName(authorName)
 
   const fontSize = height * 0.8
   const color = myself
@@ -86,7 +87,7 @@ const createElement = (node, height) => {
     : hasAuthority(authorType, authorName)
 
   const element = parent.document.createElement('div')
-  element.classList.add(ClassName.message)
+  element.classList.add(className.message)
   element.setAttribute(
     'style',
     `
@@ -105,10 +106,10 @@ const createElement = (node, height) => {
   `
   )
 
-  if (authority) {
+  if (authority && avatarUrl) {
     element.classList.add('has-auth')
     const img = parent.document.createElement('img')
-    img.src = src
+    img.src = avatarUrl
     img.setAttribute(
       'style',
       `
@@ -162,7 +163,7 @@ const flow = (node) => {
   }
 
   const video = parent.document.querySelector('.video-stream.html5-main-video')
-  if (video.paused) {
+  if (video && video.paused) {
     return
   }
 
@@ -173,6 +174,9 @@ const flow = (node) => {
   }
 
   const container = parent.document.querySelector('.html5-video-container')
+  if (!container) {
+    return
+  }
   container.appendChild(element)
 
   const millis = settings.speed * 1000
@@ -248,15 +252,58 @@ const flow = (node) => {
   }
 }
 
+const observeChat = () => {
+  const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
+  if (!items) {
+    return
+  }
+
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      const nodes = Array.from(mutation.addedNodes)
+      nodes.forEach((node) => {
+        flow(node)
+      })
+    })
+  })
+  observer.observe(items, { childList: true })
+}
+
+const addVideoEventListener = () => {
+  const video = parent.document.querySelector('.video-stream.html5-main-video')
+  if (!video) {
+    return
+  }
+
+  const callback = (e) => {
+    lines
+      .reduce(
+        (carry, messages) => [
+          ...carry,
+          ...messages.map((message) => message.animation)
+        ],
+        []
+      )
+      .forEach((animation) => animation[e.type]())
+  }
+  video.addEventListener('pause', callback)
+  video.addEventListener('play', callback)
+}
+
 const clearMessages = () => {
-  Array.from(parent.document.querySelectorAll(`.${ClassName.message}`)).forEach(
+  Array.from(parent.document.querySelectorAll(`.${className.message}`)).forEach(
     (element) => {
       element.remove()
     }
   )
 }
 
-const setupControlButton = () => {
+const addControlButton = () => {
+  const controls = parent.document.querySelector('.ytp-right-controls')
+  if (!controls) {
+    return
+  }
+
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
   path.setAttribute(
     'd',
@@ -271,25 +318,31 @@ const setupControlButton = () => {
   svg.append(path)
 
   const button = document.createElement('button')
-  button.classList.add(ClassName.button)
+  button.classList.add(className.button)
   button.classList.add('ytp-button')
+  button.style.transition = 'opacity 1s'
+  button.style.opacity = 0
   button.onclick = () => {
     chrome.runtime.sendMessage({ id: 'disabledToggled' })
   }
   button.append(svg)
 
-  const controls = parent.document.querySelector('.ytp-right-controls')
   controls.prepend(button)
+
+  // fade in...
+  setTimeout(() => {
+    button.style.opacity = 1
+  }, 0)
 }
 
 const updateControlButton = (disabled) => {
-  const button = parent.document.querySelector(`.${ClassName.button}`)
-  button.setAttribute('aria-pressed', !disabled)
+  const button = parent.document.querySelector(`.${className.button}`)
+  button && button.setAttribute('aria-pressed', !disabled)
 }
 
 const removeControlButton = () => {
-  const button = parent.document.querySelector(`.${ClassName.button}`)
-  button.remove()
+  const button = parent.document.querySelector(`.${className.button}`)
+  button && button.remove()
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -310,47 +363,17 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   }
 })
 
-logger.log('content script loaded')
-
 document.addEventListener('DOMContentLoaded', async () => {
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      const nodes = Array.from(mutation.addedNodes)
-      nodes.forEach((node) => {
-        flow(node)
-      })
-    })
-  })
-  const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
-  observer.observe(items, { childList: true })
+  chrome.runtime.sendMessage({ id: 'contentLoaded' })
 
-  const callback = (e) => {
-    lines
-      .reduce(
-        (carry, messages) => [
-          ...carry,
-          ...messages.map((message) => message.animation)
-        ],
-        []
-      )
-      .forEach((animation) => animation[e.type]())
-  }
-  const video = parent.document.querySelector('.video-stream.html5-main-video')
-  video.addEventListener('pause', callback)
-  video.addEventListener('play', callback)
+  observeChat()
+  addVideoEventListener()
+  addControlButton()
 
   window.addEventListener('unload', () => {
     clearMessages()
-
-    video.removeEventListener('pause', callback)
-    video.removeEventListener('play', callback)
-
-    observer.disconnect()
-
     removeControlButton()
   })
-
-  setupControlButton()
-
-  chrome.runtime.sendMessage({ id: 'contentLoaded' })
 })
+
+logger.log('content script loaded')
