@@ -10,7 +10,7 @@
 * Show avatar on messages.
 
 
-## Screenshot
+## Screenshots
 ![screenshot](./build/screenshots/screenshot.png?raw=true)
 
 
