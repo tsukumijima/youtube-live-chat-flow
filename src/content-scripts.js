@@ -10,6 +10,13 @@ const isMyName = (authorName) => {
   if (span) {
     return authorName === span.textContent
   }
+  const movedSpan = parent.document.querySelector(
+    '#input-container span#author-name'
+  )
+  // Fix for youtube-live-chat-form-mover
+  if (movedSpan) {
+    return authorName === movedSpan.textContent
+  }
   const button = parent.document.querySelector(
     '.html5-video-player .ytp-chrome-top-buttons .ytp-watch-later-button'
   )
