@@ -1,3 +1,4 @@
+import stylesheet from './constants/stylesheet'
 import { defaults } from './store/settings'
 import logger from './utils/logger'
 import storage from './utils/storage'
@@ -15,22 +16,21 @@ const setIcon = (tabId) => {
   chrome.pageAction.setIcon({ tabId, path })
 }
 
-const contentLoaded = async (tabId) => {
+const contentLoaded = async (tabId, cssInjected, sendResponse) => {
   const disabled = initialDisabled
   disabledTabs[tabId] = disabled
 
   setIcon(tabId)
   chrome.pageAction.show(tabId)
-  chrome.tabs.sendMessage(tabId, {
-    id: 'disabledChanged',
-    data: { disabled }
-  })
 
   const state = await storage.get()
-  chrome.tabs.sendMessage(tabId, {
-    id: 'stateChanged',
-    data: { state }
-  })
+  if (state.settings.bottomControllerEnabled && !cssInjected) {
+    logger.log('insert css')
+    chrome.tabs.insertCSS(tabId, { code: stylesheet })
+    chrome.tabs.sendMessage(tabId, { id: 'cssInjected' })
+  }
+
+  sendResponse({ disabled, state })
 }
 
 const disabledToggled = (tabId) => {
@@ -71,12 +71,12 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
 
-  const { id } = message
+  const { id, data } = message
   const { tab } = sender
   switch (id) {
     case 'contentLoaded':
-      contentLoaded(tab.id)
-      break
+      contentLoaded(tab.id, data.cssInjected, sendResponse)
+      return true
     case 'disabledToggled':
       disabledToggled(tab.id)
       break

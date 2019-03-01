@@ -1,7 +1,7 @@
 {
   "name": "youtube-live-chat-flow",
   "description": "Message Flow on YouTube Live Chat",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "author": {
     "name": "fiahfy",
     "email": "d.fiahfy@gmail.com",
@@ -19,7 +19,7 @@
     "@babel/register": "^7.0.0",
     "@babel/runtime": "^7.0.0",
     "babel-loader": "^8.0.2",
-    "copy-webpack-plugin": "^4.5.1",
+    "copy-webpack-plugin": "^5.0.0",
     "css-loader": "^2.1.0",
     "eslint": "^5.6.0",
     "eslint-config-prettier": "^4.0.0",

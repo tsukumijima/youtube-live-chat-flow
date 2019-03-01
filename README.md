@@ -8,10 +8,12 @@
 * Messages flow over a video.
 * Change message color, size and speed.
 * Show avatar on messages.
+* Move chat form to bottom controls on video.
 
 
 ## Screenshots
-![screenshot](./build/screenshots/screenshot.png?raw=true)
+![screenshot](./build/screenshots/screenshot1.png?raw=true)
+![screenshot](./build/screenshots/screenshot2.png?raw=true)
 
 
 ## Installation
