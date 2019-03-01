@@ -188,6 +188,10 @@
           rows="1"
           auto-grow
         />
+        <v-switch
+          v-model="bottomControllerEnabled"
+          label="Enable Bottom Controller"
+        />
         <v-btn class="mt-3" color="primary" flat block @click="reset">
           Reset
         </v-btn>
@@ -350,6 +354,16 @@ export default {
       set(value) {
         this.$store.commit('settings/setExtendedStyle', {
           extendedStyle: value
+        })
+      }
+    },
+    bottomControllerEnabled: {
+      get() {
+        return this.$store.state.settings.bottomControllerEnabled
+      },
+      set(value) {
+        this.$store.commit('settings/setBottomControllerEnabled', {
+          bottomControllerEnabled: value
         })
       }
     }

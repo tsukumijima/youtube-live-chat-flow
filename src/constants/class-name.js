@@ -1,11 +1,10 @@
 const id = chrome.runtime.id
 
 export default {
-  button: `${id}-button`,
-  message: `${id}-message`,
-
   injected: `${id}-injected`,
+  message: `${id}-message`,
+  controlButton: `${id}-control-button`,
+  controller: `${id}-controller`,
   focused: `${id}-focused`,
-  controls: `${id}-controls`,
-  smallControls: `${id}-small-controls`
+  small: `${id}-small`
 }

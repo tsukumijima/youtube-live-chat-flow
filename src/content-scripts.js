@@ -307,8 +307,10 @@ const clearMessages = () => {
   )
 }
 
-const addControlButton = () => {
-  const controls = parent.document.querySelector('.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls')
+const addControlButton = (disabled) => {
+  const controls = parent.document.querySelector(
+    '.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls'
+  )
   if (!controls) {
     return
   }
@@ -327,7 +329,7 @@ const addControlButton = () => {
   svg.append(path)
 
   const button = document.createElement('button')
-  button.classList.add(className.button)
+  button.classList.add(className.controlButton)
   button.classList.add('ytp-button')
   button.style.opacity = 0
   button.style.transition = 'opacity 1s'
@@ -338,6 +340,8 @@ const addControlButton = () => {
 
   controls.prepend(button)
 
+  updateControlButton(disabled)
+
   // fade in...
   setTimeout(() => {
     button.style.opacity = 1
@@ -345,12 +349,12 @@ const addControlButton = () => {
 }
 
 const updateControlButton = (disabled) => {
-  const button = parent.document.querySelector(`.${className.button}`)
+  const button = parent.document.querySelector(`.${className.controlButton}`)
   button && button.setAttribute('aria-pressed', !disabled)
 }
 
 const removeControlButton = () => {
-  const button = parent.document.querySelector(`.${className.button}`)
+  const button = parent.document.querySelector(`.${className.controlButton}`)
   button && button.remove()
 }
 
@@ -392,7 +396,7 @@ const addInputControl = () => {
         sendButton && sendButton.click()
         break
       }
-      case 17:
+      case 27:
         e.target.blur()
         break
     }
@@ -428,7 +432,7 @@ const addInputControl = () => {
 
   // add controls
   const controls = document.createElement('div')
-  controls.classList.add(className.controls)
+  controls.classList.add(className.controller)
   controls.style.opacity = 0
   controls.style.transition = 'opacity 1s'
   controls.style.left = `${leftControls.offsetWidth}px`
@@ -451,9 +455,9 @@ const addInputControl = () => {
   const controlsObserver = new ResizeObserver((entries) => {
     const [entry] = entries
     if (entry.contentRect.width < 512) {
-      controls.classList.add(className.smallControls)
+      controls.classList.add(className.small)
     } else {
-      controls.classList.remove(className.smallControls)
+      controls.classList.remove(className.small)
     }
   })
   controlsObserver.observe(controls)
@@ -465,7 +469,7 @@ const addInputControl = () => {
 }
 
 const removeInputControl = () => {
-  const button = parent.document.querySelector(`.${className.controls}`)
+  const button = parent.document.querySelector(`.${className.controller}`)
   button && button.remove()
 }
 
@@ -491,13 +495,21 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const cssInjected = parent.document.body.classList.contains(className.injected)
-  chrome.runtime.sendMessage({ id: 'contentLoaded', data: { cssInjected } })
+  const cssInjected = parent.document.body.classList.contains(
+    className.injected
+  )
+  chrome.runtime.sendMessage(
+    { id: 'contentLoaded', data: { cssInjected } },
+    (data) => {
+      disabled = data.disabled
+      settings = data.state.settings
 
-  observeChat()
-  addVideoEventListener()
-  addControlButton()
-  addInputControl()
+      observeChat()
+      addVideoEventListener()
+      addControlButton(disabled)
+      addInputControl()
+    }
+  )
 
   window.addEventListener('unload', () => {
     clearMessages()
