@@ -8,6 +8,7 @@
 * Messages flow over a video.
 * Change message color, size and speed.
 * Show avatar on messages.
+* Move chat form to bottom controls on video.
 
 
 ## Screenshots

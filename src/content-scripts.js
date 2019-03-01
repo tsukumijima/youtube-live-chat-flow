@@ -6,22 +6,24 @@ let settings = null
 const lines = []
 
 const isMyName = (authorName) => {
+  // if input control exists
   const span = document.querySelector('#input-container span#author-name')
   if (span) {
     return authorName === span.textContent
   }
+  // if input control is moved
   const movedSpan = parent.document.querySelector(
     '#input-container span#author-name'
   )
-  // Fix for youtube-live-chat-form-mover
   if (movedSpan) {
     return authorName === movedSpan.textContent
   }
+  // otherwise
   const button = parent.document.querySelector(
     '.html5-video-player .ytp-chrome-top-buttons .ytp-watch-later-button'
   )
   if (button) {
-    // TODO: ja_JP only
+    // TODO: lang: ja only
     return (
       authorName ===
       button.getAttribute('title').replace(' として後で再生します', '')
@@ -306,7 +308,7 @@ const clearMessages = () => {
 }
 
 const addControlButton = () => {
-  const controls = parent.document.querySelector('.ytp-right-controls')
+  const controls = parent.document.querySelector('.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls')
   if (!controls) {
     return
   }
@@ -352,11 +354,129 @@ const removeControlButton = () => {
   button && button.remove()
 }
 
+const addInputControl = () => {
+  if (!settings.bottomControllerEnabled) {
+    return
+  }
+
+  const leftControls = parent.document.querySelector(
+    '.ytp-chrome-bottom .ytp-chrome-controls .ytp-left-controls'
+  )
+  const rightControls = parent.document.querySelector(
+    '.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls'
+  )
+  if (!leftControls || !rightControls) {
+    return
+  }
+
+  const top = document.querySelector('#action-panel #container #top')
+  const buttons = document.querySelector(
+    '#action-panel #container #buttons.yt-live-chat-message-input-renderer'
+  )
+  if (!top || !buttons) {
+    return
+  }
+
+  const input = top.querySelector('div#input')
+  const messageButtons = buttons.querySelector('#message-buttons')
+  if (!input || !messageButtons) {
+    return
+  }
+  input.addEventListener('keydown', (e) => {
+    e.stopPropagation()
+    switch (e.keyCode) {
+      case 13: {
+        const sendButton = messageButtons.querySelector(
+          '#send-button button#button'
+        )
+        sendButton && sendButton.click()
+        break
+      }
+      case 17:
+        e.target.blur()
+        break
+    }
+  })
+  input.addEventListener('focus', () => {
+    parent.document.body.classList.add(className.focused)
+  })
+  input.addEventListener('blur', () => {
+    parent.document.body.classList.remove(className.focused)
+  })
+
+  // add description
+  const description = document.createElement('button')
+  description.textContent = 'Chat Form is Moved to Bottom Controls'
+  description.style.textAlign = 'center'
+  description.style.fontSize = 'smaller'
+  description.style.flex = 1
+  description.style.color = 'var(--yt-spec-text-secondary)'
+  description.style.webkitAppearance = 'none'
+  description.style.background = 'none'
+  description.style.border = 'none'
+  description.style.outline = 'none'
+  description.style.cursor = 'pointer'
+  description.addEventListener('click', () => {
+    input.focus()
+  })
+  const wrapper = document.createElement('div')
+  wrapper.style.flex = 1
+  wrapper.style.display = 'flex'
+  wrapper.style.alignItems = 'center'
+  wrapper.append(description)
+  buttons.append(wrapper)
+
+  // add controls
+  const controls = document.createElement('div')
+  controls.classList.add(className.controls)
+  controls.style.opacity = 0
+  controls.style.transition = 'opacity 1s'
+  controls.style.left = `${leftControls.offsetWidth}px`
+  controls.style.right = `${rightControls.offsetWidth}px`
+  controls.append(top)
+  controls.append(messageButtons)
+  rightControls.parentNode.insertBefore(controls, rightControls)
+
+  // setup resize observers
+  const leftControlsObserver = new ResizeObserver((entries) => {
+    const [entry] = entries
+    controls.style.left = `${entry.contentRect.width}px`
+  })
+  leftControlsObserver.observe(leftControls)
+  const rightControlsObserver = new ResizeObserver((entries) => {
+    const [entry] = entries
+    controls.style.right = `${entry.contentRect.width}px`
+  })
+  rightControlsObserver.observe(rightControls)
+  const controlsObserver = new ResizeObserver((entries) => {
+    const [entry] = entries
+    if (entry.contentRect.width < 512) {
+      controls.classList.add(className.smallControls)
+    } else {
+      controls.classList.remove(className.smallControls)
+    }
+  })
+  controlsObserver.observe(controls)
+
+  // fade in...
+  setTimeout(() => {
+    controls.style.opacity = 1
+  }, 0)
+}
+
+const removeInputControl = () => {
+  const button = parent.document.querySelector(`.${className.controls}`)
+  button && button.remove()
+}
+
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
 
   const { id, data } = message
   switch (id) {
+    case 'cssInjected':
+      parent.document.body.classList.add(className.injected)
+      break
     case 'disabledChanged':
       disabled = data.disabled
       updateControlButton(disabled)
@@ -371,15 +491,18 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-  chrome.runtime.sendMessage({ id: 'contentLoaded' })
+  const cssInjected = parent.document.body.classList.contains(className.injected)
+  chrome.runtime.sendMessage({ id: 'contentLoaded', data: { cssInjected } })
 
   observeChat()
   addVideoEventListener()
   addControlButton()
+  addInputControl()
 
   window.addEventListener('unload', () => {
     clearMessages()
     removeControlButton()
+    removeInputControl()
   })
 })
 

@@ -15,7 +15,8 @@ export const defaults = {
   rows: '12',
   speed: '5',
   overflow: 'hidden',
-  extendedStyle: 'text-shadow: 1px 1px 2px #333;'
+  extendedStyle: 'text-shadow: 1px 1px 2px #333;',
+  bottomControllerEnabled: false
 }
 
 export default {
@@ -74,6 +75,9 @@ export default {
     },
     setExtendedStyle(state, { extendedStyle }) {
       state.extendedStyle = extendedStyle
+    },
+    setBottomControllerEnabled(state, { bottomControllerEnabled }) {
+      state.bottomControllerEnabled = bottomControllerEnabled
     }
   }
 }
