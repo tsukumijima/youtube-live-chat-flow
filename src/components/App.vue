@@ -180,20 +180,17 @@
           step="0.1"
           suffix="sec"
         />
-        <v-select
-          v-model="overflow"
-          :items="overflows"
-          label="Overflow"
-          item-text="text"
-          item-value="value"
-          return-object
-        />
+        <v-select v-model="overflow" :items="overflows" label="Overflow" />
         <v-textarea
           v-model="extendedStyle"
           :placeholder="defaults.extendedStyle"
           label="Extended Style"
           rows="1"
           auto-grow
+        />
+        <v-switch
+          v-model="bottomControllerEnabled"
+          label="Enable Bottom Controller"
         />
         <v-btn class="mt-3" color="primary" flat block @click="reset">
           Reset
@@ -344,10 +341,10 @@ export default {
     },
     overflow: {
       get() {
-        return { value: this.$store.state.settings.overflow }
+        return this.$store.state.settings.overflow
       },
       set(value) {
-        this.$store.commit('settings/setOverflow', { overflow: value.value })
+        this.$store.commit('settings/setOverflow', { overflow: value })
       }
     },
     extendedStyle: {
@@ -359,15 +356,22 @@ export default {
           extendedStyle: value
         })
       }
+    },
+    bottomControllerEnabled: {
+      get() {
+        return this.$store.state.settings.bottomControllerEnabled
+      },
+      set(value) {
+        this.$store.commit('settings/setBottomControllerEnabled', {
+          bottomControllerEnabled: value
+        })
+      }
     }
   },
-  async mounted() {
+  async created() {
     await this.$store.dispatch('initialize')
   },
   methods: {
-    close() {
-      window.close()
-    },
     ...mapActions({
       reset: 'reset'
     })

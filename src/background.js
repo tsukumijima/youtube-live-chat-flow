@@ -1,3 +1,4 @@
+import stylesheet from './constants/stylesheet'
 import { defaults } from './store/settings'
 import logger from './utils/logger'
 import storage from './utils/storage'
@@ -15,26 +16,28 @@ const setIcon = (tabId) => {
   chrome.pageAction.setIcon({ tabId, path })
 }
 
-const contentLoaded = async (tabId) => {
+const contentLoaded = async (tabId, cssInjected, sendResponse) => {
   const disabled = initialDisabled
   disabledTabs[tabId] = disabled
+
   setIcon(tabId)
-  chrome.tabs.sendMessage(tabId, {
-    id: 'disabledChanged',
-    data: { disabled }
-  })
-  const state = await storage.get()
-  chrome.tabs.sendMessage(tabId, {
-    id: 'stateChanged',
-    data: { state }
-  })
   chrome.pageAction.show(tabId)
+
+  const state = await storage.get()
+  if (state.settings.bottomControllerEnabled && !cssInjected) {
+    logger.log('insert css')
+    chrome.tabs.insertCSS(tabId, { code: stylesheet })
+    chrome.tabs.sendMessage(tabId, { id: 'cssInjected' })
+  }
+
+  sendResponse({ disabled, state })
 }
 
 const disabledToggled = (tabId) => {
   const disabled = !disabledTabs[tabId]
   initialDisabled = disabled
   disabledTabs[tabId] = disabled
+
   setIcon(tabId)
   chrome.tabs.sendMessage(tabId, {
     id: 'disabledChanged',
@@ -57,22 +60,23 @@ const stateChanged = async () => {
 chrome.runtime.onInstalled.addListener(async (details) => {
   logger.log('chrome.runtime.onInstalled', details)
 
-  const state = {
+  const state = await storage.get()
+  const newState = {
     settings: defaults,
-    ...(await storage.get())
+    ...state
   }
-  await storage.set(state)
+  await storage.set(newState)
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
 
-  const { id } = message
+  const { id, data } = message
   const { tab } = sender
   switch (id) {
     case 'contentLoaded':
-      contentLoaded(tab.id)
-      break
+      contentLoaded(tab.id, data.cssInjected, sendResponse)
+      return true
     case 'disabledToggled':
       disabledToggled(tab.id)
       break
@@ -84,6 +88,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 chrome.pageAction.onClicked.addListener((tab) => {
   logger.log('chrome.pageAction.onClicked', tab)
+
   disabledToggled(tab.id)
 })
 

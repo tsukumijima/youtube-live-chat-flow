@@ -13,9 +13,6 @@ export default new Vuex.Store({
     },
     reset({ commit }) {
       commit('setSettings', { settings: { ...defaults } })
-    },
-    sendUpdates() {
-      chrome.runtime.sendMessage({ id: 'stateChanged' })
     }
   },
   mutations: {
@@ -30,7 +27,7 @@ export default new Vuex.Store({
     (store) => {
       store.subscribe(async () => {
         await storage.set(store.state)
-        store.dispatch('sendUpdates')
+        chrome.runtime.sendMessage({ id: 'stateChanged' })
       })
     }
   ]

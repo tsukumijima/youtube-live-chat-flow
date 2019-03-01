@@ -1,26 +1,29 @@
 import logger from './utils/logger'
+import className from './constants/class-name'
 
-const id = chrome.runtime.id
-
-const ClassName = {
-  button: `${id}-button`,
-  message: `${id}-message`
-}
-
-let disabled
-let settings
+let disabled = false
+let settings = null
 const lines = []
 
 const isMyName = (authorName) => {
+  // if input control exists
   const span = document.querySelector('#input-container span#author-name')
   if (span) {
     return authorName === span.textContent
   }
+  // if input control is moved
+  const movedSpan = parent.document.querySelector(
+    '#input-container span#author-name'
+  )
+  if (movedSpan) {
+    return authorName === movedSpan.textContent
+  }
+  // otherwise
   const button = parent.document.querySelector(
     '.html5-video-player .ytp-chrome-top-buttons .ytp-watch-later-button'
   )
   if (button) {
-    // TODO: ja_JP only
+    // TODO: lang: ja only
     return (
       authorName ===
       button.getAttribute('title').replace(' として後で再生します', '')
@@ -64,14 +67,21 @@ const createElement = (node, height) => {
     return
   }
 
+  const html =
+    node.querySelector('#message') && node.querySelector('#message').innerHTML
+  if (!html) {
+    return
+  }
+
+  const avatarUrl = node.querySelector('#img') && node.querySelector('#img').src
   const authorType = node.getAttribute('author-type')
-  const authorName = node.querySelector('#author-name').textContent
-  const html = node.querySelector('#message').innerHTML
-  const src = node.querySelector('#img').src
-  const myself = isMyName(authorName)
+  const authorName =
+    node.querySelector('#author-name') &&
+    node.querySelector('#author-name').textContent
   const purchase =
     node.querySelector('#purchase-amount') &&
     node.querySelector('#purchase-amount').textContent
+  const myself = isMyName(authorName)
 
   const fontSize = height * 0.8
   const color = myself
@@ -86,7 +96,7 @@ const createElement = (node, height) => {
     : hasAuthority(authorType, authorName)
 
   const element = parent.document.createElement('div')
-  element.classList.add(ClassName.message)
+  element.classList.add(className.message)
   element.setAttribute(
     'style',
     `
@@ -105,10 +115,10 @@ const createElement = (node, height) => {
   `
   )
 
-  if (authority) {
+  if (authority && avatarUrl) {
     element.classList.add('has-auth')
     const img = parent.document.createElement('img')
-    img.src = src
+    img.src = avatarUrl
     img.setAttribute(
       'style',
       `
@@ -157,12 +167,12 @@ const createElement = (node, height) => {
 }
 
 const flow = (node) => {
-  if (disabled || !settings || document.hidden) {
+  if (disabled || !settings) {
     return
   }
 
   const video = parent.document.querySelector('.video-stream.html5-main-video')
-  if (video.paused) {
+  if (video && video.paused) {
     return
   }
 
@@ -173,6 +183,9 @@ const flow = (node) => {
   }
 
   const container = parent.document.querySelector('.html5-video-container')
+  if (!container) {
+    return
+  }
   container.appendChild(element)
 
   const millis = settings.speed * 1000
@@ -248,15 +261,60 @@ const flow = (node) => {
   }
 }
 
+const observeChat = () => {
+  const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
+  if (!items) {
+    return
+  }
+
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      const nodes = Array.from(mutation.addedNodes)
+      nodes.forEach((node) => {
+        flow(node)
+      })
+    })
+  })
+  observer.observe(items, { childList: true })
+}
+
+const addVideoEventListener = () => {
+  const video = parent.document.querySelector('.video-stream.html5-main-video')
+  if (!video) {
+    return
+  }
+
+  const callback = (e) => {
+    lines
+      .reduce(
+        (carry, messages) => [
+          ...carry,
+          ...messages.map((message) => message.animation)
+        ],
+        []
+      )
+      .forEach((animation) => animation[e.type]())
+  }
+  video.addEventListener('pause', callback)
+  video.addEventListener('play', callback)
+}
+
 const clearMessages = () => {
-  Array.from(parent.document.querySelectorAll(`.${ClassName.message}`)).forEach(
+  Array.from(parent.document.querySelectorAll(`.${className.message}`)).forEach(
     (element) => {
       element.remove()
     }
   )
 }
 
-const setupControlButton = () => {
+const addControlButton = (disabled) => {
+  const controls = parent.document.querySelector(
+    '.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls'
+  )
+  if (!controls) {
+    return
+  }
+
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
   path.setAttribute(
     'd',
@@ -271,25 +329,148 @@ const setupControlButton = () => {
   svg.append(path)
 
   const button = document.createElement('button')
-  button.classList.add(ClassName.button)
+  button.classList.add(className.controlButton)
   button.classList.add('ytp-button')
+  button.style.opacity = 0
+  button.style.transition = 'opacity 1s'
   button.onclick = () => {
     chrome.runtime.sendMessage({ id: 'disabledToggled' })
   }
   button.append(svg)
 
-  const controls = parent.document.querySelector('.ytp-right-controls')
   controls.prepend(button)
+
+  updateControlButton(disabled)
+
+  // fade in...
+  setTimeout(() => {
+    button.style.opacity = 1
+  }, 0)
 }
 
 const updateControlButton = (disabled) => {
-  const button = parent.document.querySelector(`.${ClassName.button}`)
-  button.setAttribute('aria-pressed', !disabled)
+  const button = parent.document.querySelector(`.${className.controlButton}`)
+  button && button.setAttribute('aria-pressed', !disabled)
 }
 
 const removeControlButton = () => {
-  const button = parent.document.querySelector(`.${ClassName.button}`)
-  button.remove()
+  const button = parent.document.querySelector(`.${className.controlButton}`)
+  button && button.remove()
+}
+
+const addInputControl = () => {
+  if (!settings.bottomControllerEnabled) {
+    return
+  }
+
+  const leftControls = parent.document.querySelector(
+    '.ytp-chrome-bottom .ytp-chrome-controls .ytp-left-controls'
+  )
+  const rightControls = parent.document.querySelector(
+    '.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls'
+  )
+  if (!leftControls || !rightControls) {
+    return
+  }
+
+  const top = document.querySelector('#action-panel #container #top')
+  const buttons = document.querySelector(
+    '#action-panel #container #buttons.yt-live-chat-message-input-renderer'
+  )
+  if (!top || !buttons) {
+    return
+  }
+
+  const input = top.querySelector('div#input')
+  const messageButtons = buttons.querySelector('#message-buttons')
+  if (!input || !messageButtons) {
+    return
+  }
+  input.addEventListener('keydown', (e) => {
+    e.stopPropagation()
+    switch (e.keyCode) {
+      case 13: {
+        const sendButton = messageButtons.querySelector(
+          '#send-button button#button'
+        )
+        sendButton && sendButton.click()
+        break
+      }
+      case 27:
+        e.target.blur()
+        break
+    }
+  })
+  input.addEventListener('focus', () => {
+    parent.document.body.classList.add(className.focused)
+  })
+  input.addEventListener('blur', () => {
+    parent.document.body.classList.remove(className.focused)
+  })
+
+  // add description
+  const description = document.createElement('button')
+  description.textContent = 'Chat Form is Moved to Bottom Controls'
+  description.style.textAlign = 'center'
+  description.style.fontSize = 'smaller'
+  description.style.flex = 1
+  description.style.color = 'var(--yt-spec-text-secondary)'
+  description.style.webkitAppearance = 'none'
+  description.style.background = 'none'
+  description.style.border = 'none'
+  description.style.outline = 'none'
+  description.style.cursor = 'pointer'
+  description.addEventListener('click', () => {
+    input.focus()
+  })
+  const wrapper = document.createElement('div')
+  wrapper.style.flex = 1
+  wrapper.style.display = 'flex'
+  wrapper.style.alignItems = 'center'
+  wrapper.append(description)
+  buttons.append(wrapper)
+
+  // add controls
+  const controls = document.createElement('div')
+  controls.classList.add(className.controller)
+  controls.style.opacity = 0
+  controls.style.transition = 'opacity 1s'
+  controls.style.left = `${leftControls.offsetWidth}px`
+  controls.style.right = `${rightControls.offsetWidth}px`
+  controls.append(top)
+  controls.append(messageButtons)
+  rightControls.parentNode.insertBefore(controls, rightControls)
+
+  // setup resize observers
+  const leftControlsObserver = new ResizeObserver((entries) => {
+    const [entry] = entries
+    controls.style.left = `${entry.contentRect.width}px`
+  })
+  leftControlsObserver.observe(leftControls)
+  const rightControlsObserver = new ResizeObserver((entries) => {
+    const [entry] = entries
+    controls.style.right = `${entry.contentRect.width}px`
+  })
+  rightControlsObserver.observe(rightControls)
+  const controlsObserver = new ResizeObserver((entries) => {
+    const [entry] = entries
+    if (entry.contentRect.width < 512) {
+      controls.classList.add(className.small)
+    } else {
+      controls.classList.remove(className.small)
+    }
+  })
+  controlsObserver.observe(controls)
+
+  // fade in...
+  setTimeout(() => {
+    controls.style.opacity = 1
+  }, 0)
+}
+
+const removeInputControl = () => {
+  const button = parent.document.querySelector(`.${className.controller}`)
+  button && button.remove()
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -297,6 +478,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
   const { id, data } = message
   switch (id) {
+    case 'cssInjected':
+      parent.document.body.classList.add(className.injected)
+      break
     case 'disabledChanged':
       disabled = data.disabled
       updateControlButton(disabled)
@@ -310,47 +494,28 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   }
 })
 
-logger.log('content script loaded')
-
 document.addEventListener('DOMContentLoaded', async () => {
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      const nodes = Array.from(mutation.addedNodes)
-      nodes.forEach((node) => {
-        flow(node)
-      })
-    })
-  })
-  const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
-  observer.observe(items, { childList: true })
+  const cssInjected = parent.document.body.classList.contains(
+    className.injected
+  )
+  chrome.runtime.sendMessage(
+    { id: 'contentLoaded', data: { cssInjected } },
+    (data) => {
+      disabled = data.disabled
+      settings = data.state.settings
 
-  const callback = (e) => {
-    lines
-      .reduce(
-        (carry, messages) => [
-          ...carry,
-          ...messages.map((message) => message.animation)
-        ],
-        []
-      )
-      .forEach((animation) => animation[e.type]())
-  }
-  const video = parent.document.querySelector('.video-stream.html5-main-video')
-  video.addEventListener('pause', callback)
-  video.addEventListener('play', callback)
+      observeChat()
+      addVideoEventListener()
+      addControlButton(disabled)
+      addInputControl()
+    }
+  )
 
   window.addEventListener('unload', () => {
     clearMessages()
-
-    video.removeEventListener('pause', callback)
-    video.removeEventListener('play', callback)
-
-    observer.disconnect()
-
     removeControlButton()
+    removeInputControl()
   })
-
-  setupControlButton()
-
-  chrome.runtime.sendMessage({ id: 'contentLoaded' })
 })
+
+logger.log('content script loaded')
