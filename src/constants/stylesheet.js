@@ -21,8 +21,14 @@ yt-live-chat-author-chip {
 }
 .html5-video-player.ytp-fullscreen
 .${className.controller} #top #input-container
+yt-live-chat-text-input-field-renderer#input #label {
+  padding-left: 8px;
+}
+.html5-video-player.ytp-fullscreen
+.${className.controller} #top #input-container
 yt-live-chat-text-input-field-renderer#input #input {
   line-height: 36px;
+  padding: 0 8px;
 }
 .html5-video-player.ytp-fullscreen
 .${className.controller} #message-buttons #send-button #button {
@@ -100,7 +106,7 @@ yt-live-chat-text-input-field-renderer#input #label {
   position: absolute;
   top: 0;
   left: 1px;
-  padding-left: 8px;
+  padding-left: 4px;
   pointer-events: none;
 }
 .${className.controller} #top #input-container
@@ -111,14 +117,13 @@ yt-live-chat-text-input-field-renderer#input #input {
   line-height: 24px;
   border: 1px solid #eee;
   border-radius: 4px;
-  padding: 0 8px;
+  padding: 0 4px;
   outline: none;
+  transition: border-color .5s;
 }
 .${className.controller} #top #input-container
-yt-live-chat-text-input-field-renderer#input img.yt-live-chat-text-input-field-renderer {
-  width: 20px;
-  height: 20px;
-  margin: -5px 2px;
+yt-live-chat-text-input-field-renderer#input[focused] #input {
+  border-color: var(--yt-live-chat-text-input-field-active-underline-color, hsl(206.1, 79.3%, 52.7%));
 }
 .${className.controller} #message-buttons {
   position: relative;
@@ -147,7 +152,7 @@ a.yt-button-renderer:hover {
   width: 24px;
   height: 24px;
   opacity: 0;
-  transition: opacity 1s;
+  transition: opacity .5s;
   pointer-events: none;
 }
 .${className.controller} #message-buttons #countdown[countdown-active] {

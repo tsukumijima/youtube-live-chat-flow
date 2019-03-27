@@ -332,7 +332,7 @@ const addControlButton = (disabled) => {
   button.classList.add(className.controlButton)
   button.classList.add('ytp-button')
   button.style.opacity = 0
-  button.style.transition = 'opacity 1s'
+  button.style.transition = 'opacity .5s'
   button.onclick = () => {
     chrome.runtime.sendMessage({ id: 'disabledToggled' })
   }
@@ -373,9 +373,9 @@ const addInputControl = () => {
     return
   }
 
-  const top = document.querySelector('#action-panel #container #top')
+  const top = document.querySelector('#input-panel #container #top')
   const buttons = document.querySelector(
-    '#action-panel #container #buttons.yt-live-chat-message-input-renderer'
+    '#input-panel #container #buttons.yt-live-chat-message-input-renderer'
   )
   if (!top || !buttons) {
     return
@@ -434,7 +434,7 @@ const addInputControl = () => {
   const controls = document.createElement('div')
   controls.classList.add(className.controller)
   controls.style.opacity = 0
-  controls.style.transition = 'opacity 1s'
+  controls.style.transition = 'opacity .5s'
   controls.style.left = `${leftControls.offsetWidth}px`
   controls.style.right = `${rightControls.offsetWidth}px`
   controls.append(top)
@@ -473,10 +473,15 @@ const removeInputControl = () => {
   button && button.remove()
 }
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
 
-  const { id, data } = message
+  const { id, type, data } = message
+  if (type === 'SIGN_RELOAD' && process.env.NODE_ENV !== 'production') {
+    // reload if files changed
+    parent.location.reload()
+    return
+  }
   switch (id) {
     case 'cssInjected':
       parent.document.body.classList.add(className.injected)
@@ -494,7 +499,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   }
 })
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
   const cssInjected = parent.document.body.classList.contains(
     className.injected
   )
