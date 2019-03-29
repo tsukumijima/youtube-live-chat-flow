@@ -373,9 +373,11 @@ const addInputControl = () => {
     return
   }
 
-  const top = document.querySelector('#input-panel #container #top')
+  const top = document.querySelector(
+    'yt-live-chat-message-input-renderer #container #top'
+  )
   const buttons = document.querySelector(
-    '#input-panel #container #buttons.yt-live-chat-message-input-renderer'
+    'yt-live-chat-message-input-renderer #container #buttons.yt-live-chat-message-input-renderer'
   )
   if (!top || !buttons) {
     return
