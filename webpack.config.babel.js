@@ -11,7 +11,7 @@ export default {
   context: `${__dirname}/src`,
   entry: {
     background: './background',
-    'content-scripts': './content-scripts',
+    'content-script': './content-script',
     options: './options'
   },
   output: {

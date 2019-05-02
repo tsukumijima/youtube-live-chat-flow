@@ -15,7 +15,7 @@
       "run_at": "document_start",
       "matches": ["https://www.youtube.com/live_chat*"],
       "all_frames": true,
-      "js": ["content-scripts.js"]
+      "js": ["content-script.js"]
     }
   ],
   "page_action": {
