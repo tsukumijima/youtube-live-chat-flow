@@ -97,53 +97,33 @@ const createElement = (node, height) => {
 
   const element = parent.document.createElement('div')
   element.classList.add(className.message)
+  element.style.color = color
+  element.style.fontSize = `${fontSize}px`
+  element.style.height = `${fontSize}px`
+  element.style.lineHeight = `${fontSize}px`
   element.setAttribute(
     'style',
-    `
-    align-items: center;
-    color: ${color};
-    display: flex;
-    font-size: ${fontSize}px;
-    font-weight: bold;
-    height: ${fontSize}px;
-    left: 0;
-    line-height: ${fontSize}px;
-    position: absolute;
-    vertical-align: bottom;
-    white-space: nowrap;
-    ${settings.extendedStyle}
-  `
+    element.getAttribute('style') + settings.extendedStyle
   )
 
   if (authority && avatarUrl) {
     element.classList.add('has-auth')
     const img = parent.document.createElement('img')
+    img.classList.add(className.messageAvatar)
     img.src = avatarUrl
-    img.setAttribute(
-      'style',
-      `
-      border-radius: ${fontSize}px;
-      height: ${fontSize}px;
-      margin-right: 0.2em;
-      object-fit: cover;
-    `
-    )
+    img.style.borderRadius = `${fontSize}px`
+    img.style.height = `${fontSize}px`
     element.appendChild(img)
   }
 
   const span = parent.document.createElement('span')
+  span.classList.add(className.messageText)
   span.innerHTML = html
   Array.from(span.childNodes).map((node) => {
     if (!node.tagName || node.tagName.toLowerCase() !== 'img') {
       return node
     }
-    node.setAttribute(
-      'style',
-      `
-      height: ${fontSize}px;
-      vertical-align: bottom;
-    `
-    )
+    node.style.height = `${fontSize}px`
     return node
   })
   element.appendChild(span)
@@ -151,14 +131,8 @@ const createElement = (node, height) => {
   if (purchase) {
     const textSize = fontSize * 0.5
     const span = parent.document.createElement('span')
-    span.setAttribute(
-      'style',
-      `
-      font-size: ${textSize}px;
-      line-height: initial;
-      margin-left: 0.5em;
-    `
-    )
+    span.classList.add(className.messagePurchase)
+    span.style.fontSize = `${textSize}px`
     span.textContent = purchase
     element.appendChild(span)
   }
@@ -171,7 +145,7 @@ const flow = (node) => {
     return
   }
 
-  const video = parent.document.querySelector('.video-stream.html5-main-video')
+  const video = parent.document.querySelector('video.html5-main-video')
   if (video && video.paused) {
     return
   }
@@ -246,14 +220,8 @@ const flow = (node) => {
     : Math.floor(index / settings.rows)
   const opacity = settings.opacity ** (depth + 1)
 
-  element.setAttribute(
-    'style',
-    element.getAttribute('style') +
-      `
-    top: ${top}px;
-    opacity: ${opacity};
-  `
-  )
+  element.style.top = `${top}px`
+  element.style.opacity = opacity
 
   animation.onfinish = () => {
     element.remove()
@@ -297,6 +265,15 @@ const addVideoEventListener = () => {
   }
   video.addEventListener('pause', callback)
   video.addEventListener('play', callback)
+
+  if (video.readyState === 0) {
+    // wait until video is started
+    video.addEventListener('loadeddata', () => {
+      addInputControl()
+    })
+  } else {
+    addInputControl()
+  }
 }
 
 const clearMessages = () => {
@@ -331,8 +308,6 @@ const addControlButton = (disabled) => {
   const button = document.createElement('button')
   button.classList.add(className.controlButton)
   button.classList.add('ytp-button')
-  button.style.opacity = 0
-  button.style.transition = 'opacity .5s'
   button.onclick = () => {
     chrome.runtime.sendMessage({ id: 'disabledToggled' })
   }
@@ -341,11 +316,6 @@ const addControlButton = (disabled) => {
   controls.prepend(button)
 
   updateControlButton(disabled)
-
-  // fade in...
-  setTimeout(() => {
-    button.style.opacity = 1
-  }, 0)
 }
 
 const updateControlButton = (disabled) => {
@@ -392,6 +362,10 @@ const addInputControl = () => {
     e.stopPropagation()
     switch (e.keyCode) {
       case 13: {
+        if (e.target.textContent === '') {
+          e.target.blur()
+          return
+        }
         const sendButton = messageButtons.querySelector(
           '#send-button button#button'
         )
@@ -408,6 +382,11 @@ const addInputControl = () => {
   })
   input.addEventListener('blur', () => {
     parent.document.body.classList.remove(className.focused)
+  })
+  parent.window.addEventListener('keydown', (e) => {
+    if (e.keyCode === 13) {
+      input.focus()
+    }
   })
 
   // add description
@@ -435,8 +414,6 @@ const addInputControl = () => {
   // add controls
   const controls = document.createElement('div')
   controls.classList.add(className.controller)
-  controls.style.opacity = 0
-  controls.style.transition = 'opacity .5s'
   controls.style.left = `${leftControls.offsetWidth}px`
   controls.style.right = `${rightControls.offsetWidth}px`
   controls.append(top)
@@ -457,17 +434,12 @@ const addInputControl = () => {
   const controlsObserver = new ResizeObserver((entries) => {
     const [entry] = entries
     if (entry.contentRect.width < 512) {
-      controls.classList.add(className.small)
+      controls.classList.add(className.smallController)
     } else {
-      controls.classList.remove(className.small)
+      controls.classList.remove(className.smallController)
     }
   })
   controlsObserver.observe(controls)
-
-  // fade in...
-  setTimeout(() => {
-    controls.style.opacity = 1
-  }, 0)
 }
 
 const removeInputControl = () => {
@@ -514,7 +486,6 @@ document.addEventListener('DOMContentLoaded', () => {
       observeChat()
       addVideoEventListener()
       addControlButton(disabled)
-      addInputControl()
     }
   )
 

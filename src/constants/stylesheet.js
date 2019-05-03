@@ -34,6 +34,34 @@ yt-live-chat-text-input-field-renderer#input #input {
 .${className.controller} #message-buttons #send-button #button {
   width: 36px;
   height: 36px;
+  padding: 0;
+}
+.html5-video-player.ytp-fullscreen
+.${className.controller} #message-buttons #countdown {
+  width: 36px;
+  height: 36px;
+  right: 0;
+}
+
+.html5-video-container .${className.message} {
+  align-items: center;
+  display: flex;
+  font-weight: bold;
+  left: 0;
+  position: absolute;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+.html5-video-container .${className.message} .${className.messageAvatar} {
+  margin-right: 0.2em;
+  object-fit: cover;
+}
+.html5-video-container .${className.message} .${className.messageText} img {
+  vertical-align: bottom;
+}
+.html5-video-container .${className.message} .${className.messagePurchase} {
+  line-height: initial;
+  margin-left: 0.5em;
 }
 
 .ytp-chrome-bottom .ytp-chrome-controls {
@@ -43,7 +71,7 @@ yt-live-chat-text-input-field-renderer#input #input {
   display: none;
 }
 
-.${className.controller}.${className.small}
+.${className.controller}.${className.smallController}
 #top #input-container yt-live-chat-author-chip {
   display: none;
 }
@@ -148,7 +176,7 @@ a.yt-button-renderer:hover {
 }
 .${className.controller} #message-buttons #countdown {
   position: absolute;
-  right: 1px;
+  right: 8px;
   width: 24px;
   height: 24px;
   opacity: 0;
