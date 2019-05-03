@@ -165,7 +165,7 @@
         <v-text-field
           v-model="rows"
           :placeholder="defaults.rows"
-          label="Rows"
+          :label="`Height (Video Height / ${rows})`"
           type="number"
           min="1"
           max="20"
@@ -173,14 +173,14 @@
         <v-text-field
           v-model="speed"
           :placeholder="defaults.speed"
-          label="Speed"
+          label="Display Time"
           type="number"
           min="1"
           max="10"
           step="0.1"
           suffix="sec"
         />
-        <v-select v-model="overflow" :items="overflows" label="Overflow" />
+        <v-select v-model="overflow" :items="overflows" label="Overflow Mode" />
         <v-textarea
           v-model="extendedStyle"
           :placeholder="defaults.extendedStyle"
@@ -192,8 +192,11 @@
           v-model="bottomControllerEnabled"
           label="Enable Bottom Controller"
         />
-        <v-btn class="mt-3" color="primary" flat block @click="reset">
-          Reset
+        <v-btn class="mt-3" color="primary" flat block @click="close">
+          OK
+        </v-btn>
+        <v-btn class="mt-3" flat block @click="reset">
+          Reset Settings to Default
         </v-btn>
       </v-container>
     </v-content>
@@ -372,6 +375,9 @@ export default {
     await this.$store.dispatch('initialize')
   },
   methods: {
+    close() {
+      window.close()
+    },
     ...mapActions({
       reset: 'reset'
     })
@@ -385,7 +391,7 @@ export default {
 
 <style scoped>
 .application {
-  min-width: 480px;
+  min-width: 512px;
 }
 .color >>> .v-input__slot:before {
   height: 0;
