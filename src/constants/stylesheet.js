@@ -36,6 +36,27 @@ yt-live-chat-text-input-field-renderer#input #input {
   height: 36px;
 }
 
+.html5-video-container .${className.message} {
+  align-items: center;
+  display: flex;
+  font-weight: bold;
+  left: 0;
+  position: absolute;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+.html5-video-container .${className.message} .${className.messageAvatar} {
+  margin-right: 0.2em;
+  object-fit: cover;
+}
+.html5-video-container .${className.message} .${className.messageText} img {
+  vertical-align: bottom;
+}
+.html5-video-container .${className.message} .${className.messagePurchase} {
+  line-height: initial;
+  margin-left: 0.5em;
+}
+
 .ytp-chrome-bottom .ytp-chrome-controls {
   position: relative;
 }
@@ -43,7 +64,7 @@ yt-live-chat-text-input-field-renderer#input #input {
   display: none;
 }
 
-.${className.controller}.${className.small}
+.${className.controller}.${className.smallController}
 #top #input-container yt-live-chat-author-chip {
   display: none;
 }
