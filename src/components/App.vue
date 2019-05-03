@@ -1,203 +1,209 @@
 <template>
   <v-app>
     <v-content>
-      <v-container fluid>
-        <v-subheader class="pl-0">Avatar &amp; Color</v-subheader>
-        <v-layout row align-center>
-          <v-flex xs6><v-subheader>Guest</v-subheader></v-flex>
-          <v-flex xs6>
-            <v-layout class="align-center">
-              <v-tooltip left>
-                <v-btn
-                  slot="activator"
-                  :color="avatar ? 'primary' : 'grey darken-1'"
-                  flat
-                  icon
-                  @click="avatar = !avatar"
-                >
-                  <v-icon>account_circle</v-icon>
-                </v-btn>
-                <span>Show Avatar</span>
-              </v-tooltip>
-              <v-text-field
-                v-model="color"
-                class="color mt-0 pt-0"
-                type="color"
-                hide-details
-              />
-            </v-layout>
-          </v-flex>
-        </v-layout>
-        <v-layout row align-center>
-          <v-flex xs6><v-subheader>Member</v-subheader></v-flex>
-          <v-flex xs6>
-            <v-layout class="align-center">
-              <v-tooltip left>
-                <v-btn
-                  slot="activator"
-                  :color="memberAvatar ? 'primary' : 'grey darken-1'"
-                  flat
-                  icon
-                  @click="memberAvatar = !memberAvatar"
-                >
-                  <v-icon>account_circle</v-icon>
-                </v-btn>
-                <span>Show Avatar</span>
-              </v-tooltip>
-              <v-text-field
-                v-model="memberColor"
-                class="color mt-0 pt-0"
-                type="color"
-                hide-details
-              />
-            </v-layout>
-          </v-flex>
-        </v-layout>
-        <v-layout row align-center>
-          <v-flex xs6><v-subheader>Moderator</v-subheader></v-flex>
-          <v-flex xs6>
-            <v-layout class="align-center">
-              <v-tooltip left>
-                <v-btn
-                  slot="activator"
-                  :color="moderatorAvatar ? 'primary' : 'grey darken-1'"
-                  flat
-                  icon
-                  @click="moderatorAvatar = !moderatorAvatar"
-                >
-                  <v-icon>account_circle</v-icon>
-                </v-btn>
-                <span>Show Avatar</span>
-              </v-tooltip>
-              <v-text-field
-                v-model="moderatorColor"
-                class="color mt-0 pt-0"
-                type="color"
-                hide-details
-              />
-            </v-layout>
-          </v-flex>
-        </v-layout>
-        <v-layout row align-center>
-          <v-flex xs6><v-subheader>Owner</v-subheader></v-flex>
-          <v-flex xs6>
-            <v-layout class="align-center">
-              <v-tooltip left>
-                <v-btn
-                  slot="activator"
-                  :color="ownerAvatar ? 'primary' : 'grey darken-1'"
-                  flat
-                  icon
-                  @click="ownerAvatar = !ownerAvatar"
-                >
-                  <v-icon>account_circle</v-icon>
-                </v-btn>
-                <span>Show Avatar</span>
-              </v-tooltip>
-              <v-text-field
-                v-model="ownerColor"
-                class="color mt-0 pt-0"
-                type="color"
-                hide-details
-              />
-            </v-layout>
-          </v-flex>
-        </v-layout>
-        <v-layout row align-center>
-          <v-flex xs6><v-subheader>Super Chat</v-subheader></v-flex>
-          <v-flex xs6>
-            <v-layout class="align-center">
-              <v-tooltip left>
-                <v-btn
-                  slot="activator"
-                  :color="paidAvatar ? 'primary' : 'grey darken-1'"
-                  flat
-                  icon
-                  @click="paidAvatar = !paidAvatar"
-                >
-                  <v-icon>account_circle</v-icon>
-                </v-btn>
-                <span>Show Avatar</span>
-              </v-tooltip>
-              <v-text-field
-                v-model="paidColor"
-                class="color mt-0 pt-0"
-                type="color"
-                hide-details
-              />
-            </v-layout>
-          </v-flex>
-        </v-layout>
-        <v-layout row align-center>
-          <v-flex xs6><v-subheader>Self</v-subheader></v-flex>
-          <v-flex xs6>
-            <v-layout class="align-center">
-              <v-tooltip left>
-                <v-btn
-                  slot="activator"
-                  :color="selfAvatar ? 'primary' : 'grey darken-1'"
-                  flat
-                  icon
-                  @click="selfAvatar = !selfAvatar"
-                >
-                  <v-icon>account_circle</v-icon>
-                </v-btn>
-                <span>Show Avatar</span>
-              </v-tooltip>
-              <v-text-field
-                v-model="selfColor"
-                class="color mt-0 pt-0"
-                type="color"
-                hide-details
-              />
-            </v-layout>
-          </v-flex>
-        </v-layout>
-        <v-text-field
-          v-model="opacity"
-          :placeholder="defaults.opacity"
-          label="Opacity"
-          type="number"
-          min="0"
-          max="1"
-          step="0.1"
-        />
-        <v-text-field
-          v-model="rows"
-          :placeholder="defaults.rows"
-          :label="`Height (Video Height / ${rows})`"
-          type="number"
-          min="1"
-          max="20"
-        />
-        <v-text-field
-          v-model="speed"
-          :placeholder="defaults.speed"
-          label="Display Time"
-          type="number"
-          min="1"
-          max="10"
-          step="0.1"
-          suffix="sec"
-        />
-        <v-select v-model="overflow" :items="overflows" label="Overflow Mode" />
-        <v-textarea
-          v-model="extendedStyle"
-          :placeholder="defaults.extendedStyle"
-          label="Extended Style"
-          rows="1"
-          auto-grow
-        />
-        <v-switch
-          v-model="bottomControllerEnabled"
-          label="Enable Bottom Controller"
-        />
-        <v-btn class="mt-3" color="primary" flat block @click="close">
-          OK
-        </v-btn>
-        <v-btn class="mt-3" flat block @click="reset">
-          Reset Settings to Default
-        </v-btn>
+      <v-container class="pa-0" fluid>
+        <v-card class="pa-3" flat>
+          <v-subheader class="pl-0">Avatar &amp; Color</v-subheader>
+          <v-layout row align-center>
+            <v-flex xs6><v-subheader>Guest</v-subheader></v-flex>
+            <v-flex xs6>
+              <v-layout class="align-center">
+                <v-tooltip left>
+                  <v-btn
+                    slot="activator"
+                    :color="avatar ? 'primary' : 'grey darken-1'"
+                    flat
+                    icon
+                    @click="avatar = !avatar"
+                  >
+                    <v-icon>account_circle</v-icon>
+                  </v-btn>
+                  <span>Show Avatar</span>
+                </v-tooltip>
+                <v-text-field
+                  v-model="color"
+                  class="color mt-0 pt-0"
+                  type="color"
+                  hide-details
+                />
+              </v-layout>
+            </v-flex>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs6><v-subheader>Member</v-subheader></v-flex>
+            <v-flex xs6>
+              <v-layout class="align-center">
+                <v-tooltip left>
+                  <v-btn
+                    slot="activator"
+                    :color="memberAvatar ? 'primary' : 'grey darken-1'"
+                    flat
+                    icon
+                    @click="memberAvatar = !memberAvatar"
+                  >
+                    <v-icon>account_circle</v-icon>
+                  </v-btn>
+                  <span>Show Avatar</span>
+                </v-tooltip>
+                <v-text-field
+                  v-model="memberColor"
+                  class="color mt-0 pt-0"
+                  type="color"
+                  hide-details
+                />
+              </v-layout>
+            </v-flex>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs6><v-subheader>Moderator</v-subheader></v-flex>
+            <v-flex xs6>
+              <v-layout class="align-center">
+                <v-tooltip left>
+                  <v-btn
+                    slot="activator"
+                    :color="moderatorAvatar ? 'primary' : 'grey darken-1'"
+                    flat
+                    icon
+                    @click="moderatorAvatar = !moderatorAvatar"
+                  >
+                    <v-icon>account_circle</v-icon>
+                  </v-btn>
+                  <span>Show Avatar</span>
+                </v-tooltip>
+                <v-text-field
+                  v-model="moderatorColor"
+                  class="color mt-0 pt-0"
+                  type="color"
+                  hide-details
+                />
+              </v-layout>
+            </v-flex>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs6><v-subheader>Owner</v-subheader></v-flex>
+            <v-flex xs6>
+              <v-layout class="align-center">
+                <v-tooltip left>
+                  <v-btn
+                    slot="activator"
+                    :color="ownerAvatar ? 'primary' : 'grey darken-1'"
+                    flat
+                    icon
+                    @click="ownerAvatar = !ownerAvatar"
+                  >
+                    <v-icon>account_circle</v-icon>
+                  </v-btn>
+                  <span>Show Avatar</span>
+                </v-tooltip>
+                <v-text-field
+                  v-model="ownerColor"
+                  class="color mt-0 pt-0"
+                  type="color"
+                  hide-details
+                />
+              </v-layout>
+            </v-flex>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs6><v-subheader>Super Chat</v-subheader></v-flex>
+            <v-flex xs6>
+              <v-layout class="align-center">
+                <v-tooltip left>
+                  <v-btn
+                    slot="activator"
+                    :color="paidAvatar ? 'primary' : 'grey darken-1'"
+                    flat
+                    icon
+                    @click="paidAvatar = !paidAvatar"
+                  >
+                    <v-icon>account_circle</v-icon>
+                  </v-btn>
+                  <span>Show Avatar</span>
+                </v-tooltip>
+                <v-text-field
+                  v-model="paidColor"
+                  class="color mt-0 pt-0"
+                  type="color"
+                  hide-details
+                />
+              </v-layout>
+            </v-flex>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs6><v-subheader>Self</v-subheader></v-flex>
+            <v-flex xs6>
+              <v-layout class="align-center">
+                <v-tooltip left>
+                  <v-btn
+                    slot="activator"
+                    :color="selfAvatar ? 'primary' : 'grey darken-1'"
+                    flat
+                    icon
+                    @click="selfAvatar = !selfAvatar"
+                  >
+                    <v-icon>account_circle</v-icon>
+                  </v-btn>
+                  <span>Show Avatar</span>
+                </v-tooltip>
+                <v-text-field
+                  v-model="selfColor"
+                  class="color mt-0 pt-0"
+                  type="color"
+                  hide-details
+                />
+              </v-layout>
+            </v-flex>
+          </v-layout>
+          <v-text-field
+            v-model="opacity"
+            :placeholder="defaults.opacity"
+            label="Opacity"
+            type="number"
+            min="0"
+            max="1"
+            step="0.1"
+          />
+          <v-text-field
+            v-model="rows"
+            :placeholder="defaults.rows"
+            :label="`Height (Video Height / ${rows})`"
+            type="number"
+            min="1"
+            max="20"
+          />
+          <v-text-field
+            v-model="speed"
+            :placeholder="defaults.speed"
+            label="Display Time"
+            type="number"
+            min="1"
+            max="10"
+            step="0.1"
+            suffix="sec"
+          />
+          <v-select
+            v-model="overflow"
+            :items="overflows"
+            label="Overflow Mode"
+          />
+          <v-textarea
+            v-model="extendedStyle"
+            :placeholder="defaults.extendedStyle"
+            label="Extended Style"
+            rows="1"
+            auto-grow
+          />
+          <v-switch
+            v-model="bottomControllerEnabled"
+            label="Enable Bottom Controller"
+          />
+          <v-btn class="mt-3" color="primary" depressed block @click="close">
+            OK
+          </v-btn>
+          <v-btn class="mt-3" depressed block @click="reset">
+            Reset Settings to Default
+          </v-btn>
+        </v-card>
       </v-container>
     </v-content>
   </v-app>
