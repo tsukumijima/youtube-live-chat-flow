@@ -34,6 +34,13 @@ yt-live-chat-text-input-field-renderer#input #input {
 .${className.controller} #message-buttons #send-button #button {
   width: 36px;
   height: 36px;
+  padding: 0;
+}
+.html5-video-player.ytp-fullscreen
+.${className.controller} #message-buttons #countdown {
+  width: 36px;
+  height: 36px;
+  right: 0;
 }
 
 .html5-video-container .${className.message} {
@@ -169,7 +176,7 @@ a.yt-button-renderer:hover {
 }
 .${className.controller} #message-buttons #countdown {
   position: absolute;
-  right: 1px;
+  right: 8px;
   width: 24px;
   height: 24px;
   opacity: 0;
