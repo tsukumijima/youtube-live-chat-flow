@@ -145,7 +145,7 @@ const flow = (node) => {
     return
   }
 
-  const video = parent.document.querySelector('.video-stream.html5-main-video')
+  const video = parent.document.querySelector('video.html5-main-video')
   if (video && video.paused) {
     return
   }
@@ -265,6 +265,15 @@ const addVideoEventListener = () => {
   }
   video.addEventListener('pause', callback)
   video.addEventListener('play', callback)
+
+  if (video.readyState === 0) {
+    // wait until video is started
+    video.addEventListener('loadeddata', () => {
+      addInputControl()
+    })
+  } else {
+    addInputControl()
+  }
 }
 
 const clearMessages = () => {
@@ -468,7 +477,6 @@ document.addEventListener('DOMContentLoaded', () => {
       observeChat()
       addVideoEventListener()
       addControlButton(disabled)
-      addInputControl()
     }
   )
 
