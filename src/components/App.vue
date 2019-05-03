@@ -197,10 +197,16 @@
             v-model="bottomControllerEnabled"
             label="Enable Bottom Controller"
           />
-          <v-btn class="mt-3" color="primary" depressed block @click="close">
+          <v-btn
+            class="mt-3"
+            color="primary"
+            depressed
+            block
+            @click="onOKClick"
+          >
             OK
           </v-btn>
-          <v-btn class="mt-3" depressed block @click="reset">
+          <v-btn class="mt-3" depressed block @click="onResetClick">
             Reset Settings to Default
           </v-btn>
         </v-card>
@@ -378,15 +384,16 @@ export default {
     }
   },
   async created() {
-    await this.$store.dispatch('initialize')
+    await this.initialize()
   },
   methods: {
-    close() {
+    onOKClick() {
       window.close()
     },
-    ...mapActions({
-      reset: 'reset'
-    })
+    onResetClick() {
+      this.reset()
+    },
+    ...mapActions(['initialize', 'reset'])
   }
 }
 </script>
