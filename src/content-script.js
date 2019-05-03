@@ -362,6 +362,10 @@ const addInputControl = () => {
     e.stopPropagation()
     switch (e.keyCode) {
       case 13: {
+        if (e.target.textContent === '') {
+          e.target.blur()
+          return
+        }
         const sendButton = messageButtons.querySelector(
           '#send-button button#button'
         )
@@ -378,6 +382,11 @@ const addInputControl = () => {
   })
   input.addEventListener('blur', () => {
     parent.document.body.classList.remove(className.focused)
+  })
+  parent.window.addEventListener('keydown', (e) => {
+    if (e.keyCode === 13) {
+      input.focus()
+    }
   })
 
   // add description
