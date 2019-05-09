@@ -26,6 +26,7 @@ const contentLoaded = async (tabId, cssInjected, sendResponse) => {
   const state = await storage.get()
   if (state.settings.bottomControllerEnabled && !cssInjected) {
     logger.log('insert css')
+    // TODO: Must be injected
     chrome.tabs.insertCSS(tabId, { code: stylesheet })
     chrome.tabs.sendMessage(tabId, { id: 'cssInjected' })
   }
