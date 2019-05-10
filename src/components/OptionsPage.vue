@@ -130,23 +130,23 @@
             </v-flex>
           </v-layout>
           <v-layout row align-center>
-            <v-flex xs6><v-subheader>Self</v-subheader></v-flex>
+            <v-flex xs6><v-subheader>Myself</v-subheader></v-flex>
             <v-flex xs6>
               <v-layout class="align-center">
                 <v-tooltip left>
                   <v-btn
                     slot="activator"
-                    :color="selfAvatar ? 'primary' : 'grey darken-1'"
+                    :color="myAvatar ? 'primary' : 'grey darken-1'"
                     flat
                     icon
-                    @click="selfAvatar = !selfAvatar"
+                    @click="myAvatar = !myAvatar"
                   >
                     <v-icon>account_circle</v-icon>
                   </v-btn>
                   <span>Show Avatar</span>
                 </v-tooltip>
                 <v-text-field
-                  v-model="selfColor"
+                  v-model="myColor"
                   class="color mt-0 pt-0"
                   type="color"
                   hide-details
@@ -197,15 +197,6 @@
             v-model="bottomControllerEnabled"
             label="Enable Bottom Controller"
           />
-          <v-btn
-            class="mt-3"
-            color="primary"
-            depressed
-            block
-            @click="onOKClick"
-          >
-            OK
-          </v-btn>
           <v-btn class="mt-3" depressed block @click="onResetClick">
             Reset Settings to Default
           </v-btn>
@@ -216,13 +207,13 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import { defaults } from '~/store/settings'
+import { mapMutations } from 'vuex'
+import { initialState } from '~/store'
 
 export default {
   data() {
     return {
-      defaults,
+      defaults: initialState,
       overflows: [
         { text: 'Hidden', value: 'hidden' },
         { text: 'Overlay', value: 'overlay' }
@@ -232,168 +223,162 @@ export default {
   computed: {
     color: {
       get() {
-        return this.$store.state.settings.color
+        return this.$store.state.color
       },
       set(value) {
-        this.$store.commit('settings/setColor', { color: value })
+        this.$store.commit('setColor', { color: value })
       }
     },
     avatar: {
       get() {
-        return this.$store.state.settings.avatar
+        return this.$store.state.avatar
       },
       set(value) {
-        this.$store.commit('settings/setAvatar', { avatar: value })
+        this.$store.commit('setAvatar', { avatar: value })
       }
     },
     memberColor: {
       get() {
-        return this.$store.state.settings.memberColor
+        return this.$store.state.memberColor
       },
       set(value) {
-        this.$store.commit('settings/setMemberColor', { memberColor: value })
+        this.$store.commit('setMemberColor', { memberColor: value })
       }
     },
     memberAvatar: {
       get() {
-        return this.$store.state.settings.memberAvatar
+        return this.$store.state.memberAvatar
       },
       set(value) {
-        this.$store.commit('settings/setMemberAvatar', { memberAvatar: value })
+        this.$store.commit('setMemberAvatar', { memberAvatar: value })
       }
     },
     moderatorColor: {
       get() {
-        return this.$store.state.settings.moderatorColor
+        return this.$store.state.moderatorColor
       },
       set(value) {
-        this.$store.commit('settings/setModeratorColor', {
+        this.$store.commit('setModeratorColor', {
           moderatorColor: value
         })
       }
     },
     moderatorAvatar: {
       get() {
-        return this.$store.state.settings.moderatorAvatar
+        return this.$store.state.moderatorAvatar
       },
       set(value) {
-        this.$store.commit('settings/setModeratorAvatar', {
+        this.$store.commit('setModeratorAvatar', {
           moderatorAvatar: value
         })
       }
     },
     ownerColor: {
       get() {
-        return this.$store.state.settings.ownerColor
+        return this.$store.state.ownerColor
       },
       set(value) {
-        this.$store.commit('settings/setOwnerColor', { ownerColor: value })
+        this.$store.commit('setOwnerColor', { ownerColor: value })
       }
     },
     ownerAvatar: {
       get() {
-        return this.$store.state.settings.ownerAvatar
+        return this.$store.state.ownerAvatar
       },
       set(value) {
-        this.$store.commit('settings/setOwnerAvatar', { ownerAvatar: value })
+        this.$store.commit('setOwnerAvatar', { ownerAvatar: value })
       }
     },
     paidColor: {
       get() {
-        return this.$store.state.settings.paidColor
+        return this.$store.state.paidColor
       },
       set(value) {
-        this.$store.commit('settings/setPaidColor', { paidColor: value })
+        this.$store.commit('setPaidColor', { paidColor: value })
       }
     },
     paidAvatar: {
       get() {
-        return this.$store.state.settings.paidAvatar
+        return this.$store.state.paidAvatar
       },
       set(value) {
-        this.$store.commit('settings/setPaidAvatar', { paidAvatar: value })
+        this.$store.commit('setPaidAvatar', { paidAvatar: value })
       }
     },
-    selfColor: {
+    myColor: {
       get() {
-        return this.$store.state.settings.selfColor
+        return this.$store.state.myColor
       },
       set(value) {
-        this.$store.commit('settings/setSelfColor', { selfColor: value })
+        this.$store.commit('setMyColor', { myColor: value })
       }
     },
-    selfAvatar: {
+    myAvatar: {
       get() {
-        return this.$store.state.settings.selfAvatar
+        return this.$store.state.myAvatar
       },
       set(value) {
-        this.$store.commit('settings/setSelfAvatar', { selfAvatar: value })
+        this.$store.commit('setMyAvatar', { myAvatar: value })
       }
     },
     opacity: {
       get() {
-        return this.$store.state.settings.opacity
+        return this.$store.state.opacity
       },
       set(value) {
-        this.$store.commit('settings/setOpacity', { opacity: value })
+        this.$store.commit('setOpacity', { opacity: value })
       }
     },
     rows: {
       get() {
-        return this.$store.state.settings.rows
+        return this.$store.state.rows
       },
       set(value) {
-        this.$store.commit('settings/setRows', { rows: value })
+        this.$store.commit('setRows', { rows: value })
       }
     },
     speed: {
       get() {
-        return this.$store.state.settings.speed
+        return this.$store.state.speed
       },
       set(value) {
-        this.$store.commit('settings/setSpeed', { speed: value })
+        this.$store.commit('setSpeed', { speed: value })
       }
     },
     overflow: {
       get() {
-        return this.$store.state.settings.overflow
+        return this.$store.state.overflow
       },
       set(value) {
-        this.$store.commit('settings/setOverflow', { overflow: value })
+        this.$store.commit('setOverflow', { overflow: value })
       }
     },
     extendedStyle: {
       get() {
-        return this.$store.state.settings.extendedStyle
+        return this.$store.state.extendedStyle
       },
       set(value) {
-        this.$store.commit('settings/setExtendedStyle', {
+        this.$store.commit('setExtendedStyle', {
           extendedStyle: value
         })
       }
     },
     bottomControllerEnabled: {
       get() {
-        return this.$store.state.settings.bottomControllerEnabled
+        return this.$store.state.bottomControllerEnabled
       },
       set(value) {
-        this.$store.commit('settings/setBottomControllerEnabled', {
+        this.$store.commit('setBottomControllerEnabled', {
           bottomControllerEnabled: value
         })
       }
     }
   },
-  async created() {
-    await this.initialize()
-  },
   methods: {
-    onOKClick() {
-      window.close()
-    },
     onResetClick() {
-      this.reset()
+      this.resetState()
     },
-    ...mapActions(['initialize', 'reset'])
+    ...mapMutations(['resetState'])
   }
 }
 </script>
@@ -406,11 +391,9 @@ export default {
 .application {
   min-width: 512px;
 }
-.color >>> .v-input__slot:before {
-  height: 0;
-}
+.color >>> .v-input__slot:before,
 .color >>> .v-input__slot:after {
-  height: 0;
+  border: none;
 }
 .color >>> input {
   cursor: pointer;

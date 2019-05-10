@@ -3,9 +3,6 @@ module.exports = {
   env: {
     node: true
   },
-  globals: {
-    chrome: true
-  },
   extends: [
     'eslint:recommended',
     'plugin:prettier/recommended',

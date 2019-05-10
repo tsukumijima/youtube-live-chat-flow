@@ -1,7 +1,6 @@
+import browser from 'webextension-polyfill'
+import createStore from './store'
 import stylesheet from './constants/stylesheet'
-import { defaults } from './store/settings'
-import logger from './utils/logger'
-import storage from './utils/storage'
 import iconOff from './assets/icon-off48.png'
 import iconOn from './assets/icon-on48.png'
 import './assets/icon16.png'
@@ -11,9 +10,14 @@ import './assets/icon128.png'
 let initialDisabled = false
 const disabledTabs = {}
 
+const getSettings = async () => {
+  const store = await createStore(true)
+  return store.state
+}
+
 const setIcon = (tabId) => {
   const path = disabledTabs[tabId] ? iconOff : iconOn
-  chrome.pageAction.setIcon({ tabId, path })
+  browser.pageAction.setIcon({ tabId, path })
 }
 
 const contentLoaded = async (tabId, cssInjected, sendResponse) => {
@@ -21,17 +25,16 @@ const contentLoaded = async (tabId, cssInjected, sendResponse) => {
   disabledTabs[tabId] = disabled
 
   setIcon(tabId)
-  chrome.pageAction.show(tabId)
+  browser.pageAction.show(tabId)
 
-  const state = await storage.get()
-  if (state.settings.bottomControllerEnabled && !cssInjected) {
-    logger.log('insert css')
+  if (!cssInjected) {
+    console.log('insert css')
     // TODO: Must be injected
-    chrome.tabs.insertCSS(tabId, { code: stylesheet })
-    chrome.tabs.sendMessage(tabId, { id: 'cssInjected' })
+    browser.tabs.insertCSS(tabId, { code: stylesheet })
+    browser.tabs.sendMessage(tabId, { id: 'cssInjected' })
   }
 
-  sendResponse({ disabled, state })
+  sendResponse({ disabled, settings: {} })
 }
 
 const disabledToggled = (tabId) => {
@@ -40,37 +43,25 @@ const disabledToggled = (tabId) => {
   disabledTabs[tabId] = disabled
 
   setIcon(tabId)
-  chrome.tabs.sendMessage(tabId, {
+  browser.tabs.sendMessage(tabId, {
     id: 'disabledChanged',
     data: { disabled }
   })
 }
 
-const stateChanged = async () => {
-  const state = await storage.get()
-  chrome.tabs.query({}, (tabs) => {
-    tabs.forEach((tab) => {
-      chrome.tabs.sendMessage(tab.id, {
-        id: 'stateChanged',
-        data: { state }
-      })
+const settingsChanged = async () => {
+  const settings = await getSettings()
+  const tabs = await browser.tabs.query({})
+  for (let tab of tabs) {
+    browser.tabs.sendMessage(tab.id, {
+      id: 'stateChanged',
+      data: { settings }
     })
-  })
+  }
 }
 
-chrome.runtime.onInstalled.addListener(async (details) => {
-  logger.log('chrome.runtime.onInstalled', details)
-
-  const state = await storage.get()
-  const newState = {
-    settings: defaults,
-    ...state
-  }
-  await storage.set(newState)
-})
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log('chrome.runtime.onMessage', message, sender, sendResponse)
 
   const { id, data } = message
   const { tab } = sender
@@ -81,16 +72,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'disabledToggled':
       disabledToggled(tab.id)
       break
-    case 'stateChanged':
-      stateChanged()
+    case 'settingsChanged':
+      settingsChanged()
       break
   }
 })
 
-chrome.pageAction.onClicked.addListener((tab) => {
-  logger.log('chrome.pageAction.onClicked', tab)
+browser.pageAction.onClicked.addListener((tab) => {
+  console.log('chrome.pageAction.onClicked', tab)
 
   disabledToggled(tab.id)
 })
-
-logger.log('background script loaded')

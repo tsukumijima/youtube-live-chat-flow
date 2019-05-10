@@ -1,4 +1,4 @@
-import logger from './utils/logger'
+import browser from 'webextension-polyfill'
 import className from './constants/class-name'
 
 let disabled = false
@@ -23,7 +23,7 @@ const isMyName = (authorName) => {
     '.html5-video-player .ytp-chrome-top-buttons .ytp-watch-later-button'
   )
   if (button) {
-    // TODO: lang: ja only
+    // TODO: japanese only
     return (
       authorName ===
       button.getAttribute('title').replace(' として後で再生します', '')
@@ -85,12 +85,12 @@ const createElement = (node, height) => {
 
   const fontSize = height * 0.8
   const color = myself
-    ? settings.selfColor
+    ? settings.myColor
     : purchase
     ? settings.paidColor
     : getColor(authorType, authorName)
   const authority = myself
-    ? settings.selfAvatar
+    ? settings.myAvatar
     : purchase
     ? settings.paidAvatar
     : hasAuthority(authorType, authorName)
@@ -309,7 +309,7 @@ const addControlButton = (disabled) => {
   button.classList.add(className.controlButton)
   button.classList.add('ytp-button')
   button.onclick = () => {
-    chrome.runtime.sendMessage({ id: 'disabledToggled' })
+    browser.runtime.sendMessage({ id: 'disabledToggled' })
   }
   button.append(svg)
 
@@ -447,8 +447,8 @@ const removeInputControl = () => {
   button && button.remove()
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log('chrome.runtime.onMessage', message, sender, sendResponse)
 
   const { id, type, data } = message
   if (type === 'SIGN_RELOAD' && process.env.NODE_ENV !== 'production') {
@@ -473,27 +473,24 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 })
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const cssInjected = parent.document.body.classList.contains(
     className.injected
   )
-  chrome.runtime.sendMessage(
-    { id: 'contentLoaded', data: { cssInjected } },
-    (data) => {
-      disabled = data.disabled
-      settings = data.state.settings
-
-      observeChat()
-      addVideoEventListener()
-      addControlButton(disabled)
-    }
-  )
-
-  window.addEventListener('unload', () => {
-    clearMessages()
-    removeControlButton()
-    removeInputControl()
+  const data = await browser.runtime.sendMessage({
+    id: 'contentLoaded',
+    data: { cssInjected }
   })
+  disabled = data.disabled
+  settings = data.settings
+
+  observeChat()
+  addVideoEventListener()
+  addControlButton(disabled)
 })
 
-logger.log('content script loaded')
+window.addEventListener('unload', () => {
+  clearMessages()
+  removeControlButton()
+  removeInputControl()
+})

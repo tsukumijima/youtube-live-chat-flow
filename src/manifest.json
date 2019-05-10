@@ -1,6 +1,4 @@
 {
-  "name": "YouTube Live Chat Flow",
-  "description": "Chat Messages Flow on YouTube Videos",
   "manifest_version": 2,
   "icons": {
     "16": "assets/icon16.png",
@@ -26,8 +24,8 @@
     "open_in_tab": false
   },
   "permissions": [
-    "tabs",
     "storage",
+    "tabs",
     "https://www.youtube.com/*"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"

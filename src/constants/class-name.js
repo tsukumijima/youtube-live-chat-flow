@@ -1,13 +1,25 @@
-const id = chrome.runtime.id
+import browser from 'webextension-polyfill'
 
-export default {
-  injected: `${id}-injected`,
-  focused: `${id}-focused`,
-  message: `${id}-message`,
-  messageAvatar: `${id}-message-avatar`,
-  messageText: `${id}-message-text`,
-  messagePurchase: `${id}-message-purchase`,
-  controlButton: `${id}-control-button`,
-  controller: `${id}-controller`,
-  smallController: `${id}-small-controller`
-}
+const id = browser.runtime.id
+
+const classNames = [
+  'injected',
+  'focused',
+  'message',
+  'messageAvatar',
+  'messageText',
+  'messagePurchase',
+  'controlButton',
+  'controller',
+  'smallController'
+]
+
+export default classNames.reduce((carry, className) => {
+  const kebabName = className.replace(/([A-Z])/g, (s) => {
+    return '-' + s.charAt(0).toLowerCase()
+  })
+  return {
+    ...carry,
+    [className]: `${id}-${kebabName}`
+  }
+}, {})
