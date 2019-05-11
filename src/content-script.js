@@ -120,7 +120,7 @@ const createElement = (node, height) => {
   element.style.lineHeight = `${fontSize}px`
   element.setAttribute(
     'style',
-    element.getAttribute('style') + textStyle + settings.extendedStyle
+    element.getAttribute('style') + textStyle + settings.extendedTextStyle
   )
 
   if (authority && avatarUrl) {
