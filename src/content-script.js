@@ -58,6 +58,22 @@ const hasAuthority = (authorType) => {
   }
 }
 
+const getTextStyle = (fontSize) => {
+  switch (settings.textStyle) {
+    case 'outline': {
+      const n = (fontSize / 32).toFixed(2)
+      return `-webkit-text-stroke: ${n}px #666;`
+    }
+    case 'shadow': {
+      const n = (fontSize / 48).toFixed(2)
+      return `text-shadow: ${n}px ${n}px ${n * 2}px #333;`
+    }
+    case 'none':
+    default:
+      return ''
+  }
+}
+
 const createElement = (node, height) => {
   const tags = [
     'yt-live-chat-text-message-renderer',
@@ -94,6 +110,7 @@ const createElement = (node, height) => {
     : purchase
     ? settings.paidAvatar
     : hasAuthority(authorType, authorName)
+  const textStyle = getTextStyle(fontSize)
 
   const element = parent.document.createElement('div')
   element.classList.add(className.message)
@@ -103,7 +120,7 @@ const createElement = (node, height) => {
   element.style.lineHeight = `${fontSize}px`
   element.setAttribute(
     'style',
-    element.getAttribute('style') + settings.extendedStyle
+    element.getAttribute('style') + textStyle + settings.extendedStyle
   )
 
   if (authority && avatarUrl) {

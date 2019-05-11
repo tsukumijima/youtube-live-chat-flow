@@ -28,7 +28,7 @@ const vuexPersist = new VuexPersistence({
   }
 })
 
-export const initialState = {
+const initialState = {
   color: '#ffffff',
   avatar: false,
   memberColor: '#66ff66',
@@ -45,7 +45,8 @@ export const initialState = {
   rows: '12',
   speed: '5',
   overflow: 'hidden',
-  extendedStyle: 'text-shadow: 1px 1px 2px #333;',
+  textStyle: 'shadow',
+  extendedTextStyle: '',
   bottomControllerEnabled: false
 }
 
@@ -102,8 +103,11 @@ const config = {
     setOverflow(state, { overflow }) {
       state.overflow = overflow
     },
-    setExtendedStyle(state, { extendedStyle }) {
-      state.extendedStyle = extendedStyle
+    setTextStyle(state, { textStyle }) {
+      state.textStyle = textStyle
+    },
+    setExtendedTextStyle(state, { extendedTextStyle }) {
+      state.extendedTextStyle = extendedTextStyle
     },
     setBottomControllerEnabled(state, { bottomControllerEnabled }) {
       state.bottomControllerEnabled = bottomControllerEnabled

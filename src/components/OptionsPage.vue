@@ -156,7 +156,7 @@
           </v-layout>
           <v-text-field
             v-model="opacity"
-            :placeholder="defaults.opacity"
+            :placeholder="placeholder.opacity"
             label="Opacity"
             type="number"
             min="0"
@@ -165,7 +165,7 @@
           />
           <v-text-field
             v-model="rows"
-            :placeholder="defaults.rows"
+            :placeholder="placeholder.rows"
             :label="`Height (Video Height / ${rows})`"
             type="number"
             min="1"
@@ -173,7 +173,7 @@
           />
           <v-text-field
             v-model="speed"
-            :placeholder="defaults.speed"
+            :placeholder="placeholder.speed"
             label="Display Time"
             type="number"
             min="1"
@@ -186,10 +186,15 @@
             :items="overflows"
             label="Overflow Mode"
           />
+          <v-select
+            v-model="textStyle"
+            :items="textStyles"
+            label="Text Style"
+          />
           <v-textarea
-            v-model="extendedStyle"
-            :placeholder="defaults.extendedStyle"
-            label="Extended Style"
+            v-model="extendedTextStyle"
+            :placeholder="placeholder.extendedTextStyle"
+            label="Extended Text Style"
             rows="1"
             auto-grow
           />
@@ -208,15 +213,24 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import { initialState } from '~/store'
 
 export default {
   data() {
     return {
-      defaults: initialState,
+      placeholder: {
+        opacity: '0.8',
+        rows: '12',
+        speed: '5',
+        extendedTextStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;'
+      },
       overflows: [
         { text: 'Hidden', value: 'hidden' },
         { text: 'Overlay', value: 'overlay' }
+      ],
+      textStyles: [
+        { text: 'None', value: 'none' },
+        { text: 'Outline', value: 'outline' },
+        { text: 'Shadow', value: 'shadow' }
       ]
     }
   },
@@ -353,13 +367,21 @@ export default {
         this.$store.commit('setOverflow', { overflow: value })
       }
     },
-    extendedStyle: {
+    textStyle: {
       get() {
-        return this.$store.state.extendedStyle
+        return this.$store.state.textStyle
       },
       set(value) {
-        this.$store.commit('setExtendedStyle', {
-          extendedStyle: value
+        this.$store.commit('setTextStyle', { textStyle: value })
+      }
+    },
+    extendedTextStyle: {
+      get() {
+        return this.$store.state.extendedTextStyle
+      },
+      set(value) {
+        this.$store.commit('setExtendedTextStyle', {
+          extendedTextStyle: value
         })
       }
     },
