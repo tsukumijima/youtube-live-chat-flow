@@ -1,7 +1,7 @@
-import logger from './utils/logger'
+import browser from 'webextension-polyfill'
 import className from './constants/class-name'
 
-let disabled = false
+let enabled = true
 let settings = null
 const lines = []
 
@@ -23,7 +23,7 @@ const isMyName = (authorName) => {
     '.html5-video-player .ytp-chrome-top-buttons .ytp-watch-later-button'
   )
   if (button) {
-    // TODO: lang: ja only
+    // TODO: japanese only
     return (
       authorName ===
       button.getAttribute('title').replace(' として後で再生します', '')
@@ -58,6 +58,22 @@ const hasAuthority = (authorType) => {
   }
 }
 
+const getTextStyle = (fontSize) => {
+  switch (settings.textStyle) {
+    case 'outline': {
+      const n = (fontSize / 32).toFixed(2)
+      return `-webkit-text-stroke: ${n}px #666;`
+    }
+    case 'shadow': {
+      const n = (fontSize / 48).toFixed(2)
+      return `text-shadow: ${n}px ${n}px ${n * 2}px #333;`
+    }
+    case 'none':
+    default:
+      return ''
+  }
+}
+
 const createElement = (node, height) => {
   const tags = [
     'yt-live-chat-text-message-renderer',
@@ -85,15 +101,16 @@ const createElement = (node, height) => {
 
   const fontSize = height * 0.8
   const color = myself
-    ? settings.selfColor
+    ? settings.myColor
     : purchase
     ? settings.paidColor
     : getColor(authorType, authorName)
   const authority = myself
-    ? settings.selfAvatar
+    ? settings.myAvatar
     : purchase
     ? settings.paidAvatar
     : hasAuthority(authorType, authorName)
+  const textStyle = getTextStyle(fontSize)
 
   const element = parent.document.createElement('div')
   element.classList.add(className.message)
@@ -103,7 +120,7 @@ const createElement = (node, height) => {
   element.style.lineHeight = `${fontSize}px`
   element.setAttribute(
     'style',
-    element.getAttribute('style') + settings.extendedStyle
+    element.getAttribute('style') + textStyle + settings.extendedStyle
   )
 
   if (authority && avatarUrl) {
@@ -141,7 +158,7 @@ const createElement = (node, height) => {
 }
 
 const flow = (node) => {
-  if (disabled || !settings) {
+  if (!enabled || !settings) {
     return
   }
 
@@ -247,7 +264,7 @@ const observeChat = () => {
 }
 
 const addVideoEventListener = () => {
-  const video = parent.document.querySelector('.video-stream.html5-main-video')
+  const video = parent.document.querySelector('video.html5-main-video')
   if (!video) {
     return
   }
@@ -309,7 +326,7 @@ const addControlButton = (disabled) => {
   button.classList.add(className.controlButton)
   button.classList.add('ytp-button')
   button.onclick = () => {
-    chrome.runtime.sendMessage({ id: 'disabledToggled' })
+    browser.runtime.sendMessage({ id: 'controlButtonClicked' })
   }
   button.append(svg)
 
@@ -318,9 +335,9 @@ const addControlButton = (disabled) => {
   updateControlButton(disabled)
 }
 
-const updateControlButton = (disabled) => {
+const updateControlButton = () => {
   const button = parent.document.querySelector(`.${className.controlButton}`)
-  button && button.setAttribute('aria-pressed', !disabled)
+  button && button.setAttribute('aria-pressed', enabled)
 }
 
 const removeControlButton = () => {
@@ -447,9 +464,7 @@ const removeInputControl = () => {
   button && button.remove()
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
-
+browser.runtime.onMessage.addListener((message) => {
   const { id, type, data } = message
   if (type === 'SIGN_RELOAD' && process.env.NODE_ENV !== 'production') {
     // reload if files changed
@@ -460,40 +475,37 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'cssInjected':
       parent.document.body.classList.add(className.injected)
       break
-    case 'disabledChanged':
-      disabled = data.disabled
-      updateControlButton(disabled)
-      if (disabled) {
+    case 'enabledChanged':
+      enabled = data.enabled
+      updateControlButton()
+      if (!enabled) {
         clearMessages()
       }
       break
-    case 'stateChanged':
-      settings = data.state.settings
+    case 'settingsChanged':
+      settings = data.settings
       break
   }
 })
 
-document.addEventListener('DOMContentLoaded', () => {
-  const cssInjected = parent.document.body.classList.contains(
+document.addEventListener('DOMContentLoaded', async () => {
+  const needCSSInject = !parent.document.body.classList.contains(
     className.injected
   )
-  chrome.runtime.sendMessage(
-    { id: 'contentLoaded', data: { cssInjected } },
-    (data) => {
-      disabled = data.disabled
-      settings = data.state.settings
-
-      observeChat()
-      addVideoEventListener()
-      addControlButton(disabled)
-    }
-  )
-
-  window.addEventListener('unload', () => {
-    clearMessages()
-    removeControlButton()
-    removeInputControl()
+  const data = await browser.runtime.sendMessage({
+    id: 'contentLoaded',
+    data: { needCSSInject }
   })
+  enabled = data.enabled
+  settings = data.settings
+
+  observeChat()
+  addVideoEventListener()
+  addControlButton()
 })
 
-logger.log('content script loaded')
+window.addEventListener('unload', () => {
+  clearMessages()
+  removeControlButton()
+  removeInputControl()
+})

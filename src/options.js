@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import App from './components/App'
-import store from './store'
+import OptionsPage from './components/OptionsPage'
+import createStore from './store'
 
 Vue.use(Vuetify)
 
-new Vue({
-  el: '#app',
-  store,
-  components: { App },
-  template: '<App />'
+createStore().then((store) => {
+  new Vue({
+    el: '#app',
+    store,
+    components: { OptionsPage },
+    template: '<OptionsPage />'
+  })
 })
