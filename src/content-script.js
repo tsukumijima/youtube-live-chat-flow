@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill'
 import className from './constants/class-name'
 
-let disabled = false
+let enabled = true
 let settings = null
 const lines = []
 
@@ -141,7 +141,7 @@ const createElement = (node, height) => {
 }
 
 const flow = (node) => {
-  if (disabled || !settings) {
+  if (!enabled || !settings) {
     return
   }
 
@@ -247,7 +247,7 @@ const observeChat = () => {
 }
 
 const addVideoEventListener = () => {
-  const video = parent.document.querySelector('.video-stream.html5-main-video')
+  const video = parent.document.querySelector('video.html5-main-video')
   if (!video) {
     return
   }
@@ -309,7 +309,7 @@ const addControlButton = (disabled) => {
   button.classList.add(className.controlButton)
   button.classList.add('ytp-button')
   button.onclick = () => {
-    browser.runtime.sendMessage({ id: 'disabledToggled' })
+    browser.runtime.sendMessage({ id: 'controlButtonClicked' })
   }
   button.append(svg)
 
@@ -318,9 +318,9 @@ const addControlButton = (disabled) => {
   updateControlButton(disabled)
 }
 
-const updateControlButton = (disabled) => {
+const updateControlButton = () => {
   const button = parent.document.querySelector(`.${className.controlButton}`)
-  button && button.setAttribute('aria-pressed', !disabled)
+  button && button.setAttribute('aria-pressed', enabled)
 }
 
 const removeControlButton = () => {
@@ -447,9 +447,7 @@ const removeInputControl = () => {
   button && button.remove()
 }
 
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('chrome.runtime.onMessage', message, sender, sendResponse)
-
+browser.runtime.onMessage.addListener((message) => {
   const { id, type, data } = message
   if (type === 'SIGN_RELOAD' && process.env.NODE_ENV !== 'production') {
     // reload if files changed
@@ -460,33 +458,33 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'cssInjected':
       parent.document.body.classList.add(className.injected)
       break
-    case 'disabledChanged':
-      disabled = data.disabled
-      updateControlButton(disabled)
-      if (disabled) {
+    case 'enabledChanged':
+      enabled = data.enabled
+      updateControlButton()
+      if (!enabled) {
         clearMessages()
       }
       break
-    case 'stateChanged':
-      settings = data.state.settings
+    case 'settingsChanged':
+      settings = data.settings
       break
   }
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const cssInjected = parent.document.body.classList.contains(
+  const needCSSInject = !parent.document.body.classList.contains(
     className.injected
   )
   const data = await browser.runtime.sendMessage({
     id: 'contentLoaded',
-    data: { cssInjected }
+    data: { needCSSInject }
   })
-  disabled = data.disabled
+  enabled = data.enabled
   settings = data.settings
 
   observeChat()
   addVideoEventListener()
-  addControlButton(disabled)
+  addControlButton()
 })
 
 window.addEventListener('unload', () => {

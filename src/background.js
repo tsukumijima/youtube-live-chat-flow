@@ -7,8 +7,8 @@ import './assets/icon16.png'
 import './assets/icon48.png'
 import './assets/icon128.png'
 
-let initialDisabled = false
-const disabledTabs = {}
+let initialEnabled = true
+const enabledTabs = {}
 
 const getSettings = async () => {
   const store = await createStore(true)
@@ -16,36 +16,36 @@ const getSettings = async () => {
 }
 
 const setIcon = (tabId) => {
-  const path = disabledTabs[tabId] ? iconOff : iconOn
+  const path = enabledTabs[tabId] ? iconOn : iconOff
   browser.pageAction.setIcon({ tabId, path })
 }
 
-const contentLoaded = async (tabId, cssInjected, sendResponse) => {
-  const disabled = initialDisabled
-  disabledTabs[tabId] = disabled
+const initTab = async (tabId, needCSSInject, sendResponse) => {
+  const enabled = initialEnabled
+  enabledTabs[tabId] = enabled
 
   setIcon(tabId)
   browser.pageAction.show(tabId)
 
-  if (!cssInjected) {
-    console.log('insert css')
-    // TODO: Must be injected
+  if (needCSSInject) {
     browser.tabs.insertCSS(tabId, { code: stylesheet })
     browser.tabs.sendMessage(tabId, { id: 'cssInjected' })
   }
 
-  sendResponse({ disabled, settings: {} })
+  const settings = await getSettings()
+  sendResponse({ enabled, settings })
 }
 
-const disabledToggled = (tabId) => {
-  const disabled = !disabledTabs[tabId]
-  initialDisabled = disabled
-  disabledTabs[tabId] = disabled
+const toggleEnabled = (tabId) => {
+  const enabled = !enabledTabs[tabId]
+  initialEnabled = enabled
+  enabledTabs[tabId] = enabled
 
   setIcon(tabId)
+
   browser.tabs.sendMessage(tabId, {
-    id: 'disabledChanged',
-    data: { disabled }
+    id: 'enabledChanged',
+    data: { enabled }
   })
 }
 
@@ -54,23 +54,21 @@ const settingsChanged = async () => {
   const tabs = await browser.tabs.query({})
   for (let tab of tabs) {
     browser.tabs.sendMessage(tab.id, {
-      id: 'stateChanged',
+      id: 'settingsChanged',
       data: { settings }
     })
   }
 }
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('chrome.runtime.onMessage', message, sender, sendResponse)
-
   const { id, data } = message
   const { tab } = sender
   switch (id) {
     case 'contentLoaded':
-      contentLoaded(tab.id, data.cssInjected, sendResponse)
+      initTab(tab.id, data.needCSSInject, sendResponse)
       return true
-    case 'disabledToggled':
-      disabledToggled(tab.id)
+    case 'controlButtonClicked':
+      toggleEnabled(tab.id)
       break
     case 'settingsChanged':
       settingsChanged()
@@ -79,7 +77,5 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 browser.pageAction.onClicked.addListener((tab) => {
-  console.log('chrome.pageAction.onClicked', tab)
-
-  disabledToggled(tab.id)
+  toggleEnabled(tab.id)
 })
