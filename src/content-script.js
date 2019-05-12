@@ -59,13 +59,22 @@ const hasAuthority = (authorType) => {
 }
 
 const getTextStyle = (fontSize) => {
+  const n = (fontSize / 48).toFixed(2)
   switch (settings.textStyle) {
     case 'outline': {
-      const n = (fontSize / 32).toFixed(2)
-      return `-webkit-text-stroke: ${n}px #666;`
+      return `
+        text-shadow:
+          -${n}px -${n}px 0 #333,
+          ${n}px -${n}px 0 #333,
+          -${n}px ${n}px 0 #333,
+          ${n}px ${n}px 0 #333,
+          0 ${n}px 0 #333,
+          0 -${n}px 0 #333,
+          ${n}px 0 0 #333,
+          -${n}px 0 0 #333;
+      `
     }
     case 'shadow': {
-      const n = (fontSize / 48).toFixed(2)
       return `text-shadow: ${n}px ${n}px ${n * 2}px #333;`
     }
     case 'none':
