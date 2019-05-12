@@ -15,35 +15,36 @@ const getSettings = async () => {
   return store.state
 }
 
-const setIcon = (tabId) => {
+const setIcon = async (tabId) => {
   const path = enabledTabs[tabId] ? iconOn : iconOff
-  browser.pageAction.setIcon({ tabId, path })
+  await browser.pageAction.setIcon({ tabId, path })
 }
 
-const initTab = async (tabId, needCSSInject, sendResponse) => {
+const initTab = async (tabId, needCSSInject) => {
   const enabled = initialEnabled
   enabledTabs[tabId] = enabled
 
-  setIcon(tabId)
-  browser.pageAction.show(tabId)
+  await setIcon(tabId)
+  await browser.pageAction.show(tabId)
 
   if (needCSSInject) {
-    browser.tabs.insertCSS(tabId, { code: stylesheet })
-    browser.tabs.sendMessage(tabId, { id: 'cssInjected' })
+    await browser.tabs.insertCSS(tabId, { code: stylesheet })
+    await browser.tabs.sendMessage(tabId, { id: 'cssInjected' })
   }
 
   const settings = await getSettings()
-  sendResponse({ enabled, settings })
+
+  return { enabled, settings }
 }
 
-const toggleEnabled = (tabId) => {
+const toggleEnabled = async (tabId) => {
   const enabled = !enabledTabs[tabId]
   initialEnabled = enabled
   enabledTabs[tabId] = enabled
 
-  setIcon(tabId)
+  await setIcon(tabId)
 
-  browser.tabs.sendMessage(tabId, {
+  await browser.tabs.sendMessage(tabId, {
     id: 'enabledChanged',
     data: { enabled }
   })
@@ -53,25 +54,26 @@ const settingsChanged = async () => {
   const settings = await getSettings()
   const tabs = await browser.tabs.query({})
   for (let tab of tabs) {
-    browser.tabs.sendMessage(tab.id, {
-      id: 'settingsChanged',
-      data: { settings }
-    })
+    try {
+      await browser.tabs.sendMessage(tab.id, {
+        id: 'settingsChanged',
+        data: { settings }
+      })
+    } catch (e) {} // eslint-disable-line no-empty
   }
 }
 
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener(async (message, sender) => {
   const { id, data } = message
   const { tab } = sender
   switch (id) {
     case 'contentLoaded':
-      initTab(tab.id, data.needCSSInject, sendResponse)
-      return true
+      return await initTab(tab.id, data.needCSSInject)
     case 'controlButtonClicked':
-      toggleEnabled(tab.id)
+      await toggleEnabled(tab.id)
       break
     case 'settingsChanged':
-      settingsChanged()
+      await settingsChanged()
       break
   }
 })
