@@ -63,16 +63,16 @@ const getTextStyle = (fontSize) => {
   switch (settings.textStyle) {
     case 'outline': {
       return `
-      text-shadow:
-        -${n}px -${n}px 0 #333,
-        ${n}px -${n}px 0 #333,
-        -${n}px ${n}px 0 #333,
-        ${n}px ${n}px 0 #333,
-        0 ${n}px 0 #333,
-        0 -${n}px 0 #333,
-        ${n}px 0 0 #333,
-        -${n}px 0 0 #333
-      ;`
+        text-shadow:
+          -${n}px -${n}px 0 #333,
+          ${n}px -${n}px 0 #333,
+          -${n}px ${n}px 0 #333,
+          ${n}px ${n}px 0 #333,
+          0 ${n}px 0 #333,
+          0 -${n}px 0 #333,
+          ${n}px 0 0 #333,
+          -${n}px 0 0 #333;
+      `
     }
     case 'shadow': {
       return `text-shadow: ${n}px ${n}px ${n * 2}px #333;`
