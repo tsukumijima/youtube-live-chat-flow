@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill'
+import Color from 'color'
 import className from './constants/class-name'
 
 let enabled = true
@@ -58,25 +59,27 @@ const hasAuthority = (authorType) => {
   }
 }
 
-const getTextStyle = (fontSize) => {
+const getTextStyle = (fontSize, color) => {
   const n = (fontSize / 48).toFixed(2)
   switch (settings.textStyle) {
     case 'outline': {
+      const c = Color(color)
+        .darken(0.6)
+        .hex()
       return `
         text-shadow:
-          -${n}px -${n}px 0 #666,
-          ${n}px -${n}px 0 #666,
-          -${n}px ${n}px 0 #666,
-          ${n}px ${n}px 0 #666,
-          0 ${n}px 0 #666,
-          0 -${n}px 0 #666,
-          ${n}px 0 0 #666,
-          -${n}px 0 0 #666;
+          -${n}px -${n}px 0 ${c},
+          ${n}px -${n}px 0 ${c},
+          -${n}px ${n}px 0 ${c},
+          ${n}px ${n}px 0 ${c},
+          0 ${n}px 0 ${c},
+          0 -${n}px 0 ${c},
+          ${n}px 0 0 ${c},
+          -${n}px 0 0 ${c};
       `
     }
-    case 'shadow': {
+    case 'shadow':
       return `text-shadow: ${n}px ${n}px ${n * 2}px #333;`
-    }
     case 'none':
     default:
       return ''
@@ -119,7 +122,7 @@ const createElement = (node, height) => {
     : purchase
     ? settings.paidAvatar
     : hasAuthority(authorType, authorName)
-  const textStyle = getTextStyle(fontSize)
+  const textStyle = getTextStyle(fontSize, color)
 
   const element = parent.document.createElement('div')
   element.classList.add(className.message)
