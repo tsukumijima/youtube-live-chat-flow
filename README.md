@@ -12,8 +12,8 @@
 
 
 ## Screenshots
-![screenshot](./build/screenshots/screenshot1.png?raw=true)
-![screenshot](./build/screenshots/screenshot2.png?raw=true)
+![screenshot](.github/img/screenshot1.png)
+![screenshot](.github/img/screenshot2.png)
 
 
 ## Installation
