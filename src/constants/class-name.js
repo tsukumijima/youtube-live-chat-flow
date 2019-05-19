@@ -9,6 +9,7 @@ const classNames = [
   'messageAvatar',
   'messageText',
   'messagePurchase',
+  'sticker',
   'controlButton',
   'controller',
   'smallController'

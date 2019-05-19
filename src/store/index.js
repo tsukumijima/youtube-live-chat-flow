@@ -45,7 +45,7 @@ const initialState = {
   rows: '12',
   speed: '5',
   overflow: 'hidden',
-  textStyle: 'shadow',
+  textStyle: 'outline',
   extendedTextStyle: '',
   bottomControllerEnabled: false
 }

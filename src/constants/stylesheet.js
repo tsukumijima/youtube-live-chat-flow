@@ -63,6 +63,10 @@ yt-live-chat-text-input-field-renderer#input #input {
   line-height: initial;
   margin-left: 0.5em;
 }
+.html5-video-container .${className.sticker} {
+  left: 0;
+  position: absolute;
+}
 
 .ytp-chrome-bottom .ytp-chrome-controls {
   position: relative;
