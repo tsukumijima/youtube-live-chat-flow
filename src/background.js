@@ -1,11 +1,8 @@
 import browser from 'webextension-polyfill'
 import createStore from './store'
 import stylesheet from './constants/stylesheet'
-import iconOff from './assets/icon-off48.png'
-import iconOn from './assets/icon-on48.png'
-import './assets/icon16.png'
-import './assets/icon48.png'
-import './assets/icon128.png'
+import icon from './assets/icon.png'
+import iconOn from './assets/icon-on.png'
 
 let initialEnabled = true
 const enabledTabs = {}
@@ -16,7 +13,7 @@ const getSettings = async () => {
 }
 
 const setIcon = async (tabId) => {
-  const path = enabledTabs[tabId] ? iconOn : iconOff
+  const path = enabledTabs[tabId] ? iconOn : icon
   await browser.pageAction.setIcon({ tabId, path })
 }
 

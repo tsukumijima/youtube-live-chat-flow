@@ -31,10 +31,9 @@ yt-live-chat-text-input-field-renderer#input #input {
   padding: 0 8px;
 }
 .html5-video-player.ytp-fullscreen
-.${className.controller} #message-buttons #send-button #button {
+.${className.controller} #message-buttons #send-button yt-icon-button#button {
   width: 36px;
   height: 36px;
-  padding: 0;
 }
 .html5-video-player.ytp-fullscreen
 .${className.controller} #message-buttons #countdown {
@@ -175,12 +174,18 @@ yt-button-renderer.yt-live-chat-message-input-renderer[disabled] {
 a.yt-button-renderer:hover {
   color: inherit;
 }
-.${className.controller} #message-buttons #send-button #button {
+.${className.controller} #message-buttons #send-button yt-icon-button#button {
   display: block;
+  height: 24px;
+  width: 24px;
+  padding: 0;
+}
+.${className.controller} #message-buttons #send-button yt-icon-button#button
+paper-ripple {
+  display: none;
 }
 .${className.controller} #message-buttons #countdown {
   position: absolute;
-  right: 8px;
   width: 24px;
   height: 24px;
   opacity: 0;
