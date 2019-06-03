@@ -3,9 +3,9 @@
     <v-content>
       <v-container class="pa-0" fluid>
         <v-card class="pa-3" flat>
-          <v-subheader class="pl-0">Avatar &amp; Color</v-subheader>
+          <v-subheader class="pl-0">Avatar &amp; Color &amp; Style</v-subheader>
           <v-layout row align-center>
-            <v-flex xs6><v-subheader>Guest</v-subheader></v-flex>
+            <v-flex xs3><v-subheader>Guest</v-subheader></v-flex>
             <v-flex xs6>
               <v-layout class="align-center">
                 <v-tooltip left>
@@ -28,9 +28,17 @@
                 />
               </v-layout>
             </v-flex>
+            <v-flex xs3 pl-3>
+              <v-select
+                v-model="style"
+                :items="styles"
+                hide-details
+                class="mt-0 pt-0"
+              />
+            </v-flex>
           </v-layout>
           <v-layout row align-center>
-            <v-flex xs6><v-subheader>Member</v-subheader></v-flex>
+            <v-flex xs3><v-subheader>Member</v-subheader></v-flex>
             <v-flex xs6>
               <v-layout class="align-center">
                 <v-tooltip left>
@@ -53,9 +61,17 @@
                 />
               </v-layout>
             </v-flex>
+            <v-flex xs3 pl-3>
+              <v-select
+                v-model="memberStyle"
+                :items="styles"
+                hide-details
+                class="mt-0 pt-0"
+              />
+            </v-flex>
           </v-layout>
           <v-layout row align-center>
-            <v-flex xs6><v-subheader>Moderator</v-subheader></v-flex>
+            <v-flex xs3><v-subheader>Moderator</v-subheader></v-flex>
             <v-flex xs6>
               <v-layout class="align-center">
                 <v-tooltip left>
@@ -78,9 +94,17 @@
                 />
               </v-layout>
             </v-flex>
+            <v-flex xs3 pl-3>
+              <v-select
+                v-model="moderatorStyle"
+                :items="styles"
+                hide-details
+                class="mt-0 pt-0"
+              />
+            </v-flex>
           </v-layout>
           <v-layout row align-center>
-            <v-flex xs6><v-subheader>Owner</v-subheader></v-flex>
+            <v-flex xs3><v-subheader>Owner</v-subheader></v-flex>
             <v-flex xs6>
               <v-layout class="align-center">
                 <v-tooltip left>
@@ -103,34 +127,17 @@
                 />
               </v-layout>
             </v-flex>
-          </v-layout>
-          <v-layout row align-center>
-            <v-flex xs6><v-subheader>Super Chat</v-subheader></v-flex>
-            <v-flex xs6>
-              <v-layout class="align-center">
-                <v-tooltip left>
-                  <v-btn
-                    slot="activator"
-                    :color="paidAvatar ? 'primary' : 'grey darken-1'"
-                    flat
-                    icon
-                    @click="paidAvatar = !paidAvatar"
-                  >
-                    <v-icon>account_circle</v-icon>
-                  </v-btn>
-                  <span>Show Avatar</span>
-                </v-tooltip>
-                <v-text-field
-                  v-model="paidColor"
-                  class="color mt-0 pt-0"
-                  type="color"
-                  hide-details
-                />
-              </v-layout>
+            <v-flex xs3 pl-3>
+              <v-select
+                v-model="ownerStyle"
+                :items="styles"
+                hide-details
+                class="mt-0 pt-0"
+              />
             </v-flex>
           </v-layout>
           <v-layout row align-center>
-            <v-flex xs6><v-subheader>Myself</v-subheader></v-flex>
+            <v-flex xs3><v-subheader>Myself</v-subheader></v-flex>
             <v-flex xs6>
               <v-layout class="align-center">
                 <v-tooltip left>
@@ -152,6 +159,14 @@
                   hide-details
                 />
               </v-layout>
+            </v-flex>
+            <v-flex xs3 pl-3>
+              <v-select
+                v-model="myStyle"
+                :items="styles"
+                hide-details
+                class="mt-0 pt-0"
+              />
             </v-flex>
           </v-layout>
           <v-text-field
@@ -231,6 +246,10 @@ export default {
         { text: 'None', value: 'none' },
         { text: 'Outline', value: 'outline' },
         { text: 'Shadow', value: 'shadow' }
+      ],
+      styles: [
+        { text: 'Simple', value: 'simple' },
+        { text: '2 lines', value: 'two-line' }
       ]
     }
   },
@@ -251,6 +270,14 @@ export default {
         this.$store.commit('setAvatar', { avatar: value })
       }
     },
+    style: {
+      get() {
+        return this.$store.state.style
+      },
+      set(value) {
+        this.$store.commit('setStyle', { style: value })
+      }
+    },
     memberColor: {
       get() {
         return this.$store.state.memberColor
@@ -265,6 +292,14 @@ export default {
       },
       set(value) {
         this.$store.commit('setMemberAvatar', { memberAvatar: value })
+      }
+    },
+    memberStyle: {
+      get() {
+        return this.$store.state.memberStyle
+      },
+      set(value) {
+        this.$store.commit('setMemberStyle', { memberStyle: value })
       }
     },
     moderatorColor: {
@@ -287,6 +322,14 @@ export default {
         })
       }
     },
+    moderatorStyle: {
+      get() {
+        return this.$store.state.moderatorStyle
+      },
+      set(value) {
+        this.$store.commit('setModeratorStyle', { moderatorStyle: value })
+      }
+    },
     ownerColor: {
       get() {
         return this.$store.state.ownerColor
@@ -303,20 +346,12 @@ export default {
         this.$store.commit('setOwnerAvatar', { ownerAvatar: value })
       }
     },
-    paidColor: {
+    ownerStyle: {
       get() {
-        return this.$store.state.paidColor
+        return this.$store.state.ownerStyle
       },
       set(value) {
-        this.$store.commit('setPaidColor', { paidColor: value })
-      }
-    },
-    paidAvatar: {
-      get() {
-        return this.$store.state.paidAvatar
-      },
-      set(value) {
-        this.$store.commit('setPaidAvatar', { paidAvatar: value })
+        this.$store.commit('setOwnerStyle', { ownerStyle: value })
       }
     },
     myColor: {
@@ -333,6 +368,14 @@ export default {
       },
       set(value) {
         this.$store.commit('setMyAvatar', { myAvatar: value })
+      }
+    },
+    myStyle: {
+      get() {
+        return this.$store.state.myStyle
+      },
+      set(value) {
+        this.$store.commit('setMyStyle', { myStyle: value })
       }
     },
     opacity: {

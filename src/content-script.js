@@ -1,6 +1,7 @@
 import browser from 'webextension-polyfill'
 import className from './constants/class-name'
-import FlowController from './controllers/flow-controller'
+import FlowController from './utils/flow-controller'
+import message from './assets/message.svg'
 
 const controller = new FlowController()
 
@@ -31,26 +32,17 @@ const addControlButton = (disabled) => {
     return
   }
 
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-  path.setAttribute(
-    'd',
-    'M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z'
-  )
-  path.setAttribute('fill', '#fff')
-
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-  svg.setAttribute('viewBox', '-8 -8 40 40')
-  svg.setAttribute('width', '100%')
-  svg.setAttribute('height', '100%')
-  svg.append(path)
-
   const button = document.createElement('button')
   button.classList.add(className.controlButton)
   button.classList.add('ytp-button')
   button.onclick = () => {
     browser.runtime.sendMessage({ id: 'controlButtonClicked' })
   }
-  button.append(svg)
+  button.innerHTML = message
+
+  const svg = button.querySelector('svg')
+  svg.setAttribute('viewBox', '-8 -8 40 40')
+  svg.style.fill = 'white'
 
   controls.prepend(button)
 
@@ -225,6 +217,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 window.addEventListener('unload', () => {
   controller.clear()
+  controller.disconnect()
   removeControlButton()
   removeInputControl()
 })

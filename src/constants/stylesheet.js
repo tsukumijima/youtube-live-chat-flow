@@ -31,10 +31,9 @@ yt-live-chat-text-input-field-renderer#input #input {
   padding: 0 8px;
 }
 .html5-video-player.ytp-fullscreen
-.${className.controller} #message-buttons #send-button #button {
+.${className.controller} #message-buttons #send-button yt-icon-button#button {
   width: 36px;
   height: 36px;
-  padding: 0;
 }
 .html5-video-player.ytp-fullscreen
 .${className.controller} #message-buttons #countdown {
@@ -51,21 +50,40 @@ yt-live-chat-text-input-field-renderer#input #input {
   position: absolute;
   vertical-align: bottom;
   white-space: nowrap;
+  box-sizing: border-box;
 }
 .html5-video-container .${className.message} .${className.messageAvatar} {
   margin-right: 0.2em;
   object-fit: cover;
 }
-.html5-video-container .${className.message} .${className.messageText} img {
+.html5-video-container .${className.message}
+.${className.messageMessage} > img {
   vertical-align: bottom;
 }
 .html5-video-container .${className.message} .${className.messagePurchase} {
   line-height: initial;
   margin-left: 0.5em;
 }
-.html5-video-container .${className.sticker} {
-  left: 0;
-  position: absolute;
+.html5-video-container .${className.messageTwoLine} {
+  align-items: start;
+}
+.html5-video-container .${className.messageTwoLine} > div {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+.html5-video-container .${className.messageSuperChat} > div,
+.html5-video-container .${className.messageSuperSticker} > div {
+  align-items: start;
+  display: flex;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+.html5-video-container .${className.messageSuperChat} > div > div,
+.html5-video-container .${className.messageSuperSticker} > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
 }
 
 .ytp-chrome-bottom .ytp-chrome-controls {
@@ -175,12 +193,18 @@ yt-button-renderer.yt-live-chat-message-input-renderer[disabled] {
 a.yt-button-renderer:hover {
   color: inherit;
 }
-.${className.controller} #message-buttons #send-button #button {
+.${className.controller} #message-buttons #send-button yt-icon-button#button {
   display: block;
+  height: 24px;
+  width: 24px;
+  padding: 0;
+}
+.${className.controller} #message-buttons #send-button yt-icon-button#button
+paper-ripple {
+  display: none;
 }
 .${className.controller} #message-buttons #countdown {
   position: absolute;
-  right: 8px;
   width: 24px;
   height: 24px;
   opacity: 0;

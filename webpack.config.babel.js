@@ -34,11 +34,15 @@ export default {
         use: ['vue-style-loader', 'css-loader']
       },
       {
-        test: /\.(jpg|gif|png|svg)$/,
+        test: /\.(jpg|gif|png)$/,
         loader: 'file-loader',
         options: {
           name: 'assets/[name].[ext]'
         }
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader'
       }
     ]
   },
