@@ -31,23 +31,26 @@ const vuexPersist = new VuexPersistence({
 const initialState = {
   color: '#ffffff',
   avatar: false,
+  style: 'simple',
   memberColor: '#66ff66',
   memberAvatar: true,
+  memberStyle: 'simple',
   moderatorColor: '#6666ff',
   moderatorAvatar: true,
+  moderatorStyle: 'two-line',
   ownerColor: '#ffff66',
   ownerAvatar: true,
-  paidColor: '#ffcc66',
-  paidAvatar: true,
+  ownerStyle: 'two-line',
   myColor: '#ff6666',
   myAvatar: true,
+  myStyle: 'two-line',
   opacity: '0.8',
   rows: '12',
   speed: '5',
   overflow: 'hidden',
   textStyle: 'outline',
   extendedTextStyle: '',
-  bottomControllerEnabled: false
+  bottomControllerEnabled: true
 }
 
 const config = {
@@ -61,11 +64,17 @@ const config = {
     setAvatar(state, { avatar }) {
       state.avatar = avatar
     },
+    setStyle(state, { style }) {
+      state.style = style
+    },
     setMemberColor(state, { memberColor }) {
       state.memberColor = memberColor
     },
     setMemberAvatar(state, { memberAvatar }) {
       state.memberAvatar = memberAvatar
+    },
+    setMemberStyle(state, { memberStyle }) {
+      state.memberStyle = memberStyle
     },
     setModeratorColor(state, { moderatorColor }) {
       state.moderatorColor = moderatorColor
@@ -73,23 +82,26 @@ const config = {
     setModeratorAvatar(state, { moderatorAvatar }) {
       state.moderatorAvatar = moderatorAvatar
     },
+    setModeratorStyle(state, { moderatorStyle }) {
+      state.moderatorStyle = moderatorStyle
+    },
     setOwnerColor(state, { ownerColor }) {
       state.ownerColor = ownerColor
     },
     setOwnerAvatar(state, { ownerAvatar }) {
       state.ownerAvatar = ownerAvatar
     },
-    setPaidColor(state, { paidColor }) {
-      state.paidColor = paidColor
-    },
-    setPaidAvatar(state, { paidAvatar }) {
-      state.paidAvatar = paidAvatar
+    setOwnerStyle(state, { ownerStyle }) {
+      state.ownerStyle = ownerStyle
     },
     setMyColor(state, { myColor }) {
       state.myColor = myColor
     },
     setMyAvatar(state, { myAvatar }) {
       state.myAvatar = myAvatar
+    },
+    setMyStyle(state, { myStyle }) {
+      state.myStyle = myStyle
     },
     setOpacity(state, { opacity }) {
       state.opacity = opacity

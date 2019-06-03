@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill'
 import className from './constants/class-name'
-import FlowController from './controllers/flow-controller'
+import FlowController from './utils/flow-controller'
 import message from './assets/message.svg'
 
 const controller = new FlowController()
@@ -217,6 +217,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 window.addEventListener('unload', () => {
   controller.clear()
+  controller.disconnect()
   removeControlButton()
   removeInputControl()
 })
