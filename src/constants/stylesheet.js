@@ -60,7 +60,8 @@ yt-live-chat-text-input-field-renderer#input #input {
 .${className.messageMessage} > img {
   vertical-align: bottom;
 }
-.html5-video-container .${className.message} .${className.messagePurchase} {
+.html5-video-container .${className.message}
+.${className.messagePurchaseAmount} {
   line-height: initial;
   margin-left: 0.5em;
 }

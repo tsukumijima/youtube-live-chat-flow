@@ -302,7 +302,7 @@ export default class ElementBuilder {
 
     const purchaseTextHeight = height * 0.5
     const purchase = parent.document.createElement('span')
-    purchase.classList.add(className.messagePurchase)
+    purchase.classList.add(className.messagePurchaseAmount)
     purchase.style.fontSize = `${purchaseTextHeight}px`
     purchase.textContent = amount
     author.append(purchase)
@@ -378,7 +378,7 @@ export default class ElementBuilder {
 
     const purchaseTextHeight = height * 0.5
     const purchase = parent.document.createElement('span')
-    purchase.classList.add(className.messagePurchase)
+    purchase.classList.add(className.messagePurchaseAmount)
     purchase.style.fontSize = `${purchaseTextHeight}px`
     purchase.textContent = amount
     author.append(purchase)
