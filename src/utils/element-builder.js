@@ -22,6 +22,9 @@ export default class ElementBuilder {
       case 'yt-live-chat-paid-sticker-renderer':
         element = await this._buildSuperSticker()
         break
+      case 'yt-live-chat-legacy-paid-message-renderer':
+        element = await this._buildMembership()
+        break
     }
     if (!element) {
       return null
@@ -364,6 +367,71 @@ export default class ElementBuilder {
       sticker.style.paddingTop = `${padding}px`
       wrapper.append(sticker)
     }
+
+    return element
+  }
+  async _buildMembership() {
+    const avatarUrl = await DOMHelper.getImageSourceAsync(
+      this._node.querySelector('#img')
+    )
+    const eventText = this._node.querySelector('#event-text').textContent
+    const detailText = this._node.querySelector('#detail-text').textContent
+    const backgroundColor = this._getBackgroundColor(
+      this._node.querySelector('#card'),
+      0.8
+    )
+
+    const height = this._height * 0.8
+    const padding = this._height * 0.1
+
+    const element = parent.document.createElement('div')
+    element.dataset.lineHeight = 3
+    element.classList.add(className.messageMembership)
+    element.style.color = 'white'
+    element.style.fontSize = `${height}px`
+    element.style.lineHeight = `${height}px`
+    element.style.padding = `${padding}px`
+    element.setAttribute(
+      'style',
+      element.getAttribute('style') + this._settings.extendedStyle
+    )
+
+    const containerPadding = this._height * 0.2
+    const container = parent.document.createElement('div')
+    container.style.backgroundColor = backgroundColor
+    container.style.borderRadius = `${containerPadding / 2}px`
+    container.style.padding = `${containerPadding}px ${containerPadding * 2}px`
+    element.append(container)
+
+    if (avatarUrl) {
+      const avatar = parent.document.createElement('img')
+      avatar.classList.add(className.messageAvatar)
+      avatar.src = avatarUrl
+      avatar.style.height = `${height}px`
+      avatar.style.marginRight = `${padding}px`
+      container.append(avatar)
+    }
+
+    const wrapper = parent.document.createElement('div')
+    container.append(wrapper)
+
+    const subTextHeight = height * 0.8
+    const subTextPadding = height * 0.1
+    const author = parent.document.createElement('span')
+    author.classList.add(className.messageAuthor)
+    author.style.fontSize = `${subTextHeight}px`
+    author.style.lineHeight = `${subTextHeight}px`
+    author.style.paddingTop = `${subTextPadding}px`
+    author.style.paddingBottom = `${subTextPadding}px`
+    author.textContent = eventText
+    wrapper.append(author)
+
+    const message = parent.document.createElement('span')
+    message.classList.add(className.messageMessage)
+    message.style.paddingTop = `${padding}px`
+    message.textContent = detailText
+    this._fixInnerImageHeight(message, height)
+    wrapper.append(message)
 
     return element
   }

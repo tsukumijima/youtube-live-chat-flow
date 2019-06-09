@@ -9,6 +9,7 @@ const classNames = [
   'messageTwoLine',
   'messageSuperChat',
   'messageSuperSticker',
+  'messageMembership',
   'messageAvatar',
   'messageAuthor',
   'messageMessage',

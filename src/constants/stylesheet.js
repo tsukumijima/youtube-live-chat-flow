@@ -69,14 +69,16 @@ yt-live-chat-text-input-field-renderer#input #input {
   align-items: start;
 }
 .html5-video-container .${className.messageSuperChat} > div,
-.html5-video-container .${className.messageSuperSticker} > div {
+.html5-video-container .${className.messageSuperSticker} > div,
+.html5-video-container .${className.messageMembership} > div {
   align-items: start;
   display: flex;
   vertical-align: bottom;
   white-space: nowrap;
 }
 .html5-video-container .${className.messageSuperChat} > div > div,
-.html5-video-container .${className.messageSuperSticker} > div > div {
+.html5-video-container .${className.messageSuperSticker} > div > div,
+.html5-video-container .${className.messageMembership} > div > div {
   display: flex;
   flex-direction: column;
   align-items: start;
