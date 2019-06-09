@@ -53,17 +53,12 @@ yt-live-chat-text-input-field-renderer#input #input {
   box-sizing: border-box;
 }
 .html5-video-container .${className.message} .${className.messageAvatar} {
-  margin-right: 0.2em;
+  border-radius: 50%;
   object-fit: cover;
 }
 .html5-video-container .${className.message}
 .${className.messageMessage} > img {
   vertical-align: bottom;
-}
-.html5-video-container .${className.message}
-.${className.messagePurchaseAmount} {
-  line-height: initial;
-  margin-left: 0.5em;
 }
 .html5-video-container .${className.messageTwoLine} {
   align-items: start;

@@ -1,10 +1,11 @@
 import ElementBuilder from './element-builder'
+import className from '../constants/class-name'
 
 export default class FlowController {
   constructor() {
     this._enabled = true
     this._settings = null
-    this._lines = []
+    this._rows = []
     this._observer = null
   }
   get enabled() {
@@ -22,93 +23,54 @@ export default class FlowController {
   set settings(value) {
     this._settings = value
   }
-  async _createElement(node, containerHeight) {
-    const height = containerHeight / this._settings.rows
-
-    const builder = new ElementBuilder({
-      node,
-      height,
-      settings: this._settings
-    })
-    const element = await builder.build()
-    if (!element) {
-      return null
+  observe() {
+    const items = document.querySelector(
+      '#items.yt-live-chat-item-list-renderer'
+    )
+    if (!items) {
+      return
     }
 
-    return element
-  }
-  _createAnimation(element, containerWidth) {
-    const millis = this._settings.speed * 1000
-    const keyframes = [
-      { transform: `translate(${containerWidth}px, 0px)` },
-      { transform: `translate(-${element.offsetWidth}px, 0px)` }
-    ]
-    return element.animate(keyframes, millis)
-  }
-  _getIndex(element, lineHeight, containerWidth, time) {
-    const millis = this._settings.speed * 1000
-    const vc = (containerWidth + element.offsetWidth) / millis
-
-    let index = this._lines.findIndex((_, i, lines) => {
-      const mod = (i + lineHeight) % this._settings.rows
-      if (mod > 0 && mod < lineHeight) {
-        return false
-      }
-      return Array(lineHeight)
-        .fill(1)
-        .every((_, j) => {
-          const messages = lines[i + j]
-          if (!messages) {
-            return true
-          }
-          const message = messages[messages.length - 1]
-          if (!message) {
-            return true
-          }
-          const vt = (containerWidth + message.element.offsetWidth) / millis
-
-          const t1 = time - message.time
-          const d1 = vt * t1
-          if (d1 < message.element.offsetWidth) {
-            return false
-          }
-
-          const t2 = t1 + containerWidth / vc
-          const d2 = vt * t2
-          if (d2 < containerWidth + message.element.offsetWidth) {
-            return false
-          }
-
-          return true
+    this._observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        const nodes = Array.from(mutation.addedNodes)
+        nodes.forEach((node) => {
+          this._flow(node)
         })
+      })
     })
-    if (index === -1) {
-      index = this._lines.length
-      const mod = (index + lineHeight) % this._settings.rows
-      if (mod > 0 && mod < lineHeight) {
-        index += lineHeight - mod
-      }
-    }
-    return index
+
+    this._observer.observe(items, { childList: true })
   }
-  _pushMessage(message, index, lineHeight) {
-    Array(lineHeight)
-      .fill(1)
-      .forEach((_, j) => {
-        const i = index + j
-        if (!this._lines[i]) {
-          this._lines[i] = []
-        }
-        this._lines[i].push(message)
-      })
+  disconnect() {
+    this._observer && this._observer.disconnect()
   }
-  _shiftMessage(index, lineHeight) {
-    Array(lineHeight)
-      .fill(1)
-      .forEach((_, j) => {
-        const i = index + j
-        this._lines[i].shift()
-      })
+  play() {
+    this._rows
+      .reduce(
+        (carry, messages) => [
+          ...carry,
+          ...messages.map((message) => message.animation)
+        ],
+        []
+      )
+      .forEach((animation) => animation.play())
+  }
+  pause() {
+    this._rows
+      .reduce(
+        (carry, messages) => [
+          ...carry,
+          ...messages.map((message) => message.animation)
+        ],
+        []
+      )
+      .forEach((animation) => animation.pause())
+  }
+  clear() {
+    parent.document.querySelectorAll(`.${className.message}`).forEach((e) => {
+      e.remove()
+    })
   }
   async _flow(node) {
     if (!this._enabled || !this._settings) {
@@ -132,14 +94,11 @@ export default class FlowController {
     container.appendChild(element)
 
     const lineHeight = Number(element.dataset.lineHeight)
-    const now = Date.now()
+    const width = element.offsetWidth
+    const containerWidth = container.offsetWidth
+    const time = Date.now()
 
-    const index = this._getIndex(
-      element,
-      lineHeight,
-      container.offsetWidth,
-      now
-    )
+    const index = this._getIndex(lineHeight, width, containerWidth, time)
     if (
       index + lineHeight > this._settings.rows &&
       this._settings.overflow === 'hidden'
@@ -156,73 +115,113 @@ export default class FlowController {
     element.style.top = `${top}px`
     element.style.opacity = opacity
 
-    const animation = this._createAnimation(element, container.offsetWidth)
-
-    const message = {
-      element,
-      animation,
-      time: now
-    }
-
-    this._pushMessage(message, index, lineHeight)
-
+    const animation = this._createAnimation(element, containerWidth)
     animation.onfinish = () => {
       element.remove()
       this._shiftMessage(index, lineHeight)
     }
-  }
-  observe() {
-    const items = document.querySelector(
-      '#items.yt-live-chat-item-list-renderer'
-    )
-    if (!items) {
+
+    const message = {
+      width,
+      time,
+      animation
+    }
+    this._pushMessage(message, index, lineHeight)
+
+    if (video.paused) {
       return
     }
+    animation.play()
+  }
+  async _createElement(node, containerHeight) {
+    const height = containerHeight / this._settings.rows
 
-    this._observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        const nodes = Array.from(mutation.addedNodes)
-        nodes.forEach((node) => {
-          this._flow(node)
-        })
-      })
+    const builder = new ElementBuilder({
+      node,
+      height,
+      settings: this._settings
     })
-    this._observer.observe(items, { childList: true })
+
+    const element = await builder.build()
+    if (!element) {
+      return null
+    }
+    element.classList.add(className.message)
+    return element
   }
-  disconnect() {
-    this._observer.disconnect()
+  _createAnimation(element, containerWidth) {
+    const millis = this._settings.speed * 1000
+    const keyframes = [
+      { transform: `translate(${containerWidth}px, 0px)` },
+      { transform: `translate(-${element.offsetWidth}px, 0px)` }
+    ]
+    const animation = element.animate(keyframes, millis)
+    animation.pause()
+    return animation
   }
-  start() {
-    this._lines
-      .reduce(
-        (carry, messages) => [
-          ...carry,
-          ...messages.map((message) => message.animation)
-        ],
-        []
-      )
-      .forEach((animation) => animation.play())
+  _getIndex(lineHeight, width, containerWidth, time) {
+    const millis = this._settings.speed * 1000
+    const vc = (containerWidth + width) / millis
+
+    let index = this._rows.findIndex((_, i, rows) => {
+      const mod = (i + lineHeight) % this._settings.rows
+      if (mod > 0 && mod < lineHeight) {
+        return false
+      }
+      return Array(lineHeight)
+        .fill(1)
+        .every((_, j) => {
+          const messages = rows[i + j]
+          if (!messages) {
+            return true
+          }
+          const message = messages[messages.length - 1]
+          if (!message) {
+            return true
+          }
+          const vt = (containerWidth + message.width) / millis
+
+          const t1 = time - message.time
+          const d1 = vt * t1
+          if (d1 < message.width) {
+            return false
+          }
+
+          const t2 = t1 + containerWidth / vc
+          const d2 = vt * t2
+          if (d2 < containerWidth + message.width) {
+            return false
+          }
+
+          return true
+        })
+    })
+    if (index === -1) {
+      index = this._rows.length
+      const mod = (index + lineHeight) % this._settings.rows
+      if (mod > 0 && mod < lineHeight) {
+        index += lineHeight - mod
+      }
+    }
+    return index
   }
-  stop() {
-    this._lines
-      .reduce(
-        (carry, messages) => [
-          ...carry,
-          ...messages.map((message) => message.animation)
-        ],
-        []
-      )
-      .forEach((animation) => animation.pause())
+  _pushMessage(message, index, lineHeight) {
+    Array(lineHeight)
+      .fill(1)
+      .forEach((_, j) => {
+        const i = index + j
+        if (!this._rows[i]) {
+          this._rows[i] = []
+        }
+        this._rows[i].push(message)
+      })
   }
-  clear() {
-    this._lines
-      .reduce(
-        (carry, messages) => [
-          ...carry,
-          ...messages.map((message) => message.element)
-        ],
-        []
-      )
-      .forEach((element) => element.remove())
+  _shiftMessage(index, lineHeight) {
+    Array(lineHeight)
+      .fill(1)
+      .forEach((_, j) => {
+        const i = index + j
+        this._rows[i].shift()
+      })
   }
 }

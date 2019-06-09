@@ -207,9 +207,9 @@
             label="Text Style"
           />
           <v-textarea
-            v-model="extendedTextStyle"
-            :placeholder="placeholder.extendedTextStyle"
-            label="Extended Text Style"
+            v-model="extendedStyle"
+            :placeholder="placeholder.extendedStyle"
+            label="Extended Style"
             rows="1"
             auto-grow
           />
@@ -236,7 +236,7 @@ export default {
         opacity: '0.8',
         rows: '12',
         speed: '5',
-        extendedTextStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;'
+        extendedStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;'
       },
       overflows: [
         { text: 'Hidden', value: 'hidden' },
@@ -418,13 +418,13 @@ export default {
         this.$store.commit('setTextStyle', { textStyle: value })
       }
     },
-    extendedTextStyle: {
+    extendedStyle: {
       get() {
-        return this.$store.state.extendedTextStyle
+        return this.$store.state.extendedStyle
       },
       set(value) {
-        this.$store.commit('setExtendedTextStyle', {
-          extendedTextStyle: value
+        this.$store.commit('setExtendedStyle', {
+          extendedStyle: value
         })
       }
     },

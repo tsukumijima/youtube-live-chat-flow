@@ -11,8 +11,8 @@ const addVideoEventListener = () => {
     return
   }
 
-  video.addEventListener('play', () => controller.start())
-  video.addEventListener('pause', () => controller.stop())
+  video.addEventListener('play', () => controller.play())
+  video.addEventListener('pause', () => controller.pause())
 
   if (video.readyState === 0) {
     // wait until video is started
@@ -213,11 +213,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   controller.observe()
   addVideoEventListener()
   addControlButton()
-})
 
-window.addEventListener('unload', () => {
-  controller.clear()
-  controller.disconnect()
-  removeControlButton()
-  removeInputControl()
+  window.addEventListener('unload', () => {
+    controller.clear()
+    controller.disconnect()
+    removeControlButton()
+    removeInputControl()
+  })
 })

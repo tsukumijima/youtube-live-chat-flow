@@ -49,7 +49,7 @@ const initialState = {
   speed: '5',
   overflow: 'hidden',
   textStyle: 'outline',
-  extendedTextStyle: '',
+  extendedStyle: '',
   bottomControllerEnabled: true
 }
 
@@ -118,8 +118,8 @@ const config = {
     setTextStyle(state, { textStyle }) {
       state.textStyle = textStyle
     },
-    setExtendedTextStyle(state, { extendedTextStyle }) {
-      state.extendedTextStyle = extendedTextStyle
+    setExtendedStyle(state, { extendedStyle }) {
+      state.extendedStyle = extendedStyle
     },
     setBottomControllerEnabled(state, { bottomControllerEnabled }) {
       state.bottomControllerEnabled = bottomControllerEnabled
