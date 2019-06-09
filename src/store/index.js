@@ -44,6 +44,9 @@ const initialState = {
   myColor: '#ff6666',
   myAvatar: true,
   myStyle: 'two-line',
+  superChatHidden: false,
+  superStickerHidden: false,
+  membershipHidden: false,
   opacity: '0.8',
   rows: '12',
   speed: '5',
@@ -102,6 +105,15 @@ const config = {
     },
     setMyStyle(state, { myStyle }) {
       state.myStyle = myStyle
+    },
+    setSuperChatHidden(state, { superChatHidden }) {
+      state.superChatHidden = superChatHidden
+    },
+    setSuperStickerHidden(state, { superStickerHidden }) {
+      state.superStickerHidden = superStickerHidden
+    },
+    setMembershipHidden(state, { membershipHidden }) {
+      state.membershipHidden = membershipHidden
     },
     setOpacity(state, { opacity }) {
       state.opacity = opacity

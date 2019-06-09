@@ -17,13 +17,19 @@ export default class ElementBuilder {
         element = await this._buildText()
         break
       case 'yt-live-chat-paid-message-renderer':
-        element = await this._buildSuperChat()
+        if (!this._settings.superChatHidden) {
+          element = await this._buildSuperChat()
+        }
         break
       case 'yt-live-chat-paid-sticker-renderer':
-        element = await this._buildSuperSticker()
+        if (!this._settings.superStickerHidden) {
+          element = await this._buildSuperSticker()
+        }
         break
       case 'yt-live-chat-legacy-paid-message-renderer':
-        element = await this._buildMembership()
+        if (!this._settings.membershipHidden) {
+          element = await this._buildMembership()
+        }
         break
     }
     if (!element) {
