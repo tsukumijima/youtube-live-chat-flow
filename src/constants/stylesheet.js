@@ -53,16 +53,12 @@ yt-live-chat-text-input-field-renderer#input #input {
   box-sizing: border-box;
 }
 .html5-video-container .${className.message} .${className.messageAvatar} {
-  margin-right: 0.2em;
+  border-radius: 50%;
   object-fit: cover;
 }
 .html5-video-container .${className.message}
 .${className.messageMessage} > img {
   vertical-align: bottom;
-}
-.html5-video-container .${className.message} .${className.messagePurchase} {
-  line-height: initial;
-  margin-left: 0.5em;
 }
 .html5-video-container .${className.messageTwoLine} {
   align-items: start;
@@ -73,14 +69,16 @@ yt-live-chat-text-input-field-renderer#input #input {
   align-items: start;
 }
 .html5-video-container .${className.messageSuperChat} > div,
-.html5-video-container .${className.messageSuperSticker} > div {
+.html5-video-container .${className.messageSuperSticker} > div,
+.html5-video-container .${className.messageMembership} > div {
   align-items: start;
   display: flex;
   vertical-align: bottom;
   white-space: nowrap;
 }
 .html5-video-container .${className.messageSuperChat} > div > div,
-.html5-video-container .${className.messageSuperSticker} > div > div {
+.html5-video-container .${className.messageSuperSticker} > div > div,
+.html5-video-container .${className.messageMembership} > div > div {
   display: flex;
   flex-direction: column;
   align-items: start;

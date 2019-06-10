@@ -44,12 +44,15 @@ const initialState = {
   myColor: '#ff6666',
   myAvatar: true,
   myStyle: 'two-line',
+  superChatHidden: false,
+  superStickerHidden: false,
+  membershipHidden: false,
   opacity: '0.8',
   rows: '12',
   speed: '5',
   overflow: 'hidden',
   textStyle: 'outline',
-  extendedTextStyle: '',
+  extendedStyle: '',
   bottomControllerEnabled: true
 }
 
@@ -103,6 +106,15 @@ const config = {
     setMyStyle(state, { myStyle }) {
       state.myStyle = myStyle
     },
+    setSuperChatHidden(state, { superChatHidden }) {
+      state.superChatHidden = superChatHidden
+    },
+    setSuperStickerHidden(state, { superStickerHidden }) {
+      state.superStickerHidden = superStickerHidden
+    },
+    setMembershipHidden(state, { membershipHidden }) {
+      state.membershipHidden = membershipHidden
+    },
     setOpacity(state, { opacity }) {
       state.opacity = opacity
     },
@@ -118,8 +130,8 @@ const config = {
     setTextStyle(state, { textStyle }) {
       state.textStyle = textStyle
     },
-    setExtendedTextStyle(state, { extendedTextStyle }) {
-      state.extendedTextStyle = extendedTextStyle
+    setExtendedStyle(state, { extendedStyle }) {
+      state.extendedStyle = extendedStyle
     },
     setBottomControllerEnabled(state, { bottomControllerEnabled }) {
       state.bottomControllerEnabled = bottomControllerEnabled

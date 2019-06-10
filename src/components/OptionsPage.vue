@@ -3,7 +3,7 @@
     <v-content>
       <v-container class="pa-0" fluid>
         <v-card class="pa-3" flat>
-          <v-subheader class="pl-0">Avatar &amp; Color &amp; Style</v-subheader>
+          <v-subheader class="pl-0">Message</v-subheader>
           <v-layout row align-center>
             <v-flex xs3><v-subheader>Guest</v-subheader></v-flex>
             <v-flex xs6>
@@ -169,6 +169,57 @@
               />
             </v-flex>
           </v-layout>
+          <v-layout row align-center>
+            <v-flex xs3><v-subheader>Super Chat</v-subheader></v-flex>
+            <v-flex xs6>
+              <v-tooltip left>
+                <v-btn
+                  slot="activator"
+                  :color="superChatHidden ? 'grey darken-1' : 'primary'"
+                  flat
+                  icon
+                  @click="superChatHidden = !superChatHidden"
+                >
+                  <v-icon>visibility</v-icon>
+                </v-btn>
+                <span>Show Message</span>
+              </v-tooltip>
+            </v-flex>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs3><v-subheader>Super Sticker</v-subheader></v-flex>
+            <v-flex xs6>
+              <v-tooltip left>
+                <v-btn
+                  slot="activator"
+                  :color="superStickerHidden ? 'grey darken-1' : 'primary'"
+                  flat
+                  icon
+                  @click="superStickerHidden = !superStickerHidden"
+                >
+                  <v-icon>visibility</v-icon>
+                </v-btn>
+                <span>Show Message</span>
+              </v-tooltip>
+            </v-flex>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs3><v-subheader>Membership</v-subheader></v-flex>
+            <v-flex xs6>
+              <v-tooltip left>
+                <v-btn
+                  slot="activator"
+                  :color="membershipHidden ? 'grey darken-1' : 'primary'"
+                  flat
+                  icon
+                  @click="membershipHidden = !membershipHidden"
+                >
+                  <v-icon>visibility</v-icon>
+                </v-btn>
+                <span>Show Message</span>
+              </v-tooltip>
+            </v-flex>
+          </v-layout>
           <v-text-field
             v-model="opacity"
             :placeholder="placeholder.opacity"
@@ -199,7 +250,7 @@
           <v-select
             v-model="overflow"
             :items="overflows"
-            label="Overflow Mode"
+            label="Message Overflow"
           />
           <v-select
             v-model="textStyle"
@@ -207,9 +258,9 @@
             label="Text Style"
           />
           <v-textarea
-            v-model="extendedTextStyle"
-            :placeholder="placeholder.extendedTextStyle"
-            label="Extended Text Style"
+            v-model="extendedStyle"
+            :placeholder="placeholder.extendedStyle"
+            label="Extended Style"
             rows="1"
             auto-grow
           />
@@ -236,7 +287,7 @@ export default {
         opacity: '0.8',
         rows: '12',
         speed: '5',
-        extendedTextStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;'
+        extendedStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;'
       },
       overflows: [
         { text: 'Hidden', value: 'hidden' },
@@ -378,6 +429,36 @@ export default {
         this.$store.commit('setMyStyle', { myStyle: value })
       }
     },
+    superChatHidden: {
+      get() {
+        return this.$store.state.superChatHidden
+      },
+      set(value) {
+        this.$store.commit('setSuperChatHidden', {
+          superChatHidden: value
+        })
+      }
+    },
+    superStickerHidden: {
+      get() {
+        return this.$store.state.superStickerHidden
+      },
+      set(value) {
+        this.$store.commit('setSuperStickerHidden', {
+          superStickerHidden: value
+        })
+      }
+    },
+    membershipHidden: {
+      get() {
+        return this.$store.state.membershipHidden
+      },
+      set(value) {
+        this.$store.commit('setMembershipHidden', {
+          membershipHidden: value
+        })
+      }
+    },
     opacity: {
       get() {
         return this.$store.state.opacity
@@ -418,13 +499,13 @@ export default {
         this.$store.commit('setTextStyle', { textStyle: value })
       }
     },
-    extendedTextStyle: {
+    extendedStyle: {
       get() {
-        return this.$store.state.extendedTextStyle
+        return this.$store.state.extendedStyle
       },
       set(value) {
-        this.$store.commit('setExtendedTextStyle', {
-          extendedTextStyle: value
+        this.$store.commit('setExtendedStyle', {
+          extendedStyle: value
         })
       }
     },
