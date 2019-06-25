@@ -254,7 +254,7 @@ export default class ElementBuilder {
     const padding = this._height * 0.1
 
     const element = parent.document.createElement('div')
-    element.dataset.lineHeight = 3
+    element.dataset.lineHeight = html ? 3 : 2
     element.classList.add(className.messageSuperChat)
     element.style.color = 'white'
     element.style.fontSize = `${height}px`
@@ -446,12 +446,14 @@ export default class ElementBuilder {
     if (!children) {
       return
     }
-    // TODO: wrapped img e.g. <a ...><img ...></a>
+
     Array.from(children).map((node) => {
-      if (!node.tagName || node.tagName.toLowerCase() !== 'img') {
+      if (node.tagName && node.tagName.toLowerCase() === 'img') {
+        node.style.height = `${height}px`
         return node
       }
-      node.style.height = `${height}px`
+
+      this._fixInnerImageHeight(node, height)
       return node
     })
   }
