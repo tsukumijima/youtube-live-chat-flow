@@ -1,6 +1,7 @@
 import DOMHelper from './dom-helper'
 import MessageBuilder from './message-builder'
 import className from '../constants/class-name'
+import error from '../assets/error.svg'
 
 export default class FlowController {
   constructor() {
@@ -93,16 +94,21 @@ export default class FlowController {
       return
     }
 
+    const messageInfo = node.querySelector(`.${className.messageInfo}`)
+    messageInfo && messageInfo.remove()
+
     const { banned, reason } = this._filterMessage(message)
     if (banned) {
       const div = parent.document.createElement('div')
-      div.textContent = 'Banned'
-      div.style.lineHeight = '24px'
-      div.style.marginRight = '16px'
-      div.style.color = 'red'
+      div.classList.add(className.messageInfo)
+      div.style.marginTop = '4px'
+      div.style.marginRight = '8px'
       div.style.cursor = 'pointer'
-      div.style.textDecoration = 'underline'
       div.title = reason
+      div.innerHTML = error
+      const svg = div.querySelector('svg')
+      svg.style.fill = 'var(--yt-live-chat-secondary-text-color)'
+      svg.style.width = '16px'
       node.prepend(div)
       return
     }

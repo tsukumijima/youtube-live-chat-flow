@@ -14,6 +14,7 @@ const classNames = [
   'messageAuthor',
   'messageMessage',
   'messagePurchaseAmount',
+  'messageInfo',
   'controlButton',
   'controller',
   'smallController'
