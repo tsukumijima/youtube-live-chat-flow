@@ -1,3 +1,4 @@
+import DOMHelper from './dom-helper'
 import ElementBuilder from './element-builder'
 import className from '../constants/class-name'
 
@@ -23,8 +24,8 @@ export default class FlowController {
   set settings(value) {
     this._settings = value
   }
-  observe() {
-    const items = document.querySelector(
+  async observe() {
+    const items = await DOMHelper.querySelectorAsync(
       '#items.yt-live-chat-item-list-renderer'
     )
     if (!items) {

@@ -1,3 +1,16 @@
+const querySelectorAsync = (selector, interval = 100, timeout = 1000) => {
+  return new Promise((resolve) => {
+    const expireTime = Date.now() + timeout
+    const timer = setInterval(() => {
+      const e = document.querySelector(selector)
+      if (e || Date.now() > expireTime) {
+        clearInterval(timer)
+        resolve(e)
+      }
+    }, interval)
+  })
+}
+
 const getImageSourceAsync = (img, interval = 100, timeout = 1000) => {
   return new Promise((resolve) => {
     const expireTime = Date.now() + timeout
@@ -34,6 +47,7 @@ const waitAllImagesLoaded = (element, interval = 100, timeout = 1000) => {
 }
 
 export default {
+  querySelectorAsync,
   getImageSourceAsync,
   waitImageLoaded,
   waitAllImagesLoaded

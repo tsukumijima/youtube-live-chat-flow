@@ -9,7 +9,7 @@ const enabledTabs = {}
 
 const getSettings = async () => {
   const store = await createStore(true)
-  return store.state
+  return JSON.parse(JSON.stringify(store.state))
 }
 
 const setIcon = async (tabId) => {

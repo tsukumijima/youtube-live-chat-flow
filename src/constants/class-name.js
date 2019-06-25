@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill'
 
-const id = browser.runtime.id
+const id = 'e' + browser.runtime.id.replace('@', '')
 
 const classNames = [
   'injected',
