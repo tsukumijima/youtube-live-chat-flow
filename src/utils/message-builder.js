@@ -2,43 +2,43 @@ import Color from 'color'
 import DOMHelper from './dom-helper'
 import className from '../constants/class-name'
 
-export default class ElementBuilder {
+export default class MessageBuilder {
   constructor({ node, height, settings }) {
     this._node = node
     this._height = height
     this._settings = settings
   }
   async build() {
-    let element
+    let message
 
     const tagName = this._node.tagName.toLowerCase()
     switch (tagName) {
       case 'yt-live-chat-text-message-renderer':
-        element = await this._buildText()
+        message = await this._buildText()
         break
       case 'yt-live-chat-paid-message-renderer':
         if (!this._settings.superChatHidden) {
-          element = await this._buildSuperChat()
+          message = await this._buildSuperChat()
         }
         break
       case 'yt-live-chat-paid-sticker-renderer':
         if (!this._settings.superStickerHidden) {
-          element = await this._buildSuperSticker()
+          message = await this._buildSuperSticker()
         }
         break
       case 'yt-live-chat-legacy-paid-message-renderer':
         if (!this._settings.membershipHidden) {
-          element = await this._buildMembership()
+          message = await this._buildMembership()
         }
         break
     }
-    if (!element) {
+    if (!message) {
       return null
     }
 
-    await DOMHelper.waitAllImagesLoaded(element)
+    await DOMHelper.waitAllImagesLoaded(message.element)
 
-    return element
+    return message
   }
   get _myName() {
     // if input control exists
@@ -137,11 +137,17 @@ export default class ElementBuilder {
     }
   }
   async _buildText() {
+    let message
     if (this._style === 'two-line') {
-      return await this._buildTwoLineText()
+      message = await this._buildTwoLineText()
     } else {
-      return await this._buildOneLineText()
+      message = await this._buildOneLineText()
     }
+    message.author = this._node.querySelector(
+      '#author-name'
+    ).childNodes[0].textContent
+    message.message = this._node.querySelector('#message').textContent
+    return message
   }
   async _buildOneLineText() {
     const html = this._node.querySelector('#message').innerHTML
@@ -153,7 +159,6 @@ export default class ElementBuilder {
     const padding = this._height * 0.1
 
     const element = parent.document.createElement('div')
-    element.dataset.lineHeight = 1
     element.style.color = this._textColor
     element.style.fontSize = `${height}px`
     element.style.lineHeight = `${height}px`
@@ -180,7 +185,10 @@ export default class ElementBuilder {
     this._fixInnerImageHeight(message, height)
     element.append(message)
 
-    return element
+    return {
+      element,
+      lineHeight: 1
+    }
   }
   async _buildTwoLineText() {
     const html = this._node.querySelector('#message').innerHTML
@@ -193,7 +201,6 @@ export default class ElementBuilder {
     const padding = this._height * 0.1
 
     const element = parent.document.createElement('div')
-    element.dataset.lineHeight = 2
     element.classList.add(className.messageTwoLine)
     element.style.color = this._textColor
     element.style.fontSize = `${height}px`
@@ -236,7 +243,10 @@ export default class ElementBuilder {
     this._fixInnerImageHeight(message, height)
     wrapper.append(message)
 
-    return element
+    return {
+      element,
+      lineHeight: 2
+    }
   }
   async _buildSuperChat() {
     const html = this._node.querySelector('#message').innerHTML
@@ -254,7 +264,6 @@ export default class ElementBuilder {
     const padding = this._height * 0.1
 
     const element = parent.document.createElement('div')
-    element.dataset.lineHeight = html ? 3 : 2
     element.classList.add(className.messageSuperChat)
     element.style.color = 'white'
     element.style.fontSize = `${height}px`
@@ -304,7 +313,10 @@ export default class ElementBuilder {
       wrapper.append(message)
     }
 
-    return element
+    return {
+      element,
+      lineHeight: html ? 3 : 2
+    }
   }
   async _buildSuperSticker() {
     const avatarUrl = await DOMHelper.getImageSourceAsync(
@@ -324,7 +336,6 @@ export default class ElementBuilder {
     const padding = this._height * 0.1
 
     const element = parent.document.createElement('div')
-    element.dataset.lineHeight = 3
     element.classList.add(className.messageSuperSticker)
     element.style.color = 'white'
     element.style.fontSize = `${height}px`
@@ -374,7 +385,10 @@ export default class ElementBuilder {
       wrapper.append(sticker)
     }
 
-    return element
+    return {
+      element,
+      lineHeight: 3
+    }
   }
   async _buildMembership() {
     const avatarUrl = await DOMHelper.getImageSourceAsync(
@@ -391,7 +405,6 @@ export default class ElementBuilder {
     const padding = this._height * 0.1
 
     const element = parent.document.createElement('div')
-    element.dataset.lineHeight = 3
     element.classList.add(className.messageMembership)
     element.style.color = 'white'
     element.style.fontSize = `${height}px`
@@ -439,7 +452,10 @@ export default class ElementBuilder {
     this._fixInnerImageHeight(message, height)
     wrapper.append(message)
 
-    return element
+    return {
+      element,
+      lineHeight: 3
+    }
   }
   _fixInnerImageHeight(node, height) {
     const children = node.childNodes

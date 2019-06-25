@@ -1,5 +1,5 @@
 import DOMHelper from './dom-helper'
-import ElementBuilder from './element-builder'
+import MessageBuilder from './message-builder'
 import className from '../constants/class-name'
 
 export default class FlowController {
@@ -88,14 +88,29 @@ export default class FlowController {
       return
     }
 
-    const element = await this._createElement(node, video.offsetHeight)
-    if (!element) {
+    const message = await this._createMessage(node, video.offsetHeight)
+    if (!message) {
       return
     }
-    container.appendChild(element)
 
-    const lineHeight = Number(element.dataset.lineHeight)
-    const width = element.offsetWidth
+    const { banned, reason } = this._filterMessage(message)
+    if (banned) {
+      const div = parent.document.createElement('div')
+      div.textContent = 'Banned'
+      div.style.lineHeight = '24px'
+      div.style.marginRight = '16px'
+      div.style.color = 'red'
+      div.style.cursor = 'pointer'
+      div.style.textDecoration = 'underline'
+      div.title = reason
+      node.prepend(div)
+      return
+    }
+
+    container.appendChild(message.element)
+
+    const lineHeight = Number(message.lineHeight)
+    const width = message.element.offsetWidth
     const containerWidth = container.offsetWidth
     const time = Date.now()
 
@@ -104,7 +119,7 @@ export default class FlowController {
       index + lineHeight > this._settings.rows &&
       this._settings.overflow === 'hidden'
     ) {
-      element.remove()
+      message.element.remove()
       return
     }
 
@@ -113,20 +128,17 @@ export default class FlowController {
     const depth = Math.floor(index / this._settings.rows)
     const opacity = this._settings.opacity ** (depth + 1)
 
-    element.style.top = `${top}px`
-    element.style.opacity = opacity
+    message.element.style.top = `${top}px`
+    message.element.style.opacity = opacity
 
-    const animation = this._createAnimation(element, containerWidth)
+    const animation = this._createAnimation(message.element, containerWidth)
     animation.onfinish = () => {
-      element.remove()
+      message.element.remove()
       this._shiftMessage(index, lineHeight)
     }
 
-    const message = {
-      width,
-      time,
-      animation
-    }
+    message.time = time
+    message.animation = animation
     this._pushMessage(message, index, lineHeight)
 
     if (video.paused) {
@@ -134,21 +146,62 @@ export default class FlowController {
     }
     animation.play()
   }
-  async _createElement(node, containerHeight) {
+  async _createMessage(node, containerHeight) {
     const height = containerHeight / this._settings.rows
 
-    const builder = new ElementBuilder({
+    const builder = new MessageBuilder({
       node,
       height,
       settings: this._settings
     })
 
-    const element = await builder.build()
-    if (!element) {
+    const message = await builder.build()
+    if (!message) {
       return null
     }
-    element.classList.add(className.message)
-    return element
+    message.element.classList.add(className.message)
+    return message
+  }
+  _filterMessage(message) {
+    return this._settings.filters.reduce(
+      (carry, filter) => {
+        if (carry.banned) {
+          return carry
+        }
+
+        const { subject, keyword, regExp } = filter
+        if (!subject || !keyword) {
+          return carry
+        }
+
+        let reg
+        try {
+          const pattern = regExp
+            ? keyword
+            : keyword.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+
+          reg = new RegExp(`(${pattern})`, 'i')
+        } catch (e) {
+          return carry
+        }
+
+        const text = subject === 'author' ? message.author : message.message
+        if (!text || !reg.test(text)) {
+          return carry
+        }
+
+        let reason = `Match keyword "${keyword}" in ${subject}`
+        if (regExp) {
+          reason += ' with regexp'
+        }
+
+        return {
+          banned: true,
+          reason
+        }
+      },
+      { banned: false, reason: '' }
+    )
   }
   _createAnimation(element, containerWidth) {
     const millis = this._settings.speed * 1000
@@ -180,17 +233,17 @@ export default class FlowController {
           if (!message) {
             return true
           }
-          const vt = (containerWidth + message.width) / millis
+          const vt = (containerWidth + message.element.offsetWidth) / millis
 
           const t1 = time - message.time
           const d1 = vt * t1
-          if (d1 < message.width) {
+          if (d1 < message.element.offsetWidth) {
             return false
           }
 
           const t2 = t1 + containerWidth / vc
           const d2 = vt * t2
-          if (d2 < containerWidth + message.width) {
+          if (d2 < containerWidth + message.element.offsetWidth) {
             return false
           }
 

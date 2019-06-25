@@ -60,7 +60,7 @@ const removeControlButton = () => {
 }
 
 const addInputControl = () => {
-  if (!controller.settings.bottomControllerEnabled) {
+  if (!controller.settings.bottomChatFormEnabled) {
     return
   }
 
