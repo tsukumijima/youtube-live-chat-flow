@@ -7,7 +7,9 @@
 ## Features
 * Messages flow over a video.
 * Change message color, size and speed.
-* Show avatar on messages.
+* Show author and avatar on messages.
+* Show super chats and super stickers.
+* Filter banned words.
 * Move chat form to bottom controls on video.
 
 

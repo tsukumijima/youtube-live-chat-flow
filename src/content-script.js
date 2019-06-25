@@ -60,7 +60,7 @@ const removeControlButton = () => {
 }
 
 const addInputControl = () => {
-  if (!controller.settings.bottomControllerEnabled) {
+  if (!controller.settings.bottomChatFormEnabled) {
     return
   }
 
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   controller.enabled = data.enabled
   controller.settings = data.settings
-  controller.observe()
+  await controller.observe()
   addVideoEventListener()
   addControlButton()
 

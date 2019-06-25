@@ -52,13 +52,21 @@ const initialState = {
   speed: '5',
   overflow: 'hidden',
   textStyle: 'outline',
-  extendedStyle: '',
-  bottomControllerEnabled: true
+  extendedStyle: ''
 }
 
 const config = {
   state: {
-    ...initialState
+    ...initialState,
+    filters: [],
+    bottomChatFormEnabled: true
+  },
+  getters: {
+    getFilter(state) {
+      return ({ id }) => {
+        return state.filters.find((filter) => filter.id === id)
+      }
+    }
   },
   mutations: {
     setColor(state, { color }) {
@@ -133,13 +141,39 @@ const config = {
     setExtendedStyle(state, { extendedStyle }) {
       state.extendedStyle = extendedStyle
     },
-    setBottomControllerEnabled(state, { bottomControllerEnabled }) {
-      state.bottomControllerEnabled = bottomControllerEnabled
-    },
     resetState(state) {
       for (let [k, v] of Object.entries(initialState)) {
         state[k] = v
       }
+    },
+    addFilter(state, { filter }) {
+      const id =
+        Math.max.apply(null, [0, ...state.filters.map((item) => item.id)]) + 1
+
+      state.filters = [
+        ...state.filters,
+        {
+          id: id + 1,
+          ...filter
+        }
+      ]
+    },
+    removeFilter(state, { id }) {
+      state.filters = state.filters.filter((item) => item.id !== id)
+    },
+    setFilter(state, { id, filter }) {
+      state.filters = state.filters.map((item) => {
+        if (item.id !== id) {
+          return item
+        }
+        return {
+          ...item,
+          ...filter
+        }
+      })
+    },
+    setBottomChatFormEnabled(state, { bottomChatFormEnabled }) {
+      state.bottomChatFormEnabled = bottomChatFormEnabled
     }
   },
   plugins: [
