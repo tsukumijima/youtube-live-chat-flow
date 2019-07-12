@@ -24,7 +24,7 @@ const addVideoEventListener = () => {
   }
 }
 
-const addControlButton = (disabled) => {
+const addControlButton = () => {
   const controls = parent.document.querySelector(
     '.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls'
   )
@@ -46,7 +46,7 @@ const addControlButton = (disabled) => {
 
   controls.prepend(button)
 
-  updateControlButton(disabled)
+  updateControlButton()
 }
 
 const updateControlButton = () => {
@@ -179,12 +179,7 @@ const removeInputControl = () => {
 }
 
 browser.runtime.onMessage.addListener((message) => {
-  const { id, type, data } = message
-  if (type === 'SIGN_RELOAD' && process.env.NODE_ENV !== 'production') {
-    // reload if files changed
-    parent.location.reload()
-    return
-  }
+  const { id, data } = message
   switch (id) {
     case 'cssInjected':
       parent.document.body.classList.add(className.injected)
@@ -211,8 +206,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   controller.enabled = data.enabled
   controller.settings = data.settings
   await controller.observe()
-  addVideoEventListener()
   addControlButton()
+  addVideoEventListener()
 
   window.addEventListener('unload', () => {
     controller.clear()
