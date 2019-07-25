@@ -7,7 +7,7 @@
             <v-tab v-for="(tab, index) in tabs" :key="index">
               {{ tab.title }}
             </v-tab>
-            <v-tab-item v-for="(tab, index) in tabs" :key="index" lazy>
+            <v-tab-item v-for="(tab, index) in tabs" :key="index">
               <component :is="tab.item" />
             </v-tab-item>
           </v-tabs>

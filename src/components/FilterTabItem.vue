@@ -1,12 +1,11 @@
 <template>
   <v-card class="pa-3" flat>
     <v-subheader class="pl-0">Banned Words</v-subheader>
-    <v-layout>
-      <v-spacer />
+    <div class="text-right mb-3">
       <v-btn color="primary" depressed @click="onAddClick">
         Add Rule
       </v-btn>
-    </v-layout>
+    </div>
     <filter-table />
     <filter-dialog v-model="dialog" :inputs.sync="form" />
   </v-card>

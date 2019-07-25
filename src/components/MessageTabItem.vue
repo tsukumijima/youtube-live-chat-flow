@@ -1,20 +1,23 @@
 <template>
   <v-card class="pa-3" flat>
     <v-subheader class="pl-0">Format</v-subheader>
-    <v-layout row align-center>
-      <v-flex xs3><v-subheader>Guest</v-subheader></v-flex>
-      <v-flex xs6>
-        <v-layout class="align-center">
+    <v-row align="center">
+      <v-col cols="3" class="py-0"><v-subheader>Guest</v-subheader></v-col>
+      <v-col cols="6" class="py-0">
+        <v-row class="align-center ma-0">
           <v-tooltip top>
-            <v-btn
-              slot="activator"
-              :color="avatar ? 'primary' : 'grey darken-1'"
-              flat
-              icon
-              @click="avatar = !avatar"
-            >
-              <v-icon>account_circle</v-icon>
-            </v-btn>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                slot="activator"
+                :color="avatar ? 'primary' : 'grey darken-1'"
+                text
+                icon
+                @click="avatar = !avatar"
+                v-on="on"
+              >
+                <v-icon>account_circle</v-icon>
+              </v-btn>
+            </template>
             <span>Show Avatar</span>
           </v-tooltip>
           <v-text-field
@@ -23,31 +26,34 @@
             type="color"
             hide-details
           />
-        </v-layout>
-      </v-flex>
-      <v-flex xs3 pl-3>
+        </v-row>
+      </v-col>
+      <v-col cols="3" class="py-0">
         <v-select
           v-model="style"
           :items="styles"
           hide-details
           class="mt-0 pt-0"
         />
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center>
-      <v-flex xs3><v-subheader>Member</v-subheader></v-flex>
-      <v-flex xs6>
-        <v-layout class="align-center">
+      </v-col>
+    </v-row>
+    <v-row align="center">
+      <v-col cols="3" class="py-0"><v-subheader>Member</v-subheader></v-col>
+      <v-col cols="6" class="py-0">
+        <v-row class="align-center ma-0">
           <v-tooltip top>
-            <v-btn
-              slot="activator"
-              :color="memberAvatar ? 'primary' : 'grey darken-1'"
-              flat
-              icon
-              @click="memberAvatar = !memberAvatar"
-            >
-              <v-icon>account_circle</v-icon>
-            </v-btn>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                slot="activator"
+                :color="memberAvatar ? 'primary' : 'grey darken-1'"
+                text
+                icon
+                @click="memberAvatar = !memberAvatar"
+                v-on="on"
+              >
+                <v-icon>account_circle</v-icon>
+              </v-btn>
+            </template>
             <span>Show Avatar</span>
           </v-tooltip>
           <v-text-field
@@ -56,31 +62,34 @@
             type="color"
             hide-details
           />
-        </v-layout>
-      </v-flex>
-      <v-flex xs3 pl-3>
+        </v-row>
+      </v-col>
+      <v-col cols="3" class="py-0">
         <v-select
           v-model="memberStyle"
           :items="styles"
           hide-details
           class="mt-0 pt-0"
         />
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center>
-      <v-flex xs3><v-subheader>Moderator</v-subheader></v-flex>
-      <v-flex xs6>
-        <v-layout class="align-center">
+      </v-col>
+    </v-row>
+    <v-row align="center">
+      <v-col cols="3" class="py-0"><v-subheader>Moderator</v-subheader></v-col>
+      <v-col cols="6" class="py-0">
+        <v-row class="align-center ma-0">
           <v-tooltip top>
-            <v-btn
-              slot="activator"
-              :color="moderatorAvatar ? 'primary' : 'grey darken-1'"
-              flat
-              icon
-              @click="moderatorAvatar = !moderatorAvatar"
-            >
-              <v-icon>account_circle</v-icon>
-            </v-btn>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                slot="activator"
+                :color="moderatorAvatar ? 'primary' : 'grey darken-1'"
+                text
+                icon
+                @click="moderatorAvatar = !moderatorAvatar"
+                v-on="on"
+              >
+                <v-icon>account_circle</v-icon>
+              </v-btn>
+            </template>
             <span>Show Avatar</span>
           </v-tooltip>
           <v-text-field
@@ -89,31 +98,34 @@
             type="color"
             hide-details
           />
-        </v-layout>
-      </v-flex>
-      <v-flex xs3 pl-3>
+        </v-row>
+      </v-col>
+      <v-col cols="3" class="py-0">
         <v-select
           v-model="moderatorStyle"
           :items="styles"
           hide-details
           class="mt-0 pt-0"
         />
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center>
-      <v-flex xs3><v-subheader>Owner</v-subheader></v-flex>
-      <v-flex xs6>
-        <v-layout class="align-center">
+      </v-col>
+    </v-row>
+    <v-row align="center">
+      <v-col cols="3" class="py-0"><v-subheader>Owner</v-subheader></v-col>
+      <v-col cols="6" class="py-0">
+        <v-row class="align-center ma-0">
           <v-tooltip top>
-            <v-btn
-              slot="activator"
-              :color="ownerAvatar ? 'primary' : 'grey darken-1'"
-              flat
-              icon
-              @click="ownerAvatar = !ownerAvatar"
-            >
-              <v-icon>account_circle</v-icon>
-            </v-btn>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                slot="activator"
+                :color="ownerAvatar ? 'primary' : 'grey darken-1'"
+                text
+                icon
+                @click="ownerAvatar = !ownerAvatar"
+                v-on="on"
+              >
+                <v-icon>account_circle</v-icon>
+              </v-btn>
+            </template>
             <span>Show Avatar</span>
           </v-tooltip>
           <v-text-field
@@ -122,31 +134,34 @@
             type="color"
             hide-details
           />
-        </v-layout>
-      </v-flex>
-      <v-flex xs3 pl-3>
+        </v-row>
+      </v-col>
+      <v-col cols="3" class="py-0">
         <v-select
           v-model="ownerStyle"
           :items="styles"
           hide-details
           class="mt-0 pt-0"
         />
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center>
-      <v-flex xs3><v-subheader>Myself</v-subheader></v-flex>
-      <v-flex xs6>
-        <v-layout class="align-center">
+      </v-col>
+    </v-row>
+    <v-row align="center">
+      <v-col cols="3" class="py-0"><v-subheader>Myself</v-subheader></v-col>
+      <v-col cols="6" class="py-0">
+        <v-row class="align-center ma-0">
           <v-tooltip top>
-            <v-btn
-              slot="activator"
-              :color="myAvatar ? 'primary' : 'grey darken-1'"
-              flat
-              icon
-              @click="myAvatar = !myAvatar"
-            >
-              <v-icon>account_circle</v-icon>
-            </v-btn>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                slot="activator"
+                :color="myAvatar ? 'primary' : 'grey darken-1'"
+                text
+                icon
+                @click="myAvatar = !myAvatar"
+                v-on="on"
+              >
+                <v-icon>account_circle</v-icon>
+              </v-btn>
+            </template>
             <span>Show Avatar</span>
           </v-tooltip>
           <v-text-field
@@ -155,68 +170,79 @@
             type="color"
             hide-details
           />
-        </v-layout>
-      </v-flex>
-      <v-flex xs3 pl-3>
+        </v-row>
+      </v-col>
+      <v-col cols="3" class="py-0">
         <v-select
           v-model="myStyle"
           :items="styles"
           hide-details
           class="mt-0 pt-0"
         />
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center>
-      <v-flex xs3><v-subheader>Super Chat</v-subheader></v-flex>
-      <v-flex xs6>
+      </v-col>
+    </v-row>
+    <v-row align="center">
+      <v-col cols="3" class="py-0"><v-subheader>Super Chat</v-subheader></v-col>
+      <v-col cols="9" class="py-0">
         <v-tooltip top>
-          <v-btn
-            slot="activator"
-            :color="superChatHidden ? 'grey darken-1' : 'primary'"
-            flat
-            icon
-            @click="superChatHidden = !superChatHidden"
-          >
-            <v-icon>visibility</v-icon>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              slot="activator"
+              :color="superChatHidden ? 'grey darken-1' : 'primary'"
+              text
+              icon
+              @click="superChatHidden = !superChatHidden"
+              v-on="on"
+            >
+              <v-icon>visibility</v-icon>
+            </v-btn>
+          </template>
           <span>Show Message</span>
         </v-tooltip>
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center>
-      <v-flex xs3><v-subheader>Super Sticker</v-subheader></v-flex>
-      <v-flex xs6>
+      </v-col>
+    </v-row>
+    <v-row align="center">
+      <v-col cols="3" class="py-0"
+        ><v-subheader>Super Sticker</v-subheader></v-col
+      >
+      <v-col cols="9" class="py-0">
         <v-tooltip top>
-          <v-btn
-            slot="activator"
-            :color="superStickerHidden ? 'grey darken-1' : 'primary'"
-            flat
-            icon
-            @click="superStickerHidden = !superStickerHidden"
-          >
-            <v-icon>visibility</v-icon>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              slot="activator"
+              :color="superStickerHidden ? 'grey darken-1' : 'primary'"
+              text
+              icon
+              @click="superStickerHidden = !superStickerHidden"
+              v-on="on"
+            >
+              <v-icon>visibility</v-icon>
+            </v-btn>
+          </template>
           <span>Show Message</span>
         </v-tooltip>
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center>
-      <v-flex xs3><v-subheader>Membership</v-subheader></v-flex>
-      <v-flex xs6>
+      </v-col>
+    </v-row>
+    <v-row align="center">
+      <v-col cols="3" class="py-0"><v-subheader>Membership</v-subheader></v-col>
+      <v-col cols="9" class="py-0">
         <v-tooltip top>
-          <v-btn
-            slot="activator"
-            :color="membershipHidden ? 'grey darken-1' : 'primary'"
-            flat
-            icon
-            @click="membershipHidden = !membershipHidden"
-          >
-            <v-icon>visibility</v-icon>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              slot="activator"
+              :color="membershipHidden ? 'grey darken-1' : 'primary'"
+              text
+              icon
+              @click="membershipHidden = !membershipHidden"
+              v-on="on"
+            >
+              <v-icon>visibility</v-icon>
+            </v-btn>
+          </template>
           <span>Show Message</span>
         </v-tooltip>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
     <v-text-field
       v-model="opacity"
       :placeholder="placeholder.opacity"
