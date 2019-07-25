@@ -50,7 +50,7 @@ const initialState = {
   opacity: '0.8',
   rows: '12',
   speed: '5',
-  overflow: 'hidden',
+  overflow: 'overlay',
   textStyle: 'outline',
   extendedStyle: ''
 }

@@ -7,7 +7,7 @@
             <v-tab v-for="(tab, index) in tabs" :key="index">
               {{ tab.title }}
             </v-tab>
-            <v-tab-item v-for="(tab, index) in tabs" :key="index" lazy>
+            <v-tab-item v-for="(tab, index) in tabs" :key="index">
               <component :is="tab.item" />
             </v-tab-item>
           </v-tabs>
@@ -36,12 +36,8 @@ export default {
 }
 </script>
 
-<style>
-@import '~vuetify/dist/vuetify.min.css';
-</style>
-
 <style scoped>
-.application {
+.v-application {
   min-width: 640px;
 }
 </style>

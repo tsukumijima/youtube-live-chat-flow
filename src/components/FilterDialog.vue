@@ -1,31 +1,37 @@
 <template>
-  <v-dialog v-model="dialog" max-width="480" lazy>
+  <v-dialog v-model="dialog" max-width="480">
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-card>
         <v-card-title primary-title>
           <span class="title" v-text="title" />
         </v-card-title>
         <v-card-text>
-          <v-layout column>
-            <v-select
-              v-model="form.subject"
-              :items="subjects"
-              label="Subject"
-            />
-            <v-text-field
-              v-model="form.keyword"
-              :rules="keywordRules"
-              label="Keyword"
-              placeholder="Words or Pattern"
-              required
-            />
-            <v-checkbox v-model="form.regExp" label="Regular Expression" />
-          </v-layout>
+          <v-row>
+            <v-col cols="12" class="py-0">
+              <v-select
+                v-model="form.subject"
+                :items="subjects"
+                label="Subject"
+              />
+            </v-col>
+            <v-col cols="12" class="py-0">
+              <v-text-field
+                v-model="form.keyword"
+                :rules="keywordRules"
+                label="Keyword"
+                placeholder="Words or Pattern"
+                required
+              />
+            </v-col>
+            <v-col cols="12" class="py-0">
+              <v-checkbox v-model="form.regExp" label="Regular Expression" />
+            </v-col>
+          </v-row>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn flat @click.native="onCloseClick">Cancel</v-btn>
-          <v-btn color="primary" flat @click.native="onSaveClick">Save</v-btn>
+          <v-btn text @click.native="onCloseClick">Cancel</v-btn>
+          <v-btn color="primary" text @click.native="onSaveClick">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>

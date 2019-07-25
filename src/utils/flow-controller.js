@@ -129,13 +129,14 @@ export default class FlowController {
       return
     }
 
-    const top =
-      (video.offsetHeight / this._settings.rows) * (index % this._settings.rows)
-    const depth = Math.floor(index / this._settings.rows)
-    const opacity = this._settings.opacity ** (depth + 1)
+    const z = Math.floor(index / this._settings.rows)
+    const y = (index % this._settings.rows) + (z % 2 > 0 ? 0.5 : 0)
+    const opacity = this._settings.opacity ** (z + 1)
+    const top = (video.offsetHeight / this._settings.rows) * y
 
     message.element.style.top = `${top}px`
     message.element.style.opacity = opacity
+    message.element.style.zIndex = z + 1
 
     const animation = this._createAnimation(message.element, containerWidth)
     animation.onfinish = () => {
@@ -219,6 +220,10 @@ export default class FlowController {
     animation.pause()
     return animation
   }
+  _isDeniedIndex(index) {
+    // e.g. if rows value is "12", denied index is "23", "47", "71" ...
+    return index % (this._settings.rows * 2) === this._settings.rows * 2 - 1
+  }
   _getIndex(lineHeight, width, containerWidth, time) {
     const millis = this._settings.speed * 1000
     const vc = (containerWidth + width) / millis
@@ -231,6 +236,10 @@ export default class FlowController {
       return Array(lineHeight)
         .fill(1)
         .every((_, j) => {
+          if (this._isDeniedIndex(i + j)) {
+            return false
+          }
+
           const messages = rows[i + j]
           if (!messages) {
             return true
@@ -261,6 +270,9 @@ export default class FlowController {
       const mod = (index + lineHeight) % this._settings.rows
       if (mod > 0 && mod < lineHeight) {
         index += lineHeight - mod
+      }
+      if (this._isDeniedIndex(index + lineHeight - 1)) {
+        index += lineHeight
       }
     }
     return index
