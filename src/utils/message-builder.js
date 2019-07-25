@@ -175,7 +175,7 @@ export default class MessageBuilder {
       avatar.classList.add(className.messageAvatar)
       avatar.src = avatarUrl
       avatar.style.height = `${height}px`
-      avatar.style.marginRight = `${padding}px`
+      avatar.style.marginRight = `${padding * 2}px`
       element.append(avatar)
     }
 
@@ -218,7 +218,7 @@ export default class MessageBuilder {
       avatar.classList.add(className.messageAvatar)
       avatar.src = avatarUrl
       avatar.style.height = `${height}px`
-      avatar.style.marginRight = `${padding}px`
+      avatar.style.marginRight = `${padding * 2}px`
       element.append(avatar)
     }
 
@@ -255,6 +255,10 @@ export default class MessageBuilder {
     )
     const authorName = this._node.querySelector('#author-name').textContent
     const amount = this._node.querySelector('#purchase-amount').textContent
+    const color = this._getColor(
+      this._node.querySelector('#card > #header'),
+      0.8
+    )
     const backgroundColor = this._getBackgroundColor(
       this._node.querySelector('#card > #header'),
       0.8
@@ -265,7 +269,7 @@ export default class MessageBuilder {
 
     const element = parent.document.createElement('div')
     element.classList.add(className.messageSuperChat)
-    element.style.color = 'white'
+    element.style.color = color
     element.style.fontSize = `${height}px`
     element.style.lineHeight = `${height}px`
     element.style.padding = `${padding}px`
@@ -286,7 +290,7 @@ export default class MessageBuilder {
       avatar.classList.add(className.messageAvatar)
       avatar.src = avatarUrl
       avatar.style.height = `${height}px`
-      avatar.style.marginRight = `${padding}px`
+      avatar.style.marginRight = `${padding * 2}px`
       container.append(avatar)
     }
 
@@ -324,6 +328,10 @@ export default class MessageBuilder {
     )
     const authorName = this._node.querySelector('#author-name').textContent
     const amount = this._node.querySelector('#purchase-amount-chip').textContent
+    const color = this._getColor(
+      this._node.querySelector('#card #author-name'),
+      0.8
+    )
     const backgroundColor = this._getBackgroundColor(
       this._node.querySelector('#card'),
       0.8
@@ -337,7 +345,7 @@ export default class MessageBuilder {
 
     const element = parent.document.createElement('div')
     element.classList.add(className.messageSuperSticker)
-    element.style.color = 'white'
+    element.style.color = color
     element.style.fontSize = `${height}px`
     element.style.lineHeight = `${height}px`
     element.style.padding = `${padding}px`
@@ -358,7 +366,7 @@ export default class MessageBuilder {
       avatar.classList.add(className.messageAvatar)
       avatar.src = avatarUrl
       avatar.style.height = `${height}px`
-      avatar.style.marginRight = `${padding}px`
+      avatar.style.marginRight = `${padding * 2}px`
       container.append(avatar)
     }
 
@@ -396,6 +404,7 @@ export default class MessageBuilder {
     )
     const eventText = this._node.querySelector('#event-text').textContent
     const detailText = this._node.querySelector('#detail-text').textContent
+    const color = this._getColor(this._node.querySelector('#card'), 0.8)
     const backgroundColor = this._getBackgroundColor(
       this._node.querySelector('#card'),
       0.8
@@ -406,7 +415,7 @@ export default class MessageBuilder {
 
     const element = parent.document.createElement('div')
     element.classList.add(className.messageMembership)
-    element.style.color = 'white'
+    element.style.color = color
     element.style.fontSize = `${height}px`
     element.style.lineHeight = `${height}px`
     element.style.padding = `${padding}px`
@@ -427,7 +436,7 @@ export default class MessageBuilder {
       avatar.classList.add(className.messageAvatar)
       avatar.src = avatarUrl
       avatar.style.height = `${height}px`
-      avatar.style.marginRight = `${padding}px`
+      avatar.style.marginRight = `${padding * 2}px`
       container.append(avatar)
     }
 
@@ -473,9 +482,14 @@ export default class MessageBuilder {
       return node
     })
   }
+  _getColor(node, opacity) {
+    const color = getComputedStyle(node).color
+    const o = new Color(color).object()
+    return `rgba(${o.r}, ${o.g}, ${o.b}, ${opacity})`
+  }
   _getBackgroundColor(node, opacity) {
     const backgroundColor = getComputedStyle(node).backgroundColor
-    const c = new Color(backgroundColor).object()
-    return `rgba(${c.r}, ${c.g}, ${c.b}, ${opacity})`
+    const o = new Color(backgroundColor).object()
+    return `rgba(${o.r}, ${o.g}, ${o.b}, ${opacity})`
   }
 }

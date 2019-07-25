@@ -237,7 +237,6 @@ export default class FlowController {
         .fill(1)
         .every((_, j) => {
           if (this._isDeniedIndex(i + j)) {
-            console.log('hit', i + j)
             return false
           }
 
