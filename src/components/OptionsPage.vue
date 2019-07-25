@@ -36,12 +36,8 @@ export default {
 }
 </script>
 
-<style>
-@import '~vuetify/dist/vuetify.min.css';
-</style>
-
 <style scoped>
-.application {
+.v-application {
   min-width: 640px;
 }
 </style>
