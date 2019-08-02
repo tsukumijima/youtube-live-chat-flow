@@ -183,13 +183,15 @@ yt-live-chat-text-input-field-renderer#input[focused] #input {
 .${className.controller} #message-buttons #count {
   margin-right: 8px;
 }
-.${className.controller} #message-buttons #send-button
-yt-button-renderer.yt-live-chat-message-input-renderer[disabled] {
-  color: var(--yt-live-chat-disabled-icon-button-color);
+.${className.controller} #message-buttons #send-button yt-button-renderer {
+  color: inherit!important;
 }
-.${className.controller} #message-buttons #send-button
-a.yt-button-renderer:hover {
+.${className.controller} #message-buttons #send-button yt-icon-button {
   color: inherit;
+}
+.${className.controller} #message-buttons #send-button yt-icon-button[disabled] {
+  cursor: initial;
+  opacity: .5;
 }
 .${className.controller} #message-buttons #send-button yt-icon-button#button {
   display: block;
