@@ -51,7 +51,6 @@ const initialState = {
   rows: '12',
   speed: '5',
   overflow: 'overlay',
-  textStyle: 'outline',
   extendedStyle: ''
 }
 
@@ -134,9 +133,6 @@ const config = {
     },
     setOverflow(state, { overflow }) {
       state.overflow = overflow
-    },
-    setTextStyle(state, { textStyle }) {
-      state.textStyle = textStyle
     },
     setExtendedStyle(state, { extendedStyle }) {
       state.extendedStyle = extendedStyle

@@ -93,14 +93,13 @@ const addInputControl = () => {
     e.stopPropagation()
     switch (e.keyCode) {
       case 13: {
-        if (e.target.textContent === '') {
-          e.target.blur()
-          return
+        if (e.target.textContent !== '') {
+          const sendButton = messageButtons.querySelector(
+            '#send-button button#button'
+          )
+          sendButton && sendButton.click()
         }
-        const sendButton = messageButtons.querySelector(
-          '#send-button button#button'
-        )
-        sendButton && sendButton.click()
+        e.target.blur()
         break
       }
       case 27:
