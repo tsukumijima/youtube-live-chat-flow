@@ -89,7 +89,10 @@ export default class FlowController {
       return
     }
 
-    const message = await this._createMessage(node, video.offsetHeight)
+    const rows = Number(this._settings.rows)
+    const height = video.offsetHeight / (rows + 0.2)
+
+    const message = await this._createMessage(node, height)
     if (!message) {
       return
     }
@@ -121,18 +124,15 @@ export default class FlowController {
     const time = Date.now()
 
     const index = this._getIndex(lineHeight, width, containerWidth, time)
-    if (
-      index + lineHeight > this._settings.rows &&
-      this._settings.overflow === 'hidden'
-    ) {
+    if (index + lineHeight > rows && this._settings.overflow === 'hidden') {
       message.element.remove()
       return
     }
 
-    const z = Math.floor(index / this._settings.rows)
-    const y = (index % this._settings.rows) + (z % 2 > 0 ? 0.5 : 0)
+    const z = Math.floor(index / rows)
+    const y = (index % rows) + (z % 2 > 0 ? 0.5 : 0)
     const opacity = this._settings.opacity ** (z + 1)
-    const top = (video.offsetHeight / this._settings.rows) * y
+    const top = height * (y + 0.1)
 
     message.element.style.top = `${top}px`
     message.element.style.opacity = opacity
@@ -153,9 +153,7 @@ export default class FlowController {
     }
     animation.play()
   }
-  async _createMessage(node, containerHeight) {
-    const height = containerHeight / this._settings.rows
-
+  async _createMessage(node, height) {
     const builder = new MessageBuilder({
       node,
       height,
