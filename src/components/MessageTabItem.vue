@@ -271,7 +271,6 @@
       suffix="sec"
     />
     <v-select v-model="overflow" :items="overflows" label="Message Overflow" />
-    <v-select v-model="textStyle" :items="textStyles" label="Text Style" />
     <v-textarea
       v-model="extendedStyle"
       :placeholder="placeholder.extendedStyle"
@@ -300,11 +299,6 @@ export default {
       overflows: [
         { text: 'Hidden', value: 'hidden' },
         { text: 'Overlay', value: 'overlay' }
-      ],
-      textStyles: [
-        { text: 'None', value: 'none' },
-        { text: 'Outline', value: 'outline' },
-        { text: 'Shadow', value: 'shadow' }
       ],
       styles: [
         { text: 'Simple', value: 'simple' },
@@ -497,14 +491,6 @@ export default {
       },
       set(value) {
         this.$store.commit('setOverflow', { overflow: value })
-      }
-    },
-    textStyle: {
-      get() {
-        return this.$store.state.textStyle
-      },
-      set(value) {
-        this.$store.commit('setTextStyle', { textStyle: value })
       }
     },
     extendedStyle: {

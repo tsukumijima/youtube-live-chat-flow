@@ -68,6 +68,14 @@ export default class MessageBuilder {
     const myself = authorName === this._myName
     return myself ? 'myself' : this._node.getAttribute('author-type')
   }
+  get _paid() {
+    const tagName = this._node.tagName.toLowerCase()
+    return [
+      'yt-live-chat-paid-message-renderer',
+      'yt-live-chat-paid-sticker-renderer',
+      'yt-live-chat-legacy-paid-message-renderer'
+    ].includes(tagName)
+  }
   get _style() {
     switch (this._authorType) {
       case 'myself':
@@ -97,6 +105,9 @@ export default class MessageBuilder {
     }
   }
   get _textColor() {
+    if (this._paid) {
+      return '#ffffff'
+    }
     switch (this._authorType) {
       case 'myself':
         return this._settings.myColor
@@ -112,12 +123,10 @@ export default class MessageBuilder {
   }
   get _textStyle() {
     const n = ((this._height * 0.8) / 48).toFixed(2)
-    switch (this._settings.textStyle) {
-      case 'outline': {
-        const c = Color(this._textColor)
-          .darken(0.6)
-          .hex()
-        return `
+    const c = Color(this._textColor)
+      .darken(0.6)
+      .hex()
+    return `
           text-shadow:
             -${n}px -${n}px 0 ${c},
             ${n}px -${n}px 0 ${c},
@@ -128,13 +137,6 @@ export default class MessageBuilder {
             ${n}px 0 0 ${c},
             -${n}px 0 0 ${c};
         `
-      }
-      case 'shadow':
-        return `text-shadow: ${n}px ${n}px ${n * 2}px #333;`
-      case 'none':
-      default:
-        return ''
-    }
   }
   async _buildText() {
     let message
@@ -255,10 +257,6 @@ export default class MessageBuilder {
     )
     const authorName = this._node.querySelector('#author-name').textContent
     const amount = this._node.querySelector('#purchase-amount').textContent
-    const color = this._getColor(
-      this._node.querySelector('#card > #header'),
-      0.8
-    )
     const backgroundColor = this._getBackgroundColor(
       this._node.querySelector('#card > #header'),
       0.8
@@ -269,13 +267,15 @@ export default class MessageBuilder {
 
     const element = parent.document.createElement('div')
     element.classList.add(className.messageSuperChat)
-    element.style.color = color
+    element.style.color = this._textColor
     element.style.fontSize = `${height}px`
     element.style.lineHeight = `${height}px`
     element.style.padding = `${padding}px`
     element.setAttribute(
       'style',
-      element.getAttribute('style') + this._settings.extendedStyle
+      element.getAttribute('style') +
+        this._textStyle +
+        this._settings.extendedStyle
     )
 
     const containerPadding = this._height * 0.2
@@ -328,10 +328,6 @@ export default class MessageBuilder {
     )
     const authorName = this._node.querySelector('#author-name').textContent
     const amount = this._node.querySelector('#purchase-amount-chip').textContent
-    const color = this._getColor(
-      this._node.querySelector('#card #author-name'),
-      0.8
-    )
     const backgroundColor = this._getBackgroundColor(
       this._node.querySelector('#card'),
       0.8
@@ -345,13 +341,15 @@ export default class MessageBuilder {
 
     const element = parent.document.createElement('div')
     element.classList.add(className.messageSuperSticker)
-    element.style.color = color
+    element.style.color = this._textColor
     element.style.fontSize = `${height}px`
     element.style.lineHeight = `${height}px`
     element.style.padding = `${padding}px`
     element.setAttribute(
       'style',
-      element.getAttribute('style') + this._settings.extendedStyle
+      element.getAttribute('style') +
+        this._textStyle +
+        this._settings.extendedStyle
     )
 
     const containerPadding = this._height * 0.2
@@ -404,7 +402,6 @@ export default class MessageBuilder {
     )
     const eventText = this._node.querySelector('#event-text').textContent
     const detailText = this._node.querySelector('#detail-text').textContent
-    const color = this._getColor(this._node.querySelector('#card'), 0.8)
     const backgroundColor = this._getBackgroundColor(
       this._node.querySelector('#card'),
       0.8
@@ -415,13 +412,15 @@ export default class MessageBuilder {
 
     const element = parent.document.createElement('div')
     element.classList.add(className.messageMembership)
-    element.style.color = color
+    element.style.color = this._textColor
     element.style.fontSize = `${height}px`
     element.style.lineHeight = `${height}px`
     element.style.padding = `${padding}px`
     element.setAttribute(
       'style',
-      element.getAttribute('style') + this._settings.extendedStyle
+      element.getAttribute('style') +
+        this._textStyle +
+        this._settings.extendedStyle
     )
 
     const containerPadding = this._height * 0.2
@@ -481,11 +480,6 @@ export default class MessageBuilder {
       this._fixInnerImageHeight(node, height)
       return node
     })
-  }
-  _getColor(node, opacity) {
-    const color = getComputedStyle(node).color
-    const o = new Color(color).object()
-    return `rgba(${o.r}, ${o.g}, ${o.b}, ${opacity})`
   }
   _getBackgroundColor(node, opacity) {
     const backgroundColor = getComputedStyle(node).backgroundColor
