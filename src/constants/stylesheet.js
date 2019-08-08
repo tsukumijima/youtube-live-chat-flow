@@ -1,6 +1,6 @@
 import className from './class-name'
 
-const code = `
+export const parentCode = `
 .${className.focused} .html5-video-player .ytp-chrome-bottom {
   opacity: 1!important;
 }
@@ -86,6 +86,9 @@ yt-live-chat-text-input-field-renderer#input #input {
 
 .ytp-chrome-bottom .ytp-chrome-controls {
   position: relative;
+}
+.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls .${className.controlButton} svg {
+  fill: white;
 }
 .ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls .ytp-fullerscreen-edu-button {
   display: none;
@@ -229,4 +232,42 @@ paper-ripple {
 }
 `
 
-export default code
+export const code = `
+.${className.menuButton}.${className.menuButtonActive} > button > yt-icon {
+  color: #4387f1!important;
+}
+
+.${className.menuButton} {
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+}
+.${className.menuButton} > button > yt-icon > svg {
+  pointer-events: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.${className.description} {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.${className.description} {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.${className.description} > button {
+  text-align: center;
+  font-size: smaller;
+  flex: 1;
+  color: var(--yt-spec-text-secondary);
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  --webkit-appearance: none;
+}
+`

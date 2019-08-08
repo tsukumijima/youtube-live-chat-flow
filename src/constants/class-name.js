@@ -3,6 +3,7 @@ import browser from 'webextension-polyfill'
 const id = 'e' + browser.runtime.id.replace('@', '')
 
 const classNames = [
+  // parent window
   'injected',
   'focused',
   'message',
@@ -17,7 +18,11 @@ const classNames = [
   'messageInfo',
   'controlButton',
   'controller',
-  'smallController'
+  'smallController',
+  // window
+  'menuButton',
+  'menuButtonActive',
+  'description'
 ]
 
 export default classNames.reduce((carry, className) => {

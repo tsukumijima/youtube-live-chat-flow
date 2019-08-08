@@ -2,6 +2,7 @@ import browser from 'webextension-polyfill'
 import className from './constants/class-name'
 import FlowController from './utils/flow-controller'
 import message from './assets/message.svg'
+import downArrow from './assets/down-arrow.svg'
 
 const controller = new FlowController()
 
@@ -35,14 +36,15 @@ const addControlButton = () => {
   const button = document.createElement('button')
   button.classList.add(className.controlButton)
   button.classList.add('ytp-button')
+  button.title = 'Flow messages'
   button.onclick = () => {
     browser.runtime.sendMessage({ id: 'controlButtonClicked' })
   }
   button.innerHTML = message
 
+  // Change SVG viewBox
   const svg = button.querySelector('svg')
   svg.setAttribute('viewBox', '-8 -8 40 40')
-  svg.style.fill = 'white'
 
   controls.prepend(button)
 
@@ -57,6 +59,56 @@ const updateControlButton = () => {
 const removeControlButton = () => {
   const button = parent.document.querySelector(`.${className.controlButton}`)
   button && button.remove()
+}
+
+const addMenuButton = () => {
+  const header = document.querySelector(
+    '#chat-messages > yt-live-chat-header-renderer'
+  )
+  const refIconButton = header && header.querySelector('yt-icon-button')
+  if (!header || !refIconButton) {
+    return
+  }
+
+  const icon = document.createElement('yt-icon')
+  icon.classList.add('style-scope')
+  icon.classList.add('yt-live-chat-header-renderer')
+  icon.innerHTML = downArrow
+
+  const button = document.createElement('button')
+  button.setAttribute('id', 'button')
+  button.classList.add('yt-icon-button')
+  button.classList.add('style-scope')
+  button.append(icon)
+
+  const iconButton = document.createElement('yt-icon-button')
+  iconButton.classList.add(className.menuButton)
+  iconButton.classList.add('style-scope')
+  iconButton.classList.add('yt-live-chat-header-renderer')
+  iconButton.title = 'Follow new messages'
+  iconButton.onclick = () => {
+    browser.runtime.sendMessage({ id: 'menuButtonClicked' })
+  }
+  iconButton.append(button)
+
+  header.insertBefore(iconButton, refIconButton)
+
+  // remove unnecessary generated button
+  iconButton.querySelector('#button').remove()
+
+  updateMenuButton()
+}
+
+const updateMenuButton = () => {
+  const button = document.querySelector(`.${className.menuButton}`)
+  if (!button) {
+    return
+  }
+  if (controller.following) {
+    button.classList.add(className.menuButtonActive)
+  } else {
+    button.classList.remove(className.menuButtonActive)
+  }
 }
 
 const addInputControl = () => {
@@ -120,26 +172,15 @@ const addInputControl = () => {
   })
 
   // add description
-  const description = document.createElement('button')
-  description.textContent = 'Chat Form is Moved to Bottom Controls'
-  description.style.textAlign = 'center'
-  description.style.fontSize = 'smaller'
-  description.style.flex = 1
-  description.style.color = 'var(--yt-spec-text-secondary)'
-  description.style.webkitAppearance = 'none'
-  description.style.background = 'none'
-  description.style.border = 'none'
-  description.style.outline = 'none'
-  description.style.cursor = 'pointer'
-  description.addEventListener('click', () => {
+  const button = document.createElement('button')
+  button.textContent = 'Chat Form is Moved to Bottom Controls'
+  button.addEventListener('click', () => {
     input.focus()
   })
-  const wrapper = document.createElement('div')
-  wrapper.style.flex = 1
-  wrapper.style.display = 'flex'
-  wrapper.style.alignItems = 'center'
-  wrapper.append(description)
-  buttons.append(wrapper)
+  const description = document.createElement('div')
+  description.classList.add(className.description)
+  description.append(button)
+  buttons.append(description)
 
   // add controls
   const controls = document.createElement('div')
@@ -187,6 +228,10 @@ browser.runtime.onMessage.addListener((message) => {
       controller.enabled = data.enabled
       updateControlButton()
       break
+    case 'followingChanged':
+      controller.following = data.following
+      updateMenuButton()
+      break
     case 'settingsChanged':
       controller.settings = data.settings
       break
@@ -203,9 +248,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   })
 
   controller.enabled = data.enabled
+  controller.following = data.following
   controller.settings = data.settings
   await controller.observe()
   addControlButton()
+  addMenuButton()
   addVideoEventListener()
 
   window.addEventListener('unload', () => {
