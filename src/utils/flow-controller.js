@@ -10,6 +10,7 @@ export default class FlowController {
     this._settings = null
     this._rows = []
     this._observer = null
+    this._timer = null
   }
   get enabled() {
     return this._enabled
@@ -26,12 +27,12 @@ export default class FlowController {
   set following(value) {
     this._following = value
     if (value) {
-      // TODO:
-      this._followTimer = setInterval(() => {
-        document.querySelector('#item-scroller').scrollTop = document.querySelector('#item-scroller').scrollHeight
-      }, 100)
+      this._timer = setInterval(() => {
+        const scroller = document.querySelector('#item-scroller')
+        scroller.scrollTop = scroller.scrollHeight
+      }, 1000)
     } else {
-      clearInterval(this._followTimer)
+      clearInterval(this._timer)
     }
   }
   get settings() {
