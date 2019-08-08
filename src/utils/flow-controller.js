@@ -6,6 +6,7 @@ import error from '../assets/error.svg'
 export default class FlowController {
   constructor() {
     this._enabled = true
+    this._following = true
     this._settings = null
     this._rows = []
     this._observer = null
@@ -17,6 +18,20 @@ export default class FlowController {
     this._enabled = value
     if (!this._enabled) {
       this.clear()
+    }
+  }
+  get following() {
+    return this._following
+  }
+  set following(value) {
+    this._following = value
+    if (value) {
+      // TODO:
+      this._followTimer = setInterval(() => {
+        document.querySelector('#item-scroller').scrollTop = document.querySelector('#item-scroller').scrollHeight
+      }, 100)
+    } else {
+      clearInterval(this._followTimer)
     }
   }
   get settings() {
