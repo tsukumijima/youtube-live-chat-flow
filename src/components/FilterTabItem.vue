@@ -1,6 +1,5 @@
 <template>
   <v-card class="pa-3" flat>
-    <v-subheader class="pl-0">Banned Words</v-subheader>
     <div class="text-right mb-3">
       <v-btn color="primary" depressed @click="onAddClick">
         Add Rule
