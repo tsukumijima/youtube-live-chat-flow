@@ -189,7 +189,7 @@ export default class MessageBuilder {
 
     return {
       element,
-      lineHeight: 1
+      rows: 1
     }
   }
   async _buildTwoLineText() {
@@ -247,7 +247,7 @@ export default class MessageBuilder {
 
     return {
       element,
-      lineHeight: 2
+      rows: 2
     }
   }
   async _buildSuperChat() {
@@ -319,7 +319,7 @@ export default class MessageBuilder {
 
     return {
       element,
-      lineHeight: html ? 3 : 2
+      rows: html ? 3 : 2
     }
   }
   async _buildSuperSticker() {
@@ -393,7 +393,7 @@ export default class MessageBuilder {
 
     return {
       element,
-      lineHeight: 3
+      rows: 3
     }
   }
   async _buildMembership() {
@@ -462,7 +462,7 @@ export default class MessageBuilder {
 
     return {
       element,
-      lineHeight: 3
+      rows: 3
     }
   }
   _fixInnerImageHeight(node, height) {
