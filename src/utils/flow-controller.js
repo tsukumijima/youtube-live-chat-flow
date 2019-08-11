@@ -27,10 +27,14 @@ export default class FlowController {
   set following(value) {
     this._following = value
     if (value) {
-      this._timer = setInterval(() => {
+      const scrollToBottom = () => {
         const scroller = document.querySelector('#item-scroller')
-        scroller.scrollTop = scroller.scrollHeight
-      }, 1000)
+        if (scroller) {
+          scroller.scrollTop = scroller.scrollHeight
+        }
+      }
+      scrollToBottom()
+      this._timer = setInterval(scrollToBottom, 1000)
     } else {
       clearInterval(this._timer)
     }
