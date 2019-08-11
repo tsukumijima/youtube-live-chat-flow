@@ -11,7 +11,6 @@
             text
             icon
             @click="avatar = !avatar"
-            v-on="on"
           >
             <v-icon>account_circle</v-icon>
           </v-btn>
@@ -42,7 +41,6 @@
             text
             icon
             @click="memberAvatar = !memberAvatar"
-            v-on="on"
           >
             <v-icon>account_circle</v-icon>
           </v-btn>
@@ -73,7 +71,6 @@
             text
             icon
             @click="moderatorAvatar = !moderatorAvatar"
-            v-on="on"
           >
             <v-icon>account_circle</v-icon>
           </v-btn>
@@ -104,7 +101,6 @@
             text
             icon
             @click="ownerAvatar = !ownerAvatar"
-            v-on="on"
           >
             <v-icon>account_circle</v-icon>
           </v-btn>
@@ -135,7 +131,6 @@
             text
             icon
             @click="yourAvatar = !yourAvatar"
-            v-on="on"
           >
             <v-icon>account_circle</v-icon>
           </v-btn>
@@ -166,7 +161,6 @@
           text
           icon
           @click="superChatHidden = !superChatHidden"
-          v-on="on"
         >
           <v-icon>visibility</v-icon>
         </v-btn>
@@ -183,7 +177,6 @@
           text
           icon
           @click="superStickerHidden = !superStickerHidden"
-          v-on="on"
         >
           <v-icon>visibility</v-icon>
         </v-btn>
@@ -198,7 +191,6 @@
           text
           icon
           @click="membershipHidden = !membershipHidden"
-          v-on="on"
         >
           <v-icon>visibility</v-icon>
         </v-btn>
