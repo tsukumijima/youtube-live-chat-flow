@@ -126,21 +126,21 @@
       </v-col>
     </v-row>
     <v-row align="center">
-      <v-col cols="3" class="py-0"><v-subheader>Myself</v-subheader></v-col>
+      <v-col cols="3" class="py-0"><v-subheader>You</v-subheader></v-col>
       <v-col cols="6" class="py-0">
         <v-row class="align-center ma-0">
           <v-btn
             slot="activator"
-            :color="myAvatar ? 'primary' : 'grey darken-1'"
+            :color="yourAvatar ? 'primary' : 'grey darken-1'"
             text
             icon
-            @click="myAvatar = !myAvatar"
+            @click="yourAvatar = !yourAvatar"
             v-on="on"
           >
             <v-icon>account_circle</v-icon>
           </v-btn>
           <v-text-field
-            v-model="myColor"
+            v-model="yourColor"
             class="color mt-0 pt-0"
             type="color"
             hide-details
@@ -149,7 +149,7 @@
       </v-col>
       <v-col cols="3" class="py-0">
         <v-select
-          v-model="myStyle"
+          v-model="yourStyle"
           :items="styles"
           hide-details
           class="mt-0 pt-0"
@@ -368,28 +368,28 @@ export default {
         this.$store.commit('setOwnerStyle', { ownerStyle: value })
       }
     },
-    myColor: {
+    yourColor: {
       get() {
-        return this.$store.state.myColor
+        return this.$store.state.yourColor
       },
       set(value) {
-        this.$store.commit('setMyColor', { myColor: value })
+        this.$store.commit('setYourColor', { yourColor: value })
       }
     },
-    myAvatar: {
+    yourAvatar: {
       get() {
-        return this.$store.state.myAvatar
+        return this.$store.state.yourAvatar
       },
       set(value) {
-        this.$store.commit('setMyAvatar', { myAvatar: value })
+        this.$store.commit('setYourAvatar', { yourAvatar: value })
       }
     },
-    myStyle: {
+    yourStyle: {
       get() {
-        return this.$store.state.myStyle
+        return this.$store.state.yourStyle
       },
       set(value) {
-        this.$store.commit('setMyStyle', { myStyle: value })
+        this.$store.commit('setYourStyle', { yourStyle: value })
       }
     },
     superChatHidden: {

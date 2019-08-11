@@ -40,7 +40,7 @@ export default class MessageBuilder {
 
     return message
   }
-  get _myName() {
+  get _yourName() {
     // if input control exists
     const span = document.querySelector('#input-container span#author-name')
     if (span) {
@@ -65,8 +65,8 @@ export default class MessageBuilder {
   }
   get _authorType() {
     const authorName = this._node.querySelector('#author-name').textContent
-    const myself = authorName === this._myName
-    return myself ? 'myself' : this._node.getAttribute('author-type')
+    const you = authorName === this._yourName
+    return you ? 'you' : this._node.getAttribute('author-type')
   }
   get _paid() {
     const tagName = this._node.tagName.toLowerCase()
@@ -78,8 +78,8 @@ export default class MessageBuilder {
   }
   get _style() {
     switch (this._authorType) {
-      case 'myself':
-        return this._settings.myStyle
+      case 'you':
+        return this._settings.yourStyle
       case 'owner':
         return this._settings.ownerStyle
       case 'moderator':
@@ -92,8 +92,8 @@ export default class MessageBuilder {
   }
   get _avatar() {
     switch (this._authorType) {
-      case 'myself':
-        return this._settings.myAvatar
+      case 'you':
+        return this._settings.yourAvatar
       case 'owner':
         return this._settings.ownerAvatar
       case 'moderator':
@@ -109,8 +109,8 @@ export default class MessageBuilder {
       return '#ffffff'
     }
     switch (this._authorType) {
-      case 'myself':
-        return this._settings.myColor
+      case 'you':
+        return this._settings.yourColor
       case 'owner':
         return this._settings.ownerColor
       case 'moderator':
