@@ -5,21 +5,16 @@
       <v-col cols="3" class="py-0"><v-subheader>Guest</v-subheader></v-col>
       <v-col cols="6" class="py-0">
         <v-row class="align-center ma-0">
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                slot="activator"
-                :color="avatar ? 'primary' : 'grey darken-1'"
-                text
-                icon
-                @click="avatar = !avatar"
-                v-on="on"
-              >
-                <v-icon>account_circle</v-icon>
-              </v-btn>
-            </template>
-            <span>Show Avatar</span>
-          </v-tooltip>
+          <v-btn
+            slot="activator"
+            :color="avatar ? 'primary' : 'grey darken-1'"
+            text
+            icon
+            @click="avatar = !avatar"
+            v-on="on"
+          >
+            <v-icon>account_circle</v-icon>
+          </v-btn>
           <v-text-field
             v-model="color"
             class="color mt-0 pt-0"
@@ -41,21 +36,16 @@
       <v-col cols="3" class="py-0"><v-subheader>Member</v-subheader></v-col>
       <v-col cols="6" class="py-0">
         <v-row class="align-center ma-0">
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                slot="activator"
-                :color="memberAvatar ? 'primary' : 'grey darken-1'"
-                text
-                icon
-                @click="memberAvatar = !memberAvatar"
-                v-on="on"
-              >
-                <v-icon>account_circle</v-icon>
-              </v-btn>
-            </template>
-            <span>Show Avatar</span>
-          </v-tooltip>
+          <v-btn
+            slot="activator"
+            :color="memberAvatar ? 'primary' : 'grey darken-1'"
+            text
+            icon
+            @click="memberAvatar = !memberAvatar"
+            v-on="on"
+          >
+            <v-icon>account_circle</v-icon>
+          </v-btn>
           <v-text-field
             v-model="memberColor"
             class="color mt-0 pt-0"
@@ -77,21 +67,16 @@
       <v-col cols="3" class="py-0"><v-subheader>Moderator</v-subheader></v-col>
       <v-col cols="6" class="py-0">
         <v-row class="align-center ma-0">
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                slot="activator"
-                :color="moderatorAvatar ? 'primary' : 'grey darken-1'"
-                text
-                icon
-                @click="moderatorAvatar = !moderatorAvatar"
-                v-on="on"
-              >
-                <v-icon>account_circle</v-icon>
-              </v-btn>
-            </template>
-            <span>Show Avatar</span>
-          </v-tooltip>
+          <v-btn
+            slot="activator"
+            :color="moderatorAvatar ? 'primary' : 'grey darken-1'"
+            text
+            icon
+            @click="moderatorAvatar = !moderatorAvatar"
+            v-on="on"
+          >
+            <v-icon>account_circle</v-icon>
+          </v-btn>
           <v-text-field
             v-model="moderatorColor"
             class="color mt-0 pt-0"
@@ -113,21 +98,16 @@
       <v-col cols="3" class="py-0"><v-subheader>Owner</v-subheader></v-col>
       <v-col cols="6" class="py-0">
         <v-row class="align-center ma-0">
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                slot="activator"
-                :color="ownerAvatar ? 'primary' : 'grey darken-1'"
-                text
-                icon
-                @click="ownerAvatar = !ownerAvatar"
-                v-on="on"
-              >
-                <v-icon>account_circle</v-icon>
-              </v-btn>
-            </template>
-            <span>Show Avatar</span>
-          </v-tooltip>
+          <v-btn
+            slot="activator"
+            :color="ownerAvatar ? 'primary' : 'grey darken-1'"
+            text
+            icon
+            @click="ownerAvatar = !ownerAvatar"
+            v-on="on"
+          >
+            <v-icon>account_circle</v-icon>
+          </v-btn>
           <v-text-field
             v-model="ownerColor"
             class="color mt-0 pt-0"
@@ -149,21 +129,16 @@
       <v-col cols="3" class="py-0"><v-subheader>Myself</v-subheader></v-col>
       <v-col cols="6" class="py-0">
         <v-row class="align-center ma-0">
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                slot="activator"
-                :color="myAvatar ? 'primary' : 'grey darken-1'"
-                text
-                icon
-                @click="myAvatar = !myAvatar"
-                v-on="on"
-              >
-                <v-icon>account_circle</v-icon>
-              </v-btn>
-            </template>
-            <span>Show Avatar</span>
-          </v-tooltip>
+          <v-btn
+            slot="activator"
+            :color="myAvatar ? 'primary' : 'grey darken-1'"
+            text
+            icon
+            @click="myAvatar = !myAvatar"
+            v-on="on"
+          >
+            <v-icon>account_circle</v-icon>
+          </v-btn>
           <v-text-field
             v-model="myColor"
             class="color mt-0 pt-0"
@@ -181,24 +156,20 @@
         />
       </v-col>
     </v-row>
+    <v-subheader class="pl-0">Visibility</v-subheader>
     <v-row align="center">
       <v-col cols="3" class="py-0"><v-subheader>Super Chat</v-subheader></v-col>
       <v-col cols="9" class="py-0">
-        <v-tooltip top>
-          <template v-slot:activator="{ on }">
-            <v-btn
-              slot="activator"
-              :color="superChatHidden ? 'grey darken-1' : 'primary'"
-              text
-              icon
-              @click="superChatHidden = !superChatHidden"
-              v-on="on"
-            >
-              <v-icon>visibility</v-icon>
-            </v-btn>
-          </template>
-          <span>Show Message</span>
-        </v-tooltip>
+        <v-btn
+          slot="activator"
+          :color="superChatHidden ? 'grey darken-1' : 'primary'"
+          text
+          icon
+          @click="superChatHidden = !superChatHidden"
+          v-on="on"
+        >
+          <v-icon>visibility</v-icon>
+        </v-btn>
       </v-col>
     </v-row>
     <v-row align="center">
@@ -206,41 +177,31 @@
         ><v-subheader>Super Sticker</v-subheader></v-col
       >
       <v-col cols="9" class="py-0">
-        <v-tooltip top>
-          <template v-slot:activator="{ on }">
-            <v-btn
-              slot="activator"
-              :color="superStickerHidden ? 'grey darken-1' : 'primary'"
-              text
-              icon
-              @click="superStickerHidden = !superStickerHidden"
-              v-on="on"
-            >
-              <v-icon>visibility</v-icon>
-            </v-btn>
-          </template>
-          <span>Show Message</span>
-        </v-tooltip>
+        <v-btn
+          slot="activator"
+          :color="superStickerHidden ? 'grey darken-1' : 'primary'"
+          text
+          icon
+          @click="superStickerHidden = !superStickerHidden"
+          v-on="on"
+        >
+          <v-icon>visibility</v-icon>
+        </v-btn>
       </v-col>
     </v-row>
     <v-row align="center">
       <v-col cols="3" class="py-0"><v-subheader>Membership</v-subheader></v-col>
       <v-col cols="9" class="py-0">
-        <v-tooltip top>
-          <template v-slot:activator="{ on }">
-            <v-btn
-              slot="activator"
-              :color="membershipHidden ? 'grey darken-1' : 'primary'"
-              text
-              icon
-              @click="membershipHidden = !membershipHidden"
-              v-on="on"
-            >
-              <v-icon>visibility</v-icon>
-            </v-btn>
-          </template>
-          <span>Show Message</span>
-        </v-tooltip>
+        <v-btn
+          slot="activator"
+          :color="membershipHidden ? 'grey darken-1' : 'primary'"
+          text
+          icon
+          @click="membershipHidden = !membershipHidden"
+          v-on="on"
+        >
+          <v-icon>visibility</v-icon>
+        </v-btn>
       </v-col>
     </v-row>
     <v-text-field
