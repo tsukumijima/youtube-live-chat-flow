@@ -167,9 +167,9 @@
       </v-col>
     </v-row>
     <v-row align="center">
-      <v-col cols="3" class="py-0"
-        ><v-subheader>Super Sticker</v-subheader></v-col
-      >
+      <v-col cols="3" class="py-0">
+        <v-subheader>Super Sticker</v-subheader>
+      </v-col>
       <v-col cols="9" class="py-0">
         <v-btn
           slot="activator"
