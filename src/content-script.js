@@ -79,11 +79,10 @@ const removeControlButton = () => {
 }
 
 const addMenuButtons = () => {
-  const header = document.querySelector(
-    '#chat-messages > yt-live-chat-header-renderer'
+  const refIconButton = document.querySelector(
+    '#chat-messages > yt-live-chat-header-renderer > yt-icon-button'
   )
-  const refIconButton = header && header.querySelector('yt-icon-button')
-  if (!header || !refIconButton) {
+  if (!refIconButton) {
     return
   }
 
@@ -108,7 +107,7 @@ const addMenuButtons = () => {
     iconButton.onclick = config.onclick
     iconButton.append(button)
 
-    header.insertBefore(iconButton, refIconButton)
+    refIconButton.parentNode.insertBefore(iconButton, refIconButton)
 
     // remove unnecessary generated button
     iconButton.querySelector('#button').remove()
