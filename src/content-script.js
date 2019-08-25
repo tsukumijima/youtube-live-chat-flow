@@ -52,8 +52,7 @@ const addControlButton = () => {
   }
 
   const button = document.createElement('button')
-  button.classList.add(className.controlButton)
-  button.classList.add('ytp-button')
+  button.classList.add('ytp-button', className.controlButton)
   button.title = 'Flow messages'
   button.onclick = () => {
     browser.runtime.sendMessage({ id: 'controlButtonClicked' })
@@ -90,20 +89,21 @@ const addMenuButtons = () => {
 
   for (let config of menuButtonConfigs) {
     const icon = document.createElement('yt-icon')
-    icon.classList.add('style-scope')
-    icon.classList.add('yt-live-chat-header-renderer')
+    icon.classList.add('yt-live-chat-header-renderer', 'style-scope')
     icon.innerHTML = config.svg
 
     const button = document.createElement('button')
     button.setAttribute('id', 'button')
-    button.classList.add('yt-icon-button')
-    button.classList.add('style-scope')
+    button.classList.add('yt-icon-button', 'style-scope')
     button.append(icon)
 
     const iconButton = document.createElement('yt-icon-button')
-    iconButton.classList.add(className.menuButton, config.className)
-    iconButton.classList.add('style-scope')
-    iconButton.classList.add('yt-live-chat-header-renderer')
+    iconButton.classList.add(
+      'yt-live-chat-header-renderer',
+      'style-scope',
+      className.menuButton,
+      config.className
+    )
     iconButton.title = config.title
     iconButton.onclick = config.onclick
     iconButton.append(button)
