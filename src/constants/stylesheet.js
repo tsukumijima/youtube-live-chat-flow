@@ -233,6 +233,14 @@ paper-ripple {
 `
 
 export const code = `
+yt-live-chat-header-renderer > #primary-content {
+  min-width: 0;
+}
+
+yt-live-chat-header-renderer > #primary-content > #view-selector > yt-sort-filter-sub-menu-renderer {
+  width: 100%;
+}
+
 .${className.menuButton}.${className.menuButtonActive} > button > yt-icon {
   color: #4387f1!important;
 }
