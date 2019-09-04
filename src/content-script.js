@@ -89,14 +89,9 @@ const addMenuButtons = () => {
   for (let config of menuButtonConfigs) {
     const icon = document.createElement('yt-icon')
     icon.classList.add('yt-live-chat-header-renderer', 'style-scope')
-    icon.innerHTML = config.svg
-
-    const button = document.createElement('button')
-    button.setAttribute('id', 'button')
-    button.classList.add('yt-icon-button', 'style-scope')
-    button.append(icon)
 
     const iconButton = document.createElement('yt-icon-button')
+    iconButton.id = 'overflow'
     iconButton.classList.add(
       'yt-live-chat-header-renderer',
       'style-scope',
@@ -105,12 +100,12 @@ const addMenuButtons = () => {
     )
     iconButton.title = config.title
     iconButton.onclick = config.onclick
-    iconButton.append(button)
+    iconButton.append(icon)
 
     refIconButton.parentNode.insertBefore(iconButton, refIconButton)
 
-    // remove unnecessary generated button
-    iconButton.querySelector('#button').remove()
+    // insert svg after wrapper button appended
+    icon.innerHTML = config.svg
   }
 
   updateMenuButtons()

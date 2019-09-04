@@ -245,11 +245,6 @@ yt-live-chat-header-renderer > #primary-content > #view-selector > yt-sort-filte
   color: #4387f1!important;
 }
 
-.${className.menuButton} {
-  width: 40px;
-  height: 40px;
-  padding: 8px;
-}
 .${className.menuButton} > button > yt-icon > svg {
   pointer-events: none;
   display: block;
