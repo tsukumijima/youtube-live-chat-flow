@@ -3,6 +3,24 @@ import className from './constants/class-name'
 import FlowController from './utils/flow-controller'
 import message from './assets/message.svg'
 import downArrow from './assets/down-arrow.svg'
+import refresh from './assets/refresh.svg'
+
+const menuButtonConfigs = [
+  {
+    svg: downArrow,
+    title: 'Follow New Messages',
+    className: className.followButton,
+    onclick: () => browser.runtime.sendMessage({ id: 'menuButtonClicked' }),
+    isActive: () => controller.following
+  },
+  {
+    svg: refresh,
+    title: 'Reload Frame',
+    className: className.reloadButton,
+    onclick: () => location.reload(),
+    isActive: () => false
+  }
+]
 
 const controller = new FlowController()
 
@@ -34,8 +52,7 @@ const addControlButton = () => {
   }
 
   const button = document.createElement('button')
-  button.classList.add(className.controlButton)
-  button.classList.add('ytp-button')
+  button.classList.add('ytp-button', className.controlButton)
   button.title = 'Flow messages'
   button.onclick = () => {
     browser.runtime.sendMessage({ id: 'controlButtonClicked' })
@@ -61,53 +78,50 @@ const removeControlButton = () => {
   button && button.remove()
 }
 
-const addMenuButton = () => {
-  const header = document.querySelector(
-    '#chat-messages > yt-live-chat-header-renderer'
+const addMenuButtons = () => {
+  const refIconButton = document.querySelector(
+    '#chat-messages > yt-live-chat-header-renderer > yt-icon-button'
   )
-  const refIconButton = header && header.querySelector('yt-icon-button')
-  if (!header || !refIconButton) {
+  if (!refIconButton) {
     return
   }
 
-  const icon = document.createElement('yt-icon')
-  icon.classList.add('style-scope')
-  icon.classList.add('yt-live-chat-header-renderer')
-  icon.innerHTML = downArrow
+  for (let config of menuButtonConfigs) {
+    const icon = document.createElement('yt-icon')
+    icon.classList.add('yt-live-chat-header-renderer', 'style-scope')
 
-  const button = document.createElement('button')
-  button.setAttribute('id', 'button')
-  button.classList.add('yt-icon-button')
-  button.classList.add('style-scope')
-  button.append(icon)
+    const iconButton = document.createElement('yt-icon-button')
+    iconButton.id = 'overflow'
+    iconButton.classList.add(
+      'yt-live-chat-header-renderer',
+      'style-scope',
+      className.menuButton,
+      config.className
+    )
+    iconButton.title = config.title
+    iconButton.onclick = config.onclick
+    iconButton.append(icon)
 
-  const iconButton = document.createElement('yt-icon-button')
-  iconButton.classList.add(className.menuButton)
-  iconButton.classList.add('style-scope')
-  iconButton.classList.add('yt-live-chat-header-renderer')
-  iconButton.title = 'Follow new messages'
-  iconButton.onclick = () => {
-    browser.runtime.sendMessage({ id: 'menuButtonClicked' })
+    refIconButton.parentNode.insertBefore(iconButton, refIconButton)
+
+    // insert svg after wrapper button appended
+    icon.innerHTML = config.svg
   }
-  iconButton.append(button)
 
-  header.insertBefore(iconButton, refIconButton)
-
-  // remove unnecessary generated button
-  iconButton.querySelector('#button').remove()
-
-  updateMenuButton()
+  updateMenuButtons()
 }
 
-const updateMenuButton = () => {
-  const button = document.querySelector(`.${className.menuButton}`)
-  if (!button) {
-    return
-  }
-  if (controller.following) {
-    button.classList.add(className.menuButtonActive)
-  } else {
-    button.classList.remove(className.menuButtonActive)
+const updateMenuButtons = () => {
+  for (let config of menuButtonConfigs) {
+    const button = document.querySelector(`.${config.className}`)
+    if (!button) {
+      return
+    }
+    if (config.isActive()) {
+      button.classList.add(className.menuButtonActive)
+    } else {
+      button.classList.remove(className.menuButtonActive)
+    }
   }
 }
 
@@ -230,7 +244,7 @@ browser.runtime.onMessage.addListener((message) => {
       break
     case 'followingChanged':
       controller.following = data.following
-      updateMenuButton()
+      updateMenuButtons()
       break
     case 'settingsChanged':
       controller.settings = data.settings
@@ -252,7 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   controller.settings = data.settings
   await controller.observe()
   addControlButton()
-  addMenuButton()
+  addMenuButtons()
   addVideoEventListener()
 
   window.addEventListener('unload', () => {

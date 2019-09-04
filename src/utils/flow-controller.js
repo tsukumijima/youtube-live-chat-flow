@@ -27,10 +27,14 @@ export default class FlowController {
   set following(value) {
     this._following = value
     if (value) {
-      this._timer = setInterval(() => {
+      const scrollToBottom = () => {
         const scroller = document.querySelector('#item-scroller')
-        scroller.scrollTop = scroller.scrollHeight
-      }, 1000)
+        if (scroller) {
+          scroller.scrollTop = scroller.scrollHeight
+        }
+      }
+      scrollToBottom()
+      this._timer = setInterval(scrollToBottom, 1000)
     } else {
       clearInterval(this._timer)
     }
@@ -134,13 +138,12 @@ export default class FlowController {
 
     container.appendChild(message.element)
 
-    const lineHeight = Number(message.lineHeight)
-    const width = message.element.offsetWidth
+    const messageRows = Number(message.rows)
     const containerWidth = container.offsetWidth
-    const time = Date.now()
+    const times = this._createTimes(message.element, containerWidth)
 
-    const index = this._getIndex(lineHeight, width, containerWidth, time)
-    if (index + lineHeight > rows && this._settings.overflow === 'hidden') {
+    const index = this._getIndex(messageRows, times)
+    if (index + messageRows > rows && this._settings.overflow === 'hidden') {
       message.element.remove()
       return
     }
@@ -157,12 +160,12 @@ export default class FlowController {
     const animation = this._createAnimation(message.element, containerWidth)
     animation.onfinish = () => {
       message.element.remove()
-      this._shiftMessage(index, lineHeight)
+      this._shiftMessage(index, messageRows)
     }
 
-    message.time = time
+    message.times = times
     message.animation = animation
-    this._pushMessage(message, index, lineHeight)
+    this._pushMessage(message, index, messageRows)
 
     if (video.paused) {
       return
@@ -224,6 +227,20 @@ export default class FlowController {
       { banned: false, reason: '' }
     )
   }
+  _createTimes(element, containerWidth) {
+    const millis = this._settings.speed * 1000
+    const w = element.offsetWidth
+    const v = (containerWidth + w) / millis
+    const t = w / v
+    const n = Date.now()
+
+    return {
+      willAppear: n,
+      didAppear: n + t,
+      willDisappear: n + millis - t,
+      didDisappear: n + millis
+    }
+  }
   _createAnimation(element, containerWidth) {
     const millis = this._settings.speed * 1000
     const keyframes = [
@@ -238,16 +255,13 @@ export default class FlowController {
     // e.g. if rows value is "12", denied index is "23", "47", "71" ...
     return index % (this._settings.rows * 2) === this._settings.rows * 2 - 1
   }
-  _getIndex(lineHeight, width, containerWidth, time) {
-    const millis = this._settings.speed * 1000
-    const vc = (containerWidth + width) / millis
-
+  _getIndex(messageRows, times) {
     let index = this._rows.findIndex((_, i, rows) => {
-      const mod = (i + lineHeight) % this._settings.rows
-      if (mod > 0 && mod < lineHeight) {
+      const mod = (i + messageRows) % this._settings.rows
+      if (mod > 0 && mod < messageRows) {
         return false
       }
-      return Array(lineHeight)
+      return Array(messageRows)
         .fill(1)
         .every((_, j) => {
           if (this._isDeniedIndex(i + j)) {
@@ -258,41 +272,32 @@ export default class FlowController {
           if (!messages) {
             return true
           }
+
           const message = messages[messages.length - 1]
           if (!message) {
             return true
           }
-          const vt = (containerWidth + message.element.offsetWidth) / millis
 
-          const t1 = time - message.time
-          const d1 = vt * t1
-          if (d1 < message.element.offsetWidth) {
-            return false
-          }
-
-          const t2 = t1 + containerWidth / vc
-          const d2 = vt * t2
-          if (d2 < containerWidth + message.element.offsetWidth) {
-            return false
-          }
-
-          return true
+          return (
+            message.times.didDisappear < times.willDisappear &&
+            message.times.didAppear < times.willAppear
+          )
         })
     })
     if (index === -1) {
       index = this._rows.length
-      const mod = (index + lineHeight) % this._settings.rows
-      if (mod > 0 && mod < lineHeight) {
-        index += lineHeight - mod
+      const mod = (index + messageRows) % this._settings.rows
+      if (mod > 0 && mod < messageRows) {
+        index += messageRows - mod
       }
-      if (this._isDeniedIndex(index + lineHeight - 1)) {
-        index += lineHeight
+      if (this._isDeniedIndex(index + messageRows - 1)) {
+        index += messageRows
       }
     }
     return index
   }
-  _pushMessage(message, index, lineHeight) {
-    Array(lineHeight)
+  _pushMessage(message, index, messageRows) {
+    Array(messageRows)
       .fill(1)
       .forEach((_, j) => {
         const i = index + j
@@ -302,8 +307,8 @@ export default class FlowController {
         this._rows[i].push(message)
       })
   }
-  _shiftMessage(index, lineHeight) {
-    Array(lineHeight)
+  _shiftMessage(index, messageRows) {
+    Array(messageRows)
       .fill(1)
       .forEach((_, j) => {
         const i = index + j

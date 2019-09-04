@@ -28,7 +28,7 @@ export default {
       tabIndex: null,
       tabs: [
         { title: 'Message', item: MessageTabItem },
-        { title: 'Filter', item: FilterTabItem },
+        { title: 'Banned Words', item: FilterTabItem },
         { title: 'Others', item: OthersTabItem }
       ]
     }

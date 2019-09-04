@@ -41,9 +41,9 @@ const initialState = {
   ownerColor: '#ffff66',
   ownerAvatar: true,
   ownerStyle: 'two-line',
-  myColor: '#ff6666',
-  myAvatar: true,
-  myStyle: 'two-line',
+  yourColor: '#ff6666',
+  yourAvatar: true,
+  yourStyle: 'two-line',
   superChatHidden: false,
   superStickerHidden: false,
   membershipHidden: false,
@@ -104,14 +104,14 @@ const config = {
     setOwnerStyle(state, { ownerStyle }) {
       state.ownerStyle = ownerStyle
     },
-    setMyColor(state, { myColor }) {
-      state.myColor = myColor
+    setYourColor(state, { yourColor }) {
+      state.yourColor = yourColor
     },
-    setMyAvatar(state, { myAvatar }) {
-      state.myAvatar = myAvatar
+    setYourAvatar(state, { yourAvatar }) {
+      state.yourAvatar = yourAvatar
     },
-    setMyStyle(state, { myStyle }) {
-      state.myStyle = myStyle
+    setYourStyle(state, { yourStyle }) {
+      state.yourStyle = yourStyle
     },
     setSuperChatHidden(state, { superChatHidden }) {
       state.superChatHidden = superChatHidden

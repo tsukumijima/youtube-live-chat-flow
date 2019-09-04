@@ -22,6 +22,8 @@ const classNames = [
   // window
   'menuButton',
   'menuButtonActive',
+  'followButton',
+  'reloadButton',
   'description'
 ]
 

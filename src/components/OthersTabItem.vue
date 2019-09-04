@@ -3,7 +3,7 @@
     <v-switch
       v-model="bottomChatFormEnabled"
       label="Bottom Chat Form"
-      hint="Move chat form to bottom controls on video (Page reload is needed)"
+      hint="Move chat form to bottom controls on video (Page reload required)"
       persistent-hint
     />
   </v-card>
