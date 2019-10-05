@@ -146,6 +146,9 @@ const addInputControl = () => {
   const buttons = document.querySelector(
     'yt-live-chat-message-input-renderer #container #buttons.yt-live-chat-message-input-renderer'
   )
+  const message = document.querySelector(
+    'yt-live-chat-message-input-renderer #interaction-message'
+  )
   if (!top || !buttons) {
     return
   }
@@ -203,6 +206,7 @@ const addInputControl = () => {
   controls.style.right = `${rightControls.offsetWidth}px`
   controls.append(top)
   controls.append(messageButtons)
+  controls.append(message)
   rightControls.parentNode.insertBefore(controls, rightControls)
 
   // setup resize observers
