@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-3" flat>
+  <v-card class="pa-5" flat>
     <v-subheader class="pl-0">Format</v-subheader>
     <v-row align="center">
       <v-col cols="3" class="py-0"><v-subheader>Guest</v-subheader></v-col>

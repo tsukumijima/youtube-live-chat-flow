@@ -41,6 +41,11 @@ yt-live-chat-text-input-field-renderer#input #input {
   height: 36px;
   right: 0;
 }
+.html5-video-player.ytp-fullscreen
+.${className.controller} #interaction-message yt-live-chat-message-renderer #button paper-button {
+  height: 40px;
+  font-size: 14px;
+}
 
 .html5-video-container .${className.message} {
   align-items: center;
@@ -109,6 +114,10 @@ yt-live-chat-text-input-field-renderer#input #input {
   height: 100%;
   box-sizing: border-box;
 }
+.${className.controller}:hover #interaction-message {
+  display: block;
+}
+
 .${className.controller} #top {
   display: flex;
   flex: 1;
@@ -229,6 +238,25 @@ paper-ripple {
 .${className.controller} #message-buttons #countdown #countdown-line {
   stroke-dasharray: 62.8318;
   transform: translate(0, 24px) rotateZ(-90deg);
+}
+
+.${className.controller} #interaction-message {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  display: none;
+}
+.${className.controller} #interaction-message yt-live-chat-message-renderer #subtext {
+  display: none;
+}
+.${className.controller} #interaction-message yt-live-chat-message-renderer #button yt-button-renderer {
+  width: 100%;
+  margin: 4px 0;
+}
+.${className.controller} #interaction-message yt-live-chat-message-renderer #button paper-button {
+  font-size: 10px;
+  padding: 0 8px;
+  height: 28px;
 }
 `
 

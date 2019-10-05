@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-3" flat>
+  <v-card class="pa-5" flat>
     <v-switch
       v-model="bottomChatFormEnabled"
       label="Bottom Chat Form"

@@ -3,7 +3,7 @@
     <v-content>
       <v-container class="pa-0" fluid>
         <v-card flat>
-          <v-tabs v-model="tabIndex">
+          <v-tabs v-model="tabIndex" grow>
             <v-tab v-for="(tab, index) in tabs" :key="index">
               {{ tab.title }}
             </v-tab>
