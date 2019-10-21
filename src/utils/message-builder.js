@@ -26,7 +26,7 @@ export default class MessageBuilder {
           message = await this._buildSuperSticker()
         }
         break
-      case 'yt-live-chat-legacy-paid-message-renderer':
+      case 'yt-live-chat-membership-item-renderer':
         if (!this._settings.membershipHidden) {
           message = await this._buildMembership()
         }
@@ -73,7 +73,7 @@ export default class MessageBuilder {
     return [
       'yt-live-chat-paid-message-renderer',
       'yt-live-chat-paid-sticker-renderer',
-      'yt-live-chat-legacy-paid-message-renderer'
+      'yt-live-chat-membership-item-renderer'
     ].includes(tagName)
   }
   get _style() {
@@ -400,10 +400,10 @@ export default class MessageBuilder {
     const avatarUrl = await DOMHelper.getImageSourceAsync(
       this._node.querySelector('#img')
     )
-    const eventText = this._node.querySelector('#event-text').textContent
-    const detailText = this._node.querySelector('#detail-text').textContent
+    const eventText = this._node.querySelector('#author-name').textContent
+    const detailText = this._node.querySelector('#header-subtext').textContent
     const backgroundColor = this._getBackgroundColor(
-      this._node.querySelector('#card'),
+      this._node.querySelector('#card > #header'),
       0.8
     )
 
