@@ -4,8 +4,8 @@
     <td class="keyword text-truncate" v-text="item.keyword" />
     <td v-text="regExp" />
     <td>
-      <v-icon class="mr-2" color="teal" @click="onEditClick">edit</v-icon>
-      <v-icon color="pink" @click="onDeleteClick">delete</v-icon>
+      <v-icon class="mr-2" color="teal" @click="onEditClick">mdi-pencil</v-icon>
+      <v-icon color="pink" @click="onDeleteClick">mdi-delete</v-icon>
     </td>
     <filter-dialog v-model="dialog" :inputs.sync="form" title="Edit Rule" />
   </tr>
