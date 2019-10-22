@@ -18,13 +18,15 @@ jobs:
       - run: yarn
       - run: yarn test
       - run: yarn package
+      - id: get_version
+        run: echo ::set-output name=version::$(node -p "require('./package.json').version")
       - id: create_release
         uses: actions/create-release@v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ''
-          release_name: Draft
+          tag_name: v${{ steps.get_version.outputs.version }}
+          release_name: v${{ steps.get_version.outputs.version }}
           draft: true
           prerelease: true
       - uses: actions/upload-release-asset@v1.0.1
