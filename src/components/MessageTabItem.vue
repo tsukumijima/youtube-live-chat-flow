@@ -12,7 +12,7 @@
             icon
             @click="avatar = !avatar"
           >
-            <v-icon>account_circle</v-icon>
+            <v-icon>mdi-account-circle</v-icon>
           </v-btn>
           <v-text-field
             v-model="color"
@@ -42,7 +42,7 @@
             icon
             @click="memberAvatar = !memberAvatar"
           >
-            <v-icon>account_circle</v-icon>
+            <v-icon>mdi-account-circle</v-icon>
           </v-btn>
           <v-text-field
             v-model="memberColor"
@@ -72,7 +72,7 @@
             icon
             @click="moderatorAvatar = !moderatorAvatar"
           >
-            <v-icon>account_circle</v-icon>
+            <v-icon>mdi-account-circle</v-icon>
           </v-btn>
           <v-text-field
             v-model="moderatorColor"
@@ -102,7 +102,7 @@
             icon
             @click="ownerAvatar = !ownerAvatar"
           >
-            <v-icon>account_circle</v-icon>
+            <v-icon>mdi-account-circle</v-icon>
           </v-btn>
           <v-text-field
             v-model="ownerColor"
@@ -132,7 +132,7 @@
             icon
             @click="yourAvatar = !yourAvatar"
           >
-            <v-icon>account_circle</v-icon>
+            <v-icon>mdi-account-circle</v-icon>
           </v-btn>
           <v-text-field
             v-model="yourColor"
@@ -162,7 +162,7 @@
           icon
           @click="superChatHidden = !superChatHidden"
         >
-          <v-icon>visibility</v-icon>
+          <v-icon>mdi-eye</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -178,7 +178,7 @@
           icon
           @click="superStickerHidden = !superStickerHidden"
         >
-          <v-icon>visibility</v-icon>
+          <v-icon>mdi-eye</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -192,7 +192,7 @@
           icon
           @click="membershipHidden = !membershipHidden"
         >
-          <v-icon>visibility</v-icon>
+          <v-icon>mdi-eye</v-icon>
         </v-btn>
       </v-col>
     </v-row>

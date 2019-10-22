@@ -28,6 +28,10 @@ export default class FlowController {
     this._following = value
     if (value) {
       const scrollToBottom = () => {
+        const hovered = !!document.querySelector('#chat:hover')
+        if (hovered) {
+          return
+        }
         const scroller = document.querySelector('#item-scroller')
         if (scroller) {
           scroller.scrollTop = scroller.scrollHeight
