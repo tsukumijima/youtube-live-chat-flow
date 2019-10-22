@@ -1,6 +1,6 @@
 # YouTube Live Chat Flow
 
-[![Build Status](https://travis-ci.com/fiahfy/youtube-live-chat-flow.svg?branch=master)](https://travis-ci.com/fiahfy/youtube-live-chat-flow)
+![badge](https://github.com/fiahfy/youtube-live-chat-flow/workflows/Web%20Extension%20CI/badge.svg)
 
 > Chrome Extension for Chat Messages Flow on YouTube Videos.
 
