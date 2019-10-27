@@ -164,7 +164,7 @@ yt-live-chat-text-input-field-renderer#input[has-text] #label {
 .${className.controller} #top #input-container
 yt-live-chat-text-input-field-renderer#input #label {
   position: absolute;
-  top: 0;
+  top: unset!important;
   left: 1px;
   padding-left: 4px;
   pointer-events: none;
