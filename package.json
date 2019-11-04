@@ -1,7 +1,7 @@
 {
   "name": "youtube-live-chat-flow",
   "description": "Chat Messages Flow on YouTube Videos",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "author": {
     "name": "fiahfy",
     "email": "d.fiahfy@gmail.com",
@@ -10,7 +10,7 @@
   "dependencies": {
     "color": "^3.1.2",
     "vue": "^2.6.10",
-    "vuetify": "^2.1.5",
+    "vuetify": "^2.1.9",
     "vuex": "^3.1.1",
     "vuex-persist": "^2.1.1",
     "webextension-polyfill": "^0.5.0"
@@ -24,8 +24,8 @@
     "babel-loader": "^8.0.6",
     "copy-webpack-plugin": "^5.0.4",
     "css-loader": "^3.2.0",
-    "eslint": "^6.5.1",
-    "eslint-config-prettier": "^6.4.0",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^5.2.3",
     "file-loader": "^4.2.0",
@@ -33,11 +33,11 @@
     "husky": "^3.0.9",
     "prettier": "^1.18.2",
     "svg-inline-loader": "^0.8.0",
-    "vue-loader": "^15.7.1",
+    "vue-loader": "^15.7.2",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.9",
-    "webpack-extension-reloader": "^1.1.1"
+    "webpack-cli": "^3.3.10",
+    "webpack-extension-reloader": "^1.1.2"
   },
   "keywords": [
     "chrome extension",

@@ -148,6 +148,10 @@ yt-live-chat-author-chip {
   white-space: nowrap;
 }
 .${className.controller} #top #input-container
+yt-live-chat-author-chip #author-name {
+  color: inherit;
+}
+.${className.controller} #top #input-container
 yt-live-chat-text-input-field-renderer#input {
   position: relative;
   display: flex;
@@ -156,6 +160,10 @@ yt-live-chat-text-input-field-renderer#input {
   align-items: center;
   height: 100%;
   margin-right: 8px;
+}
+.${className.controller} #top #input-container
+yt-live-chat-text-input-field-renderer#input #label {
+  color: inherit;
 }
 .${className.controller} #top #input-container
 yt-live-chat-text-input-field-renderer#input[has-text] #label {
