@@ -1,9 +1,11 @@
-import browser from 'webextension-polyfill'
+import { browser } from 'webextension-polyfill-ts'
 import className from './constants/class-name'
 import FlowController from './utils/flow-controller'
 import message from './assets/message.svg'
 import downArrow from './assets/down-arrow.svg'
 import refresh from './assets/refresh.svg'
+
+const controller = new FlowController()
 
 const menuButtonConfigs = [
   {
@@ -22,25 +24,9 @@ const menuButtonConfigs = [
   }
 ]
 
-const controller = new FlowController()
-
-const addVideoEventListener = () => {
-  const video = parent.document.querySelector('video.html5-main-video')
-  if (!video) {
-    return
-  }
-
-  video.addEventListener('play', () => controller.play())
-  video.addEventListener('pause', () => controller.pause())
-
-  if (video.readyState === 0) {
-    // wait until video is started
-    video.addEventListener('loadeddata', () => {
-      addInputControl()
-    })
-  } else {
-    addInputControl()
-  }
+const updateControlButton = () => {
+  const button = parent.document.querySelector(`.${className.controlButton}`)
+  button && button.setAttribute('aria-pressed', String(controller.enabled))
 }
 
 const addControlButton = () => {
@@ -61,21 +47,30 @@ const addControlButton = () => {
 
   // Change SVG viewBox
   const svg = button.querySelector('svg')
-  svg.setAttribute('viewBox', '-8 -8 40 40')
+  svg?.setAttribute('viewBox', '-8 -8 40 40')
 
   controls.prepend(button)
 
   updateControlButton()
 }
 
-const updateControlButton = () => {
-  const button = parent.document.querySelector(`.${className.controlButton}`)
-  button && button.setAttribute('aria-pressed', controller.enabled)
-}
-
 const removeControlButton = () => {
   const button = parent.document.querySelector(`.${className.controlButton}`)
   button && button.remove()
+}
+
+const updateMenuButtons = () => {
+  for (const config of menuButtonConfigs) {
+    const button = document.querySelector(`.${config.className}`)
+    if (!button) {
+      return
+    }
+    if (config.isActive()) {
+      button.classList.add(className.menuButtonActive)
+    } else {
+      button.classList.remove(className.menuButtonActive)
+    }
+  }
 }
 
 const addMenuButtons = () => {
@@ -86,7 +81,7 @@ const addMenuButtons = () => {
     return
   }
 
-  for (let config of menuButtonConfigs) {
+  for (const config of menuButtonConfigs) {
     const icon = document.createElement('yt-icon')
     icon.classList.add('yt-live-chat-header-renderer', 'style-scope')
 
@@ -102,27 +97,13 @@ const addMenuButtons = () => {
     iconButton.onclick = config.onclick
     iconButton.append(icon)
 
-    refIconButton.parentNode.insertBefore(iconButton, refIconButton)
+    refIconButton.parentNode?.insertBefore(iconButton, refIconButton)
 
     // insert svg after wrapper button appended
     icon.innerHTML = config.svg
   }
 
   updateMenuButtons()
-}
-
-const updateMenuButtons = () => {
-  for (let config of menuButtonConfigs) {
-    const button = document.querySelector(`.${config.className}`)
-    if (!button) {
-      return
-    }
-    if (config.isActive()) {
-      button.classList.add(className.menuButtonActive)
-    } else {
-      button.classList.remove(className.menuButtonActive)
-    }
-  }
 }
 
 const addInputControl = () => {
@@ -132,10 +113,10 @@ const addInputControl = () => {
 
   const leftControls = parent.document.querySelector(
     '.ytp-chrome-bottom .ytp-chrome-controls .ytp-left-controls'
-  )
+  ) as HTMLElement | null
   const rightControls = parent.document.querySelector(
     '.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls'
-  )
+  ) as HTMLElement | null
   if (!leftControls || !rightControls) {
     return
   }
@@ -148,31 +129,35 @@ const addInputControl = () => {
   )
   const message = document.querySelector(
     'yt-live-chat-message-input-renderer #interaction-message'
-  )
+  ) as HTMLElement | null
   if (!top || !buttons) {
     return
   }
 
-  const input = top.querySelector('div#input')
+  const input = top.querySelector('div#input') as HTMLInputElement | null
   const messageButtons = buttons.querySelector('#message-buttons')
   if (!input || !messageButtons) {
     return
   }
   input.addEventListener('keydown', (e) => {
     e.stopPropagation()
+    if (!(e instanceof KeyboardEvent)) {
+      return
+    }
+    const el = e.target as HTMLElement
     switch (e.keyCode) {
       case 13: {
-        if (e.target.textContent !== '') {
+        if (el.textContent !== '') {
           const sendButton = messageButtons.querySelector(
             '#send-button button#button'
-          )
-          sendButton && sendButton.click()
+          ) as HTMLButtonElement | null
+          sendButton?.click()
         }
-        e.target.blur()
+        el.blur()
         break
       }
       case 27:
-        e.target.blur()
+        el.blur()
         break
     }
   })
@@ -206,8 +191,8 @@ const addInputControl = () => {
   controls.style.right = `${rightControls.offsetWidth}px`
   controls.append(top)
   controls.append(messageButtons)
-  controls.append(message)
-  rightControls.parentNode.insertBefore(controls, rightControls)
+  message && controls.append(message)
+  rightControls.parentNode?.insertBefore(controls, rightControls)
 
   // setup resize observers
   const leftControlsObserver = new ResizeObserver((entries) => {
@@ -234,6 +219,27 @@ const addInputControl = () => {
 const removeInputControl = () => {
   const button = parent.document.querySelector(`.${className.controller}`)
   button && button.remove()
+}
+
+const addVideoEventListener = () => {
+  const video = parent.document.querySelector(
+    'video.html5-main-video'
+  ) as HTMLVideoElement | null
+  if (!video) {
+    return
+  }
+
+  video.addEventListener('play', () => controller.play())
+  video.addEventListener('pause', () => controller.pause())
+
+  if (video.readyState === 0) {
+    // wait until video is started
+    video.addEventListener('loadeddata', () => {
+      addInputControl()
+    })
+  } else {
+    addInputControl()
+  }
 }
 
 browser.runtime.onMessage.addListener((message) => {

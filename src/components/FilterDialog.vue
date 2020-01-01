@@ -9,14 +9,14 @@
           <v-row>
             <v-col cols="12" class="py-0">
               <v-select
-                v-model="form.subject"
+                v-model="formInputs.subject"
                 :items="subjects"
                 label="Subject"
               />
             </v-col>
             <v-col cols="12" class="py-0">
               <v-text-field
-                v-model="form.keyword"
+                v-model="formInputs.keyword"
                 :rules="keywordRules"
                 label="Keyword"
                 placeholder="Words or Pattern"
@@ -24,7 +24,10 @@
               />
             </v-col>
             <v-col cols="12" class="py-0">
-              <v-checkbox v-model="form.regExp" label="Regular Expression" />
+              <v-checkbox
+                v-model="formInputs.regExp"
+                label="Regular Expression"
+              />
             </v-col>
           </v-row>
         </v-card-text>
@@ -38,63 +41,55 @@
   </v-dialog>
 </template>
 
-<script>
-export default {
-  props: {
-    value: {
-      type: Boolean,
-      required: true
-    },
-    inputs: {
-      type: Object,
-      default: () => {}
-    },
-    title: {
-      type: String,
-      default: 'Add Rule'
-    }
-  },
-  data() {
-    return {
-      subjects: [
-        { text: 'Author', value: 'author' },
-        { text: 'Message', value: 'message' }
-      ],
-      keywordRules: [(v) => !!v || 'Keyword is required'],
-      valid: false,
-      dialog: false,
-      form: {}
-    }
-  },
-  watch: {
-    value(value) {
-      this.dialog = value
-      if (value) {
-        this.form = {
-          subject: 'message',
-          ...this.inputs
-        }
+<script lang="ts">
+import { Vue, Component, Prop, Watch, Ref } from 'vue-property-decorator'
+import { VForm } from 'vuetify/lib'
+
+@Component
+export default class FilterDialog extends Vue {
+  @Prop({ type: Boolean, required: true }) readonly value!: boolean
+  @Prop({ type: Object, default: () => ({}) }) readonly inputs!: object
+  @Prop({ type: String, default: 'Add Rule' }) readonly title!: string
+  @Ref() readonly form!: typeof VForm
+
+  subjects = [
+    { text: 'Author', value: 'author' },
+    { text: 'Message', value: 'message' }
+  ]
+  keywordRules = [(v: string) => !!v || 'Keyword is required']
+  valid = false
+  dialog = false
+  formInputs = {}
+
+  @Watch('value')
+  onValueChanged(value: boolean) {
+    this.dialog = value
+    if (value) {
+      this.formInputs = {
+        subject: 'message',
+        ...this.inputs
       }
-    },
-    dialog(value) {
-      if (!value) {
-        this.$emit('update:inputs', null)
-      }
-      this.$emit('input', value)
     }
-  },
-  methods: {
-    onCloseClick() {
+  }
+  @Watch('dialog')
+  onDialogChanged(value: boolean) {
+    if (!value) {
       this.$emit('update:inputs', null)
-      this.$emit('input', false)
-    },
-    onSaveClick() {
-      if (!this.$refs.form.validate()) {
-        return
-      }
-      this.$emit('update:inputs', { ...this.form })
-      this.$emit('input', false)
     }
+    this.$emit('input', value)
+  }
+
+  onCloseClick() {
+    this.$emit('update:inputs', null)
+    this.$emit('input', false)
+  }
+  onSaveClick() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!(this.form as any).validate()) {
+      return
+    }
+    this.$emit('update:inputs', { ...this.formInputs })
+    this.$emit('input', false)
   }
 }
 </script>

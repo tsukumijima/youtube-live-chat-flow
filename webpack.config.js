@@ -1,12 +1,9 @@
-import webpack from 'webpack'
-import CopyWebpackPlugin from 'copy-webpack-plugin'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import { VueLoaderPlugin } from 'vue-loader'
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
-const mode = process.env.NODE_ENV || 'development'
-
-export default {
-  mode,
+module.exports = {
+  mode: 'development',
   target: 'web',
   context: `${__dirname}/src`,
   entry: {
@@ -22,9 +19,11 @@ export default {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        options: {
+          appendTsSuffixTo: [/\.vue$/]
+        }
       },
       {
         test: /\.vue$/,
@@ -48,11 +47,6 @@ export default {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(mode)
-      }
-    }),
     new CopyWebpackPlugin([
       {
         from: 'manifest.json',
@@ -76,7 +70,7 @@ export default {
     new VueLoaderPlugin()
   ],
   resolve: {
-    extensions: ['.js', '.json', '.vue'],
+    extensions: ['.js', '.ts', '.vue'],
     alias: {
       '~~': `${__dirname}/`,
       '~': `${__dirname}/src/`,

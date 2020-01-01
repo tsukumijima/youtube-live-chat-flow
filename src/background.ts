@@ -1,23 +1,32 @@
-import browser from 'webextension-polyfill'
-import createStore from './store'
+import { browser } from 'webextension-polyfill-ts'
+import { readyStore } from './store'
 import { parentCode, code } from './constants/stylesheet'
 import icon from './assets/icon.png'
 import iconOn from './assets/icon-on.png'
 
-let initialState = { enabled: true, following: true }
-let tabStates = {}
-
-const getSettings = async () => {
-  const store = await createStore(true)
-  return JSON.parse(JSON.stringify(store.state))
+interface TabState {
+  enabled: boolean
+  following: boolean
 }
 
-const setIcon = async (tabId) => {
+const initialState = { enabled: true, following: true }
+let tabStates: { [tabId: number]: TabState } = {}
+
+const getSettings = async () => {
+  const store = await readyStore()
+  return JSON.parse(JSON.stringify(store.state.settings))
+}
+
+const setIcon = async (tabId: number) => {
   const path = tabStates[tabId] && tabStates[tabId].enabled ? iconOn : icon
   await browser.pageAction.setIcon({ tabId, path })
 }
 
-const initTab = async (tabId, frameId, needCSSInject) => {
+const initTab = async (
+  tabId: number,
+  frameId: number,
+  needCSSInject: boolean
+) => {
   const enabled = initialState.enabled
   const following = initialState.following
   tabStates = { ...tabStates, [tabId]: { enabled, following } }
@@ -39,7 +48,7 @@ const initTab = async (tabId, frameId, needCSSInject) => {
   return { enabled, following, settings }
 }
 
-const toggleEnabled = async (tabId) => {
+const toggleEnabled = async (tabId: number) => {
   const enabled = !(tabStates[tabId] && tabStates[tabId].enabled)
   initialState.enabled = enabled
   tabStates = {
@@ -55,7 +64,7 @@ const toggleEnabled = async (tabId) => {
   })
 }
 
-const toggleFollowing = async (tabId) => {
+const toggleFollowing = async (tabId: number) => {
   const following = !(tabStates[tabId] && tabStates[tabId].following)
   initialState.following = following
   tabStates = {
@@ -74,12 +83,13 @@ const toggleFollowing = async (tabId) => {
 const settingsChanged = async () => {
   const settings = await getSettings()
   const tabs = await browser.tabs.query({})
-  for (let tab of tabs) {
+  for (const tab of tabs) {
     try {
-      await browser.tabs.sendMessage(tab.id, {
-        id: 'settingsChanged',
-        data: { settings }
-      })
+      tab.id &&
+        (await browser.tabs.sendMessage(tab.id, {
+          id: 'settingsChanged',
+          data: { settings }
+        }))
     } catch (e) {} // eslint-disable-line no-empty
   }
 }
@@ -89,12 +99,16 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   const { tab, frameId } = sender
   switch (id) {
     case 'contentLoaded':
-      return await initTab(tab.id, frameId, data.needCSSInject)
+      return (
+        tab?.id &&
+        frameId &&
+        (await initTab(tab.id, frameId, data.needCSSInject))
+      )
     case 'controlButtonClicked':
-      await toggleEnabled(tab.id)
+      tab?.id && (await toggleEnabled(tab.id))
       break
     case 'menuButtonClicked':
-      await toggleFollowing(tab.id)
+      tab?.id && (await toggleFollowing(tab.id))
       break
     case 'settingsChanged':
       await settingsChanged()
@@ -103,5 +117,5 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
 })
 
 browser.pageAction.onClicked.addListener((tab) => {
-  toggleEnabled(tab.id)
+  tab.id && toggleEnabled(tab.id)
 })

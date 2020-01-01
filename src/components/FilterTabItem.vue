@@ -1,6 +1,6 @@
 <template>
-  <v-card class="pa-5" flat>
-    <div class="text-right mb-3">
+  <v-card class="py-5" flat>
+    <div class="text-right mb-3 px-5">
       <v-btn color="primary" depressed @click="onAddClick">
         Add Rule
       </v-btn>
@@ -10,48 +10,48 @@
   </v-card>
 </template>
 
-<script>
-import { mapMutations, mapState } from 'vuex'
-import FilterDialog from './FilterDialog'
-import FilterTable from './FilterTable'
+<script lang="ts">
+import { Vue, Component, Watch } from 'vue-property-decorator'
+import { settingsStore } from '~/store'
+import Filter from '~/models/filter'
+import FilterDialog from '~/components/FilterDialog.vue'
+import FilterTable from '~/components/FilterTable.vue'
 
-export default {
+@Component({
   components: {
     FilterDialog,
     FilterTable
-  },
-  data() {
-    return {
-      dialog: false,
-      form: {
-        subject: 'message',
-        keyword: '',
-        regExp: false
-      }
+  }
+})
+export default class FilterTabItem extends Vue {
+  dialog = false
+  form = {
+    subject: 'message',
+    keyword: '',
+    regExp: false
+  }
+
+  get filters() {
+    return settingsStore.filters
+  }
+
+  @Watch('dialog')
+  onDialogChanged(value: boolean) {
+    if (!value && this.form) {
+      settingsStore.addFilter({ ...this.form })
     }
-  },
-  computed: {
-    ...mapState(['filters'])
-  },
-  watch: {
-    dialog(value) {
-      if (!value && this.form) {
-        this.addFilter({ filter: this.form })
-      }
-    },
-    filters(value, oldValue) {
-      if (value.length > oldValue.length) {
-        this.$nextTick(() => {
-          window.scrollTo(0, document.body.scrollHeight)
-        })
-      }
+  }
+  @Watch('filters')
+  onFiltersChanged(value: Filter[], oldValue: Filter[]) {
+    if (value.length > oldValue.length) {
+      this.$nextTick(() => {
+        window.scrollTo(0, document.body.scrollHeight)
+      })
     }
-  },
-  methods: {
-    onAddClick() {
-      this.dialog = true
-    },
-    ...mapMutations(['addFilter'])
+  }
+
+  onAddClick() {
+    this.dialog = true
   }
 }
 </script>

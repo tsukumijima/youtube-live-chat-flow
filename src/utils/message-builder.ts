@@ -3,7 +3,19 @@ import DOMHelper from './dom-helper'
 import className from '../constants/class-name'
 
 export default class MessageBuilder {
-  constructor({ node, height, settings }) {
+  private _node: Element
+  private _height: number
+  private _settings: any
+
+  constructor({
+    node,
+    height,
+    settings
+  }: {
+    node: Element
+    height: number
+    settings: any
+  }) {
     this._node = node
     this._height = height
     this._settings = settings
@@ -43,29 +55,26 @@ export default class MessageBuilder {
   get _yourName() {
     // if input control exists
     const span = document.querySelector('#input-container span#author-name')
-    if (span) {
+    if (span?.textContent) {
       return span.textContent
     }
     // if input control is moved
     const movedSpan = parent.document.querySelector(
       '#input-container span#author-name'
     )
-    if (movedSpan) {
+    if (movedSpan?.textContent) {
       return movedSpan.textContent
     }
     // otherwise
     const button = parent.document.querySelector(
       '.html5-video-player .ytp-chrome-top-buttons .ytp-watch-later-button'
-    )
-    if (button) {
-      // TODO: japanese only
-      return button.getAttribute('title').replace(' として後で再生します', '')
-    }
-    return null
+    ) as HTMLElement | null
+    // TODO: japanese only
+    return button?.getAttribute('title')?.replace(' として後で再生します', '')
   }
   get _authorType() {
-    const authorName = this._node.querySelector('#author-name').textContent
-    const you = authorName === this._yourName
+    const authorName = this._node.querySelector('#author-name')?.textContent
+    const you = authorName && authorName === this._yourName
     return you ? 'you' : this._node.getAttribute('author-type')
   }
   get _paid() {
@@ -145,17 +154,20 @@ export default class MessageBuilder {
     } else {
       message = await this._buildOneLineText()
     }
-    message.author = this._node.querySelector(
-      '#author-name'
-    ).childNodes[0].textContent
-    message.message = this._node.querySelector('#message').textContent
-    return message
+    return {
+      ...message,
+      author: this._node.querySelector('#author-name')?.childNodes[0]
+        .textContent,
+      message: this._node.querySelector('#message')?.textContent
+    }
   }
   async _buildOneLineText() {
-    const html = this._node.querySelector('#message').innerHTML
-    const avatarUrl = await DOMHelper.getImageSourceAsync(
-      this._node.querySelector('#img')
-    )
+    const html = this._node.querySelector('#message')?.innerHTML ?? ''
+    const avatorImage = this._node.querySelector(
+      '#img'
+    ) as HTMLImageElement | null
+    const avatarUrl =
+      avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))
 
     const height = this._height * 0.8
     const padding = this._height * 0.1
@@ -193,11 +205,14 @@ export default class MessageBuilder {
     }
   }
   async _buildTwoLineText() {
-    const html = this._node.querySelector('#message').innerHTML
-    const avatarUrl = await DOMHelper.getImageSourceAsync(
-      this._node.querySelector('#img')
-    )
-    const authorName = this._node.querySelector('#author-name').textContent
+    const html = this._node.querySelector('#message')?.innerHTML ?? ''
+    const avatorImage = this._node.querySelector(
+      '#img'
+    ) as HTMLImageElement | null
+    const avatarUrl =
+      avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))
+    const authorName =
+      this._node.querySelector('#author-name')?.textContent ?? ''
 
     const height = this._height * 0.8
     const padding = this._height * 0.1
@@ -251,16 +266,18 @@ export default class MessageBuilder {
     }
   }
   async _buildSuperChat() {
-    const html = this._node.querySelector('#message').innerHTML
-    const avatarUrl = await DOMHelper.getImageSourceAsync(
-      this._node.querySelector('#img')
-    )
-    const authorName = this._node.querySelector('#author-name').textContent
-    const amount = this._node.querySelector('#purchase-amount').textContent
-    const backgroundColor = this._getBackgroundColor(
-      this._node.querySelector('#card > #header'),
-      0.8
-    )
+    const html = this._node.querySelector('#message')?.innerHTML ?? ''
+    const avatorImage = this._node.querySelector(
+      '#img'
+    ) as HTMLImageElement | null
+    const avatarUrl =
+      avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))
+    const authorName =
+      this._node.querySelector('#author-name')?.textContent ?? ''
+    const amount =
+      this._node.querySelector('#purchase-amount')?.textContent ?? ''
+    const card = this._node.querySelector('#card > #header')
+    const backgroundColor = card && this._getBackgroundColor(card, 0.8)
 
     const height = this._height * 0.8
     const padding = this._height * 0.1
@@ -280,7 +297,7 @@ export default class MessageBuilder {
 
     const containerPadding = this._height * 0.2
     const container = parent.document.createElement('div')
-    container.style.backgroundColor = backgroundColor
+    container.style.backgroundColor = backgroundColor ?? 'transparent'
     container.style.borderRadius = `${containerPadding / 2}px`
     container.style.padding = `${containerPadding}px ${containerPadding * 2}px`
     element.append(container)
@@ -323,18 +340,22 @@ export default class MessageBuilder {
     }
   }
   async _buildSuperSticker() {
-    const avatarUrl = await DOMHelper.getImageSourceAsync(
-      this._node.querySelector('#img')
-    )
-    const authorName = this._node.querySelector('#author-name').textContent
-    const amount = this._node.querySelector('#purchase-amount-chip').textContent
-    const backgroundColor = this._getBackgroundColor(
-      this._node.querySelector('#card'),
-      0.8
-    )
-    const stickerUrl = await DOMHelper.getImageSourceAsync(
-      this._node.querySelector('#sticker > #img')
-    )
+    const avatorImage = this._node.querySelector(
+      '#img'
+    ) as HTMLImageElement | null
+    const avatarUrl =
+      avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))
+    const authorName =
+      this._node.querySelector('#author-name')?.textContent ?? ''
+    const amount =
+      this._node.querySelector('#purchase-amount-chip')?.textContent ?? ''
+    const card = this._node.querySelector('#card')
+    const backgroundColor = card && this._getBackgroundColor(card, 0.8)
+    const stickerImage = this._node.querySelector(
+      '#sticker > #img'
+    ) as HTMLImageElement | null
+    const stickerUrl =
+      stickerImage && (await DOMHelper.getImageSourceAsync(stickerImage))
 
     const height = this._height * 0.8
     const padding = this._height * 0.1
@@ -354,7 +375,7 @@ export default class MessageBuilder {
 
     const containerPadding = this._height * 0.2
     const container = parent.document.createElement('div')
-    container.style.backgroundColor = backgroundColor
+    container.style.backgroundColor = backgroundColor ?? 'transparent'
     container.style.borderRadius = `${containerPadding / 2}px`
     container.style.padding = `${containerPadding}px ${containerPadding * 2}px`
     element.append(container)
@@ -397,15 +418,17 @@ export default class MessageBuilder {
     }
   }
   async _buildMembership() {
-    const avatarUrl = await DOMHelper.getImageSourceAsync(
-      this._node.querySelector('#img')
-    )
-    const eventText = this._node.querySelector('#author-name').textContent
-    const detailText = this._node.querySelector('#header-subtext').textContent
-    const backgroundColor = this._getBackgroundColor(
-      this._node.querySelector('#card > #header'),
-      0.8
-    )
+    const avatorImage = this._node.querySelector(
+      '#img'
+    ) as HTMLImageElement | null
+    const avatarUrl =
+      avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))
+    const eventText =
+      this._node.querySelector('#author-name')?.textContent ?? ''
+    const detailText =
+      this._node.querySelector('#header-subtext')?.textContent ?? ''
+    const header = this._node.querySelector('#card > #header')
+    const backgroundColor = header && this._getBackgroundColor(header, 0.8)
 
     const height = this._height * 0.8
     const padding = this._height * 0.1
@@ -425,7 +448,7 @@ export default class MessageBuilder {
 
     const containerPadding = this._height * 0.2
     const container = parent.document.createElement('div')
-    container.style.backgroundColor = backgroundColor
+    container.style.backgroundColor = backgroundColor ?? 'transparent'
     container.style.borderRadius = `${containerPadding / 2}px`
     container.style.padding = `${containerPadding}px ${containerPadding * 2}px`
     element.append(container)
@@ -465,24 +488,25 @@ export default class MessageBuilder {
       rows: 3
     }
   }
-  _fixInnerImageHeight(node, height) {
-    const children = node.childNodes
+  _fixInnerImageHeight(element: Element, height: number) {
+    const children = element.childNodes
     if (!children) {
       return
     }
 
     Array.from(children).map((node) => {
-      if (node.tagName && node.tagName.toLowerCase() === 'img') {
+      if (node instanceof HTMLImageElement) {
         node.style.height = `${height}px`
         return node
       }
-
-      this._fixInnerImageHeight(node, height)
+      if (node instanceof HTMLElement) {
+        this._fixInnerImageHeight(node, height)
+      }
       return node
     })
   }
-  _getBackgroundColor(node, opacity) {
-    const backgroundColor = getComputedStyle(node).backgroundColor
+  _getBackgroundColor(element: Element, opacity: number) {
+    const backgroundColor = getComputedStyle(element).backgroundColor
     const o = new Color(backgroundColor).object()
     return `rgba(${o.r}, ${o.g}, ${o.b}, ${opacity})`
   }

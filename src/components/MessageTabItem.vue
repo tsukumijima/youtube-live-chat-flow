@@ -26,6 +26,7 @@
         <v-select
           v-model="style"
           :items="styles"
+          dense
           hide-details
           class="mt-0 pt-0"
         />
@@ -56,6 +57,7 @@
         <v-select
           v-model="memberStyle"
           :items="styles"
+          dense
           hide-details
           class="mt-0 pt-0"
         />
@@ -86,6 +88,7 @@
         <v-select
           v-model="moderatorStyle"
           :items="styles"
+          dense
           hide-details
           class="mt-0 pt-0"
         />
@@ -116,6 +119,7 @@
         <v-select
           v-model="ownerStyle"
           :items="styles"
+          dense
           hide-details
           class="mt-0 pt-0"
         />
@@ -146,6 +150,7 @@
         <v-select
           v-model="yourStyle"
           :items="styles"
+          dense
           hide-details
           class="mt-0 pt-0"
         />
@@ -199,6 +204,7 @@
     <v-text-field
       v-model="opacity"
       :placeholder="placeholder.opacity"
+      class="mt-3"
       label="Opacity"
       type="number"
       min="0"
@@ -237,231 +243,202 @@
   </v-card>
 </template>
 
-<script>
-import { mapMutations } from 'vuex'
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator'
+import { settingsStore } from '~/store'
 
-export default {
-  data() {
-    return {
-      placeholder: {
-        opacity: '0.8',
-        rows: '12',
-        speed: '5',
-        extendedStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;'
-      },
-      overflows: [
-        { text: 'Hidden', value: 'hidden' },
-        { text: 'Overlay', value: 'overlay' }
-      ],
-      styles: [
-        { text: 'Simple', value: 'simple' },
-        { text: '2 lines', value: 'two-line' }
-      ]
-    }
-  },
-  computed: {
-    color: {
-      get() {
-        return this.$store.state.color
-      },
-      set(value) {
-        this.$store.commit('setColor', { color: value })
-      }
-    },
-    avatar: {
-      get() {
-        return this.$store.state.avatar
-      },
-      set(value) {
-        this.$store.commit('setAvatar', { avatar: value })
-      }
-    },
-    style: {
-      get() {
-        return this.$store.state.style
-      },
-      set(value) {
-        this.$store.commit('setStyle', { style: value })
-      }
-    },
-    memberColor: {
-      get() {
-        return this.$store.state.memberColor
-      },
-      set(value) {
-        this.$store.commit('setMemberColor', { memberColor: value })
-      }
-    },
-    memberAvatar: {
-      get() {
-        return this.$store.state.memberAvatar
-      },
-      set(value) {
-        this.$store.commit('setMemberAvatar', { memberAvatar: value })
-      }
-    },
-    memberStyle: {
-      get() {
-        return this.$store.state.memberStyle
-      },
-      set(value) {
-        this.$store.commit('setMemberStyle', { memberStyle: value })
-      }
-    },
-    moderatorColor: {
-      get() {
-        return this.$store.state.moderatorColor
-      },
-      set(value) {
-        this.$store.commit('setModeratorColor', {
-          moderatorColor: value
-        })
-      }
-    },
-    moderatorAvatar: {
-      get() {
-        return this.$store.state.moderatorAvatar
-      },
-      set(value) {
-        this.$store.commit('setModeratorAvatar', {
-          moderatorAvatar: value
-        })
-      }
-    },
-    moderatorStyle: {
-      get() {
-        return this.$store.state.moderatorStyle
-      },
-      set(value) {
-        this.$store.commit('setModeratorStyle', { moderatorStyle: value })
-      }
-    },
-    ownerColor: {
-      get() {
-        return this.$store.state.ownerColor
-      },
-      set(value) {
-        this.$store.commit('setOwnerColor', { ownerColor: value })
-      }
-    },
-    ownerAvatar: {
-      get() {
-        return this.$store.state.ownerAvatar
-      },
-      set(value) {
-        this.$store.commit('setOwnerAvatar', { ownerAvatar: value })
-      }
-    },
-    ownerStyle: {
-      get() {
-        return this.$store.state.ownerStyle
-      },
-      set(value) {
-        this.$store.commit('setOwnerStyle', { ownerStyle: value })
-      }
-    },
-    yourColor: {
-      get() {
-        return this.$store.state.yourColor
-      },
-      set(value) {
-        this.$store.commit('setYourColor', { yourColor: value })
-      }
-    },
-    yourAvatar: {
-      get() {
-        return this.$store.state.yourAvatar
-      },
-      set(value) {
-        this.$store.commit('setYourAvatar', { yourAvatar: value })
-      }
-    },
-    yourStyle: {
-      get() {
-        return this.$store.state.yourStyle
-      },
-      set(value) {
-        this.$store.commit('setYourStyle', { yourStyle: value })
-      }
-    },
-    superChatHidden: {
-      get() {
-        return this.$store.state.superChatHidden
-      },
-      set(value) {
-        this.$store.commit('setSuperChatHidden', {
-          superChatHidden: value
-        })
-      }
-    },
-    superStickerHidden: {
-      get() {
-        return this.$store.state.superStickerHidden
-      },
-      set(value) {
-        this.$store.commit('setSuperStickerHidden', {
-          superStickerHidden: value
-        })
-      }
-    },
-    membershipHidden: {
-      get() {
-        return this.$store.state.membershipHidden
-      },
-      set(value) {
-        this.$store.commit('setMembershipHidden', {
-          membershipHidden: value
-        })
-      }
-    },
-    opacity: {
-      get() {
-        return this.$store.state.opacity
-      },
-      set(value) {
-        this.$store.commit('setOpacity', { opacity: value })
-      }
-    },
-    rows: {
-      get() {
-        return this.$store.state.rows
-      },
-      set(value) {
-        this.$store.commit('setRows', { rows: value })
-      }
-    },
-    speed: {
-      get() {
-        return this.$store.state.speed
-      },
-      set(value) {
-        this.$store.commit('setSpeed', { speed: value })
-      }
-    },
-    overflow: {
-      get() {
-        return this.$store.state.overflow
-      },
-      set(value) {
-        this.$store.commit('setOverflow', { overflow: value })
-      }
-    },
-    extendedStyle: {
-      get() {
-        return this.$store.state.extendedStyle
-      },
-      set(value) {
-        this.$store.commit('setExtendedStyle', {
-          extendedStyle: value
-        })
-      }
-    }
-  },
-  methods: {
-    onResetClick() {
-      this.resetState()
-    },
-    ...mapMutations(['resetState'])
+@Component
+export default class MessageTabItem extends Vue {
+  placeholder = {
+    opacity: '0.8',
+    rows: '12',
+    speed: '5',
+    extendedStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;'
+  }
+  overflows = [
+    { text: 'Hidden', value: 'hidden' },
+    { text: 'Overlay', value: 'overlay' }
+  ]
+  styles = [
+    { text: 'Simple', value: 'simple' },
+    { text: '2 lines', value: 'two-line' }
+  ]
+
+  get color() {
+    return settingsStore.color
+  }
+  set color(value) {
+    settingsStore.setColor({ color: value })
+  }
+
+  get avatar() {
+    return settingsStore.avatar
+  }
+  set avatar(value) {
+    settingsStore.setAvatar({ avatar: value })
+  }
+
+  get style() {
+    return settingsStore.style
+  }
+  set style(value) {
+    settingsStore.setStyle({ style: value })
+  }
+
+  get memberColor() {
+    return settingsStore.memberColor
+  }
+  set memberColor(value) {
+    settingsStore.setMemberColor({ memberColor: value })
+  }
+
+  get memberAvatar() {
+    return settingsStore.memberAvatar
+  }
+  set memberAvatar(value) {
+    settingsStore.setMemberAvatar({ memberAvatar: value })
+  }
+
+  get memberStyle() {
+    return settingsStore.memberStyle
+  }
+  set memberStyle(value) {
+    settingsStore.setMemberStyle({ memberStyle: value })
+  }
+
+  get moderatorColor() {
+    return settingsStore.moderatorColor
+  }
+  set moderatorColor(value) {
+    settingsStore.setModeratorColor({
+      moderatorColor: value
+    })
+  }
+
+  get moderatorAvatar() {
+    return settingsStore.moderatorAvatar
+  }
+  set moderatorAvatar(value) {
+    settingsStore.setModeratorAvatar({
+      moderatorAvatar: value
+    })
+  }
+
+  get moderatorStyle() {
+    return settingsStore.moderatorStyle
+  }
+  set moderatorStyle(value) {
+    settingsStore.setModeratorStyle({ moderatorStyle: value })
+  }
+
+  get ownerColor() {
+    return settingsStore.ownerColor
+  }
+  set ownerColor(value) {
+    settingsStore.setOwnerColor({ ownerColor: value })
+  }
+
+  get ownerAvatar() {
+    return settingsStore.ownerAvatar
+  }
+  set ownerAvatar(value) {
+    settingsStore.setOwnerAvatar({ ownerAvatar: value })
+  }
+
+  get ownerStyle() {
+    return settingsStore.ownerStyle
+  }
+  set ownerStyle(value) {
+    settingsStore.setOwnerStyle({ ownerStyle: value })
+  }
+
+  get yourColor() {
+    return settingsStore.yourColor
+  }
+  set yourColor(value) {
+    settingsStore.setYourColor({ yourColor: value })
+  }
+
+  get yourAvatar() {
+    return settingsStore.yourAvatar
+  }
+  set yourAvatar(value) {
+    settingsStore.setYourAvatar({ yourAvatar: value })
+  }
+
+  get yourStyle() {
+    return settingsStore.yourStyle
+  }
+  set yourStyle(value) {
+    settingsStore.setYourStyle({ yourStyle: value })
+  }
+
+  get superChatHidden() {
+    return settingsStore.superChatHidden
+  }
+  set superChatHidden(value) {
+    settingsStore.setSuperChatHidden({
+      superChatHidden: value
+    })
+  }
+
+  get superStickerHidden() {
+    return settingsStore.superStickerHidden
+  }
+  set superStickerHidden(value) {
+    settingsStore.setSuperStickerHidden({
+      superStickerHidden: value
+    })
+  }
+
+  get membershipHidden() {
+    return settingsStore.membershipHidden
+  }
+  set membershipHidden(value) {
+    settingsStore.setMembershipHidden({
+      membershipHidden: value
+    })
+  }
+
+  get opacity() {
+    return settingsStore.opacity
+  }
+  set opacity(value) {
+    settingsStore.setOpacity({ opacity: value })
+  }
+
+  get rows() {
+    return settingsStore.rows
+  }
+  set rows(value) {
+    settingsStore.setRows({ rows: value })
+  }
+
+  get speed() {
+    return settingsStore.speed
+  }
+  set speed(value) {
+    settingsStore.setSpeed({ speed: value })
+  }
+
+  get overflow() {
+    return settingsStore.overflow
+  }
+  set overflow(value) {
+    settingsStore.setOverflow({ overflow: value })
+  }
+
+  get extendedStyle() {
+    return settingsStore.extendedStyle
+  }
+  set extendedStyle(value) {
+    settingsStore.setExtendedStyle({
+      extendedStyle: value
+    })
+  }
+
+  onResetClick() {
+    settingsStore.resetState()
   }
 }
 </script>

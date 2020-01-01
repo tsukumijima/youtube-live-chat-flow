@@ -1,4 +1,4 @@
-import className from './class-name'
+import className from '~/constants/class-name'
 
 export const parentCode = `
 .${className.focused} .html5-video-player .ytp-chrome-bottom {
