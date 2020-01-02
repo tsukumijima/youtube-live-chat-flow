@@ -24,6 +24,9 @@
       "node_modules/@types",
       "src/@types"
     ],
+    "types": [
+      "vuetify"
+    ],
     "experimentalDecorators": true
   },
   "exclude": ["node_modules"]

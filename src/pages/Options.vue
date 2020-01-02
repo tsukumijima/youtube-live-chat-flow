@@ -34,7 +34,7 @@ export default class Options extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .v-application {
   min-width: 640px;
 }

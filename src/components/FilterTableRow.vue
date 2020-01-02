@@ -56,7 +56,7 @@ export default class FilterTableRow extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .keyword {
   max-width: 256px;
 }

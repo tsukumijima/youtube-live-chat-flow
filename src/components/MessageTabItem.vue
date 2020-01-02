@@ -443,12 +443,12 @@ export default class MessageTabItem extends Vue {
 }
 </script>
 
-<style scoped>
-.color >>> .v-input__slot:before,
-.color >>> .v-input__slot:after {
+<style lang="scss" scoped>
+.color ::v-deep .v-input__slot:before,
+.color ::v-deep .v-input__slot:after {
   border: none !important;
 }
-.color >>> input {
+.color ::v-deep input {
   cursor: pointer;
   height: 32px;
   padding: 0;

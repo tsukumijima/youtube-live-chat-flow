@@ -1,6 +1,7 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
   mode: 'development',
@@ -30,8 +31,17 @@ module.exports = {
         loader: 'vue-loader'
       },
       {
-        test: /\.css$/,
-        use: ['vue-style-loader', 'css-loader']
+        test: /\.s(c|a)ss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: require('sass')
+            }
+          }
+        ]
       },
       {
         test: /\.(jpg|gif|png|woff|woff2|eot|ttf)$/,
@@ -67,7 +77,8 @@ module.exports = {
       filename: './assets/options.html',
       chunks: ['options']
     }),
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new VuetifyLoaderPlugin()
   ],
   resolve: {
     extensions: ['.js', '.ts', '.vue'],
