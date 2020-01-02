@@ -141,9 +141,6 @@ const addInputControl = () => {
   }
   input.addEventListener('keydown', (e) => {
     e.stopPropagation()
-    if (!(e instanceof KeyboardEvent)) {
-      return
-    }
     const el = e.target as HTMLElement
     switch (e.keyCode) {
       case 13: {

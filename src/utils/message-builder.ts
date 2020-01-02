@@ -172,7 +172,7 @@ export default class MessageBuilder {
     const height = this._height * 0.8
     const padding = this._height * 0.1
 
-    const element = parent.document.createElement('div')
+    const element = document.createElement('div')
     element.style.color = this._textColor
     element.style.fontSize = `${height}px`
     element.style.lineHeight = `${height}px`
@@ -185,7 +185,7 @@ export default class MessageBuilder {
     )
 
     if (this._avatar && avatarUrl) {
-      const avatar = parent.document.createElement('img')
+      const avatar = document.createElement('img')
       avatar.classList.add(className.messageAvatar)
       avatar.src = avatarUrl
       avatar.style.height = `${height}px`
@@ -193,7 +193,7 @@ export default class MessageBuilder {
       element.append(avatar)
     }
 
-    const message = parent.document.createElement('span')
+    const message = document.createElement('span')
     message.classList.add(className.messageMessage)
     message.innerHTML = html
     this._fixInnerImageHeight(message, height)
@@ -217,7 +217,7 @@ export default class MessageBuilder {
     const height = this._height * 0.8
     const padding = this._height * 0.1
 
-    const element = parent.document.createElement('div')
+    const element = document.createElement('div')
     element.classList.add(className.messageTwoLine)
     element.style.color = this._textColor
     element.style.fontSize = `${height}px`
@@ -231,7 +231,7 @@ export default class MessageBuilder {
     )
 
     if (this._avatar && avatarUrl) {
-      const avatar = parent.document.createElement('img')
+      const avatar = document.createElement('img')
       avatar.classList.add(className.messageAvatar)
       avatar.src = avatarUrl
       avatar.style.height = `${height}px`
@@ -239,12 +239,12 @@ export default class MessageBuilder {
       element.append(avatar)
     }
 
-    const wrapper = parent.document.createElement('div')
+    const wrapper = document.createElement('div')
     element.append(wrapper)
 
     const subTextHeight = height * 0.8
     const subTextPadding = height * 0.1
-    const author = parent.document.createElement('span')
+    const author = document.createElement('span')
     author.classList.add(className.messageAuthor)
     author.style.fontSize = `${subTextHeight}px`
     author.style.lineHeight = `${subTextHeight}px`
@@ -253,7 +253,7 @@ export default class MessageBuilder {
     author.textContent = authorName
     wrapper.append(author)
 
-    const message = parent.document.createElement('span')
+    const message = document.createElement('span')
     message.classList.add(className.messageMessage)
     message.style.paddingTop = `${padding}px`
     message.innerHTML = html
@@ -282,7 +282,7 @@ export default class MessageBuilder {
     const height = this._height * 0.8
     const padding = this._height * 0.1
 
-    const element = parent.document.createElement('div')
+    const element = document.createElement('div')
     element.classList.add(className.messageSuperChat)
     element.style.color = this._textColor
     element.style.fontSize = `${height}px`
@@ -296,14 +296,14 @@ export default class MessageBuilder {
     )
 
     const containerPadding = this._height * 0.2
-    const container = parent.document.createElement('div')
+    const container = document.createElement('div')
     container.style.backgroundColor = backgroundColor ?? 'transparent'
     container.style.borderRadius = `${containerPadding / 2}px`
     container.style.padding = `${containerPadding}px ${containerPadding * 2}px`
     element.append(container)
 
     if (avatarUrl) {
-      const avatar = parent.document.createElement('img')
+      const avatar = document.createElement('img')
       avatar.classList.add(className.messageAvatar)
       avatar.src = avatarUrl
       avatar.style.height = `${height}px`
@@ -311,12 +311,12 @@ export default class MessageBuilder {
       container.append(avatar)
     }
 
-    const wrapper = parent.document.createElement('div')
+    const wrapper = document.createElement('div')
     container.append(wrapper)
 
     const subTextHeight = height * 0.8
     const subTextPadding = height * 0.1
-    const author = parent.document.createElement('span')
+    const author = document.createElement('span')
     author.classList.add(className.messageAuthor)
     author.style.fontSize = `${subTextHeight}px`
     author.style.lineHeight = `${subTextHeight}px`
@@ -326,7 +326,7 @@ export default class MessageBuilder {
     wrapper.append(author)
 
     if (html) {
-      const message = parent.document.createElement('span')
+      const message = document.createElement('span')
       message.classList.add(className.messageMessage)
       message.style.paddingTop = `${padding}px`
       message.innerHTML = html
@@ -360,7 +360,7 @@ export default class MessageBuilder {
     const height = this._height * 0.8
     const padding = this._height * 0.1
 
-    const element = parent.document.createElement('div')
+    const element = document.createElement('div')
     element.classList.add(className.messageSuperSticker)
     element.style.color = this._textColor
     element.style.fontSize = `${height}px`
@@ -374,14 +374,14 @@ export default class MessageBuilder {
     )
 
     const containerPadding = this._height * 0.2
-    const container = parent.document.createElement('div')
+    const container = document.createElement('div')
     container.style.backgroundColor = backgroundColor ?? 'transparent'
     container.style.borderRadius = `${containerPadding / 2}px`
     container.style.padding = `${containerPadding}px ${containerPadding * 2}px`
     element.append(container)
 
     if (avatarUrl) {
-      const avatar = parent.document.createElement('img')
+      const avatar = document.createElement('img')
       avatar.classList.add(className.messageAvatar)
       avatar.src = avatarUrl
       avatar.style.height = `${height}px`
@@ -389,12 +389,12 @@ export default class MessageBuilder {
       container.append(avatar)
     }
 
-    const wrapper = parent.document.createElement('div')
+    const wrapper = document.createElement('div')
     container.append(wrapper)
 
     const subTextHeight = height * 0.8
     const subTextPadding = height * 0.1
-    const author = parent.document.createElement('span')
+    const author = document.createElement('span')
     author.classList.add(className.messageAuthor)
     author.style.fontSize = `${subTextHeight}px`
     author.style.lineHeight = `${subTextHeight}px`
@@ -405,7 +405,7 @@ export default class MessageBuilder {
 
     if (stickerUrl) {
       const stickerHeight = height * 1.9
-      const sticker = parent.document.createElement('img')
+      const sticker = document.createElement('img')
       sticker.src = stickerUrl
       sticker.style.height = `${stickerHeight}px`
       sticker.style.paddingTop = `${padding}px`
@@ -433,7 +433,7 @@ export default class MessageBuilder {
     const height = this._height * 0.8
     const padding = this._height * 0.1
 
-    const element = parent.document.createElement('div')
+    const element = document.createElement('div')
     element.classList.add(className.messageMembership)
     element.style.color = this._textColor
     element.style.fontSize = `${height}px`
@@ -447,14 +447,14 @@ export default class MessageBuilder {
     )
 
     const containerPadding = this._height * 0.2
-    const container = parent.document.createElement('div')
+    const container = document.createElement('div')
     container.style.backgroundColor = backgroundColor ?? 'transparent'
     container.style.borderRadius = `${containerPadding / 2}px`
     container.style.padding = `${containerPadding}px ${containerPadding * 2}px`
     element.append(container)
 
     if (avatarUrl) {
-      const avatar = parent.document.createElement('img')
+      const avatar = document.createElement('img')
       avatar.classList.add(className.messageAvatar)
       avatar.src = avatarUrl
       avatar.style.height = `${height}px`
@@ -462,12 +462,12 @@ export default class MessageBuilder {
       container.append(avatar)
     }
 
-    const wrapper = parent.document.createElement('div')
+    const wrapper = document.createElement('div')
     container.append(wrapper)
 
     const subTextHeight = height * 0.8
     const subTextPadding = height * 0.1
-    const author = parent.document.createElement('span')
+    const author = document.createElement('span')
     author.classList.add(className.messageAuthor)
     author.style.fontSize = `${subTextHeight}px`
     author.style.lineHeight = `${subTextHeight}px`
@@ -476,7 +476,7 @@ export default class MessageBuilder {
     author.textContent = eventText
     wrapper.append(author)
 
-    const message = parent.document.createElement('span')
+    const message = document.createElement('span')
     message.classList.add(className.messageMessage)
     message.style.paddingTop = `${padding}px`
     message.textContent = detailText
