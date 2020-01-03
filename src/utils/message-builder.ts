@@ -1,9 +1,10 @@
 import Color from 'color'
 import DOMHelper from './dom-helper'
-import className from '../constants/class-name'
+import { build } from './message-builder2'
+import { parse } from './message-parser'
 
 export default class MessageBuilder {
-  private _node: Element
+  private _node: HTMLElement
   private _height: number
   private _settings: any
 
@@ -12,7 +13,7 @@ export default class MessageBuilder {
     height,
     settings
   }: {
-    node: Element
+    node: HTMLElement
     height: number
     settings: any
   }) {
@@ -44,13 +45,17 @@ export default class MessageBuilder {
         }
         break
     }
-    if (!message) {
+    const element = message?.element
+    if (!element) {
       return null
     }
 
-    await DOMHelper.waitAllImagesLoaded(message.element)
+    await DOMHelper.waitAllImagesLoaded(element)
 
-    return message
+    return {
+      ...message,
+      element
+    }
   }
   get _yourName() {
     // if input control exists
@@ -162,42 +167,14 @@ export default class MessageBuilder {
     }
   }
   async _buildOneLineText() {
-    const html = this._node.querySelector('#message')?.innerHTML ?? ''
-    const avatorImage = this._node.querySelector(
-      '#img'
-    ) as HTMLImageElement | null
-    const avatarUrl =
-      avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))
+    const params = await parse(this._node)
 
-    const height = this._height * 0.8
-    const padding = this._height * 0.1
-
-    const element = document.createElement('div')
-    element.style.color = this._textColor
-    element.style.fontSize = `${height}px`
-    element.style.lineHeight = `${height}px`
-    element.style.padding = `${padding}px`
-    element.setAttribute(
-      'style',
-      element.getAttribute('style') +
-        this._textStyle +
-        this._settings.extendedStyle
-    )
-
-    if (this._avatar && avatarUrl) {
-      const avatar = document.createElement('img')
-      avatar.classList.add(className.messageAvatar)
-      avatar.src = avatarUrl
-      avatar.style.height = `${height}px`
-      avatar.style.marginRight = `${padding * 2}px`
-      element.append(avatar)
-    }
-
-    const message = document.createElement('span')
-    message.classList.add(className.messageMessage)
-    message.innerHTML = html
-    this._fixInnerImageHeight(message, height)
-    element.append(message)
+    const element = build('one-line-message', {
+      ...params,
+      fontColor: this._textColor,
+      fontStyle: this._textStyle + this._settings.extendedStyle,
+      height: this._height
+    })
 
     return {
       element,
@@ -205,60 +182,14 @@ export default class MessageBuilder {
     }
   }
   async _buildTwoLineText() {
-    const html = this._node.querySelector('#message')?.innerHTML ?? ''
-    const avatorImage = this._node.querySelector(
-      '#img'
-    ) as HTMLImageElement | null
-    const avatarUrl =
-      avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))
-    const authorName =
-      this._node.querySelector('#author-name')?.textContent ?? ''
+    const params = await parse(this._node)
 
-    const height = this._height * 0.8
-    const padding = this._height * 0.1
-
-    const element = document.createElement('div')
-    element.classList.add(className.messageTwoLine)
-    element.style.color = this._textColor
-    element.style.fontSize = `${height}px`
-    element.style.lineHeight = `${height}px`
-    element.style.padding = `${padding}px`
-    element.setAttribute(
-      'style',
-      element.getAttribute('style') +
-        this._textStyle +
-        this._settings.extendedStyle
-    )
-
-    if (this._avatar && avatarUrl) {
-      const avatar = document.createElement('img')
-      avatar.classList.add(className.messageAvatar)
-      avatar.src = avatarUrl
-      avatar.style.height = `${height}px`
-      avatar.style.marginRight = `${padding * 2}px`
-      element.append(avatar)
-    }
-
-    const wrapper = document.createElement('div')
-    element.append(wrapper)
-
-    const subTextHeight = height * 0.8
-    const subTextPadding = height * 0.1
-    const author = document.createElement('span')
-    author.classList.add(className.messageAuthor)
-    author.style.fontSize = `${subTextHeight}px`
-    author.style.lineHeight = `${subTextHeight}px`
-    author.style.paddingTop = `${subTextPadding}px`
-    author.style.paddingBottom = `${subTextPadding}px`
-    author.textContent = authorName
-    wrapper.append(author)
-
-    const message = document.createElement('span')
-    message.classList.add(className.messageMessage)
-    message.style.paddingTop = `${padding}px`
-    message.innerHTML = html
-    this._fixInnerImageHeight(message, height)
-    wrapper.append(message)
+    const element = build('two-line-message', {
+      ...params,
+      fontColor: this._textColor,
+      fontStyle: this._textStyle + this._settings.extendedStyle,
+      height: this._height
+    })
 
     return {
       element,
@@ -266,151 +197,29 @@ export default class MessageBuilder {
     }
   }
   async _buildSuperChat() {
-    const html = this._node.querySelector('#message')?.innerHTML ?? ''
-    const avatorImage = this._node.querySelector(
-      '#img'
-    ) as HTMLImageElement | null
-    const avatarUrl =
-      avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))
-    const authorName =
-      this._node.querySelector('#author-name')?.textContent ?? ''
-    const amount =
-      this._node.querySelector('#purchase-amount')?.textContent ?? ''
-    const card = this._node.querySelector('#card > #header')
-    const backgroundColor = card && this._getBackgroundColor(card, 0.8)
+    const params = await parse(this._node)
 
-    const height = this._height * 0.8
-    const padding = this._height * 0.1
-
-    const element = document.createElement('div')
-    element.classList.add(className.messageSuperChat)
-    element.style.color = this._textColor
-    element.style.fontSize = `${height}px`
-    element.style.lineHeight = `${height}px`
-    element.style.padding = `${padding}px`
-    element.setAttribute(
-      'style',
-      element.getAttribute('style') +
-        this._textStyle +
-        this._settings.extendedStyle
-    )
-
-    const containerPadding = this._height * 0.2
-    const container = document.createElement('div')
-    container.style.backgroundColor = backgroundColor ?? 'transparent'
-    container.style.borderRadius = `${containerPadding / 2}px`
-    container.style.padding = `${containerPadding}px ${containerPadding * 2}px`
-    element.append(container)
-
-    if (avatarUrl) {
-      const avatar = document.createElement('img')
-      avatar.classList.add(className.messageAvatar)
-      avatar.src = avatarUrl
-      avatar.style.height = `${height}px`
-      avatar.style.marginRight = `${padding * 2}px`
-      container.append(avatar)
-    }
-
-    const wrapper = document.createElement('div')
-    container.append(wrapper)
-
-    const subTextHeight = height * 0.8
-    const subTextPadding = height * 0.1
-    const author = document.createElement('span')
-    author.classList.add(className.messageAuthor)
-    author.style.fontSize = `${subTextHeight}px`
-    author.style.lineHeight = `${subTextHeight}px`
-    author.style.paddingTop = `${subTextPadding}px`
-    author.style.paddingBottom = `${subTextPadding}px`
-    author.textContent = `${authorName} - ${amount}`
-    wrapper.append(author)
-
-    if (html) {
-      const message = document.createElement('span')
-      message.classList.add(className.messageMessage)
-      message.style.paddingTop = `${padding}px`
-      message.innerHTML = html
-      this._fixInnerImageHeight(message, height)
-      wrapper.append(message)
-    }
+    const element = build('card-message', {
+      ...params,
+      fontColor: this._textColor,
+      fontStyle: this._textStyle + this._settings.extendedStyle,
+      height: this._height
+    })
 
     return {
       element,
-      rows: html ? 3 : 2
+      rows: params?.html ? 3 : 2
     }
   }
   async _buildSuperSticker() {
-    const avatorImage = this._node.querySelector(
-      '#img'
-    ) as HTMLImageElement | null
-    const avatarUrl =
-      avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))
-    const authorName =
-      this._node.querySelector('#author-name')?.textContent ?? ''
-    const amount =
-      this._node.querySelector('#purchase-amount-chip')?.textContent ?? ''
-    const card = this._node.querySelector('#card')
-    const backgroundColor = card && this._getBackgroundColor(card, 0.8)
-    const stickerImage = this._node.querySelector(
-      '#sticker > #img'
-    ) as HTMLImageElement | null
-    const stickerUrl =
-      stickerImage && (await DOMHelper.getImageSourceAsync(stickerImage))
+    const params = await parse(this._node)
 
-    const height = this._height * 0.8
-    const padding = this._height * 0.1
-
-    const element = document.createElement('div')
-    element.classList.add(className.messageSuperSticker)
-    element.style.color = this._textColor
-    element.style.fontSize = `${height}px`
-    element.style.lineHeight = `${height}px`
-    element.style.padding = `${padding}px`
-    element.setAttribute(
-      'style',
-      element.getAttribute('style') +
-        this._textStyle +
-        this._settings.extendedStyle
-    )
-
-    const containerPadding = this._height * 0.2
-    const container = document.createElement('div')
-    container.style.backgroundColor = backgroundColor ?? 'transparent'
-    container.style.borderRadius = `${containerPadding / 2}px`
-    container.style.padding = `${containerPadding}px ${containerPadding * 2}px`
-    element.append(container)
-
-    if (avatarUrl) {
-      const avatar = document.createElement('img')
-      avatar.classList.add(className.messageAvatar)
-      avatar.src = avatarUrl
-      avatar.style.height = `${height}px`
-      avatar.style.marginRight = `${padding * 2}px`
-      container.append(avatar)
-    }
-
-    const wrapper = document.createElement('div')
-    container.append(wrapper)
-
-    const subTextHeight = height * 0.8
-    const subTextPadding = height * 0.1
-    const author = document.createElement('span')
-    author.classList.add(className.messageAuthor)
-    author.style.fontSize = `${subTextHeight}px`
-    author.style.lineHeight = `${subTextHeight}px`
-    author.style.paddingTop = `${subTextPadding}px`
-    author.style.paddingBottom = `${subTextPadding}px`
-    author.textContent = `${authorName} - ${amount}`
-    wrapper.append(author)
-
-    if (stickerUrl) {
-      const stickerHeight = height * 1.9
-      const sticker = document.createElement('img')
-      sticker.src = stickerUrl
-      sticker.style.height = `${stickerHeight}px`
-      sticker.style.paddingTop = `${padding}px`
-      wrapper.append(sticker)
-    }
+    const element = build('sticker', {
+      ...params,
+      fontColor: this._textColor,
+      fontStyle: this._textStyle + this._settings.extendedStyle,
+      height: this._height
+    })
 
     return {
       element,
@@ -418,96 +227,18 @@ export default class MessageBuilder {
     }
   }
   async _buildMembership() {
-    const avatorImage = this._node.querySelector(
-      '#img'
-    ) as HTMLImageElement | null
-    const avatarUrl =
-      avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))
-    const eventText =
-      this._node.querySelector('#author-name')?.textContent ?? ''
-    const detailText =
-      this._node.querySelector('#header-subtext')?.textContent ?? ''
-    const header = this._node.querySelector('#card > #header')
-    const backgroundColor = header && this._getBackgroundColor(header, 0.8)
+    const params = await parse(this._node)
 
-    const height = this._height * 0.8
-    const padding = this._height * 0.1
-
-    const element = document.createElement('div')
-    element.classList.add(className.messageMembership)
-    element.style.color = this._textColor
-    element.style.fontSize = `${height}px`
-    element.style.lineHeight = `${height}px`
-    element.style.padding = `${padding}px`
-    element.setAttribute(
-      'style',
-      element.getAttribute('style') +
-        this._textStyle +
-        this._settings.extendedStyle
-    )
-
-    const containerPadding = this._height * 0.2
-    const container = document.createElement('div')
-    container.style.backgroundColor = backgroundColor ?? 'transparent'
-    container.style.borderRadius = `${containerPadding / 2}px`
-    container.style.padding = `${containerPadding}px ${containerPadding * 2}px`
-    element.append(container)
-
-    if (avatarUrl) {
-      const avatar = document.createElement('img')
-      avatar.classList.add(className.messageAvatar)
-      avatar.src = avatarUrl
-      avatar.style.height = `${height}px`
-      avatar.style.marginRight = `${padding * 2}px`
-      container.append(avatar)
-    }
-
-    const wrapper = document.createElement('div')
-    container.append(wrapper)
-
-    const subTextHeight = height * 0.8
-    const subTextPadding = height * 0.1
-    const author = document.createElement('span')
-    author.classList.add(className.messageAuthor)
-    author.style.fontSize = `${subTextHeight}px`
-    author.style.lineHeight = `${subTextHeight}px`
-    author.style.paddingTop = `${subTextPadding}px`
-    author.style.paddingBottom = `${subTextPadding}px`
-    author.textContent = eventText
-    wrapper.append(author)
-
-    const message = document.createElement('span')
-    message.classList.add(className.messageMessage)
-    message.style.paddingTop = `${padding}px`
-    message.textContent = detailText
-    this._fixInnerImageHeight(message, height)
-    wrapper.append(message)
+    const element = build('card-message', {
+      ...params,
+      fontColor: this._textColor,
+      fontStyle: this._textStyle + this._settings.extendedStyle,
+      height: this._height
+    })
 
     return {
       element,
       rows: 3
     }
-  }
-  _fixInnerImageHeight(element: Element, height: number) {
-    const children = element.childNodes
-    if (!children) {
-      return
-    }
-
-    Array.from(children).map((node) => {
-      if (node instanceof HTMLImageElement) {
-        node.style.height = `${height}px`
-        return node
-      }
-      if (node instanceof HTMLElement) {
-        this._fixInnerImageHeight(node, height)
-      }
-      return node
-    })
-  }
-  _getBackgroundColor(element: Element, opacity: number) {
-    const backgroundColor = getComputedStyle(element).backgroundColor
-    const o = new Color(backgroundColor).object()
-    return `rgba(${o.r}, ${o.g}, ${o.b}, ${opacity})`
   }
 }
