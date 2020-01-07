@@ -1,44 +1,48 @@
-import DOMHelper from './dom-helper'
-import MessageBuilder from './message-builder'
-import className from '../constants/class-name'
-import error from '../assets/error.svg'
+import className from '~/constants/class-name'
+import error from '~/assets/error.svg'
+import Filter from '~/models/filter'
+import Settings from '~/models/settings'
+import Message from '~/models/message'
+import { querySelectorAsync, waitAllImagesLoaded } from './dom-helper'
+import MessageSettings from './message-settings'
+import { parse } from './message-parser'
+import { render } from './message-renderer'
 
-interface Message {
-  animation: Animation
-  times: {
-    willAppear: number
-    didAppear: number
-    willDisappear: number
-    didDisappear: number
-  }
+interface Times {
+  willAppear: number
+  didAppear: number
+  willDisappear: number
+  didDisappear: number
 }
 
-interface Settings {
-  rows: number
-  overflow: string
-  opacity: number
+interface MessageAnimation {
+  animation: Animation
+  times: Times
 }
 
 export default class FlowController {
-  private _enabled = true
-  private _following = true
-  private _settings: any = {}
-  private _rows: Message[][] = []
-  private _observer: MutationObserver | undefined = undefined
-  private _timer = -1
+  private _enabled = false
+  private _following = false
+  private animations: MessageAnimation[][] = []
+  private observer: MutationObserver | undefined
+  private timer = -1
+  settings: Settings | undefined
 
   get enabled() {
     return this._enabled
   }
+
   set enabled(value) {
     this._enabled = value
     if (!this._enabled) {
       this.clear()
     }
   }
+
   get following() {
     return this._following
   }
+
   set following(value) {
     this._following = value
     if (value) {
@@ -53,70 +57,14 @@ export default class FlowController {
         }
       }
       scrollToBottom()
-      this._timer = window.setInterval(scrollToBottom, 1000)
+      this.timer = window.setInterval(scrollToBottom, 1000)
     } else {
-      clearInterval(this._timer)
+      clearInterval(this.timer)
     }
   }
-  get settings() {
-    return this._settings
-  }
-  set settings(value) {
-    this._settings = value
-  }
-  async observe() {
-    const items = await DOMHelper.querySelectorAsync(
-      '#items.yt-live-chat-item-list-renderer'
-    )
-    if (!items) {
-      return
-    }
 
-    this._observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        const nodes = Array.from(mutation.addedNodes)
-        nodes.forEach((node: Node) => {
-          if (node instanceof Element) {
-            this._flow(node)
-          }
-        })
-      })
-    })
-
-    this._observer.observe(items, { childList: true })
-  }
-  disconnect() {
-    this._observer?.disconnect()
-  }
-  play() {
-    this._rows
-      .reduce(
-        (carry: Animation[], messages) => [
-          ...carry,
-          ...messages.map((message) => message.animation)
-        ],
-        []
-      )
-      .forEach((animation) => animation.play())
-  }
-  pause() {
-    this._rows
-      .reduce(
-        (carry: Animation[], messages) => [
-          ...carry,
-          ...messages.map((message) => message.animation)
-        ],
-        []
-      )
-      .forEach((animation) => animation.pause())
-  }
-  clear() {
-    parent.document.querySelectorAll(`.${className.message}`).forEach((e) => {
-      e.remove()
-    })
-  }
-  async _flow(element: Element) {
-    if (!this._enabled || !this._settings) {
+  private async flow(element: HTMLElement) {
+    if (!this._enabled || !this.settings) {
       return
     }
 
@@ -134,21 +82,21 @@ export default class FlowController {
       return
     }
 
-    const rows = Number(this._settings.rows)
+    const rows = Number(this.settings.rows)
     const height = video.offsetHeight / (rows + 0.2)
 
-    const message = await this._createMessage(element, height)
+    const message = await parse(element)
     if (!message) {
       return
     }
 
-    const messageInfo = element.querySelector(`.${className.messageInfo}`)
-    messageInfo && messageInfo.remove()
+    const infoIcon = element.querySelector(`.${className.infoIcon}`)
+    infoIcon && infoIcon.remove()
 
-    const { banned, reason } = this._filterMessage(message)
-    if (banned) {
+    const reason = this.filterMessage(message, this.settings)
+    if (reason) {
       const div = parent.document.createElement('div')
-      div.classList.add(className.messageInfo)
+      div.classList.add(className.infoIcon)
       div.style.marginTop = '4px'
       div.style.marginRight = '8px'
       div.style.cursor = 'pointer'
@@ -161,102 +109,122 @@ export default class FlowController {
       return
     }
 
-    container.appendChild(message.element)
+    const me = await this.createMessageElement(message, height, this.settings)
+    if (!me) {
+      return
+    }
 
-    const messageRows = Number(message.rows)
+    me.style.display = 'none'
+    container.appendChild(me)
+    await waitAllImagesLoaded(me)
+    me.style.display = 'flex'
+
+    const messageRows = Math.ceil(me.offsetHeight / height)
     const containerWidth = container.offsetWidth
-    const times = this._createTimes(message.element, containerWidth)
+    const times = this.createTimes(me, containerWidth, this.settings)
 
-    const index = this._getIndex(messageRows, times)
-    if (index + messageRows > rows && this._settings.overflow === 'hidden') {
-      message.element.remove()
+    const index = this.getIndex(messageRows, times, this.settings)
+    if (index + messageRows > rows && this.settings.overflow === 'hidden') {
+      me.remove()
       return
     }
 
     const z = Math.floor(index / rows)
     const y = (index % rows) + (z % 2 > 0 ? 0.5 : 0)
-    const opacity = this._settings.opacity ** (z + 1)
+    const opacity = Number(this.settings.opacity) ** (z + 1)
     const top = height * (y + 0.1)
 
-    message.element.style.top = `${top}px`
-    message.element.style.opacity = String(opacity)
-    message.element.style.zIndex = String(z + 1)
+    me.style.top = `${top}px`
+    me.style.opacity = String(opacity)
+    me.style.zIndex = String(z + 1)
 
-    const animation = this._createAnimation(message.element, containerWidth)
+    const animation = this.createAnimation(me, containerWidth, this.settings)
     animation.onfinish = () => {
-      message.element.remove()
-      this._shiftMessage(index, messageRows)
+      me.remove()
+      this.shiftAnimation(index, messageRows)
     }
 
-    const m = {
-      ...message,
-      times,
-      animation
+    const messageAnimation = {
+      animation,
+      times
     }
-    this._pushMessage(m, index, messageRows)
+    this.pushAnimation(messageAnimation, index, messageRows)
 
     if (video.paused) {
       return
     }
     animation.play()
   }
-  async _createMessage(node: Element, height: number) {
-    const builder = new MessageBuilder({
-      node,
-      height,
-      settings: this._settings
-    })
 
-    const message = await builder.build()
-    if (!message) {
+  private async createMessageElement(
+    message: Message,
+    height: number,
+    settings: Settings
+  ) {
+    const ms = new MessageSettings(message, settings)
+    if (!ms.template) {
       return null
     }
-    message.element.classList.add(className.message)
-    return message
+
+    const element = render(ms.template, {
+      ...message,
+      author: ms.author ? message.author : undefined,
+      avatarUrl: ms.avatar ? message.avatarUrl : undefined,
+      fontColor: ms.fontColor,
+      fontStyle: ms.fontStyle,
+      height
+    })
+
+    if (!element) {
+      return null
+    }
+
+    element.classList.add(className.message)
+
+    return element
   }
-  _filterMessage(message: any) {
-    return this._settings.filters.reduce(
-      (carry: any, filter: any) => {
-        if (carry.banned) {
-          return carry
-        }
 
-        const { subject, keyword, regExp } = filter
-        if (!subject || !keyword) {
-          return carry
-        }
+  private filterMessage(message: Message, settings: Settings) {
+    return settings.filters.reduce((carry: string, filter: Filter) => {
+      if (carry) {
+        return carry
+      }
 
-        let reg
-        try {
-          const pattern = regExp
-            ? keyword
-            : keyword.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+      const { subject, keyword, regExp } = filter
+      if (!subject || !keyword) {
+        return carry
+      }
 
-          reg = new RegExp(`(${pattern})`, 'i')
-        } catch (e) {
-          return carry
-        }
+      let reg
+      try {
+        const pattern = regExp
+          ? keyword
+          : keyword.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
 
-        const text = subject === 'author' ? message.author : message.message
-        if (!text || !reg.test(text)) {
-          return carry
-        }
+        reg = new RegExp(`(${pattern})`, 'i')
+      } catch (e) {
+        return carry
+      }
 
-        let reason = `Match keyword "${keyword}" in ${subject}`
-        if (regExp) {
-          reason += ' with regexp'
-        }
+      const text = subject === 'author' ? message.author : message.message
+      if (!text || !reg.test(text)) {
+        return carry
+      }
 
-        return {
-          banned: true,
-          reason
-        }
-      },
-      { banned: false, reason: '' }
-    )
+      let reason = `Match keyword "${keyword}" in ${subject}`
+      if (regExp) {
+        reason += ' with regexp'
+      }
+
+      return reason
+    }, '')
   }
-  _createTimes(element: HTMLElement, containerWidth: number) {
-    const millis = this._settings.speed * 1000
+  private createTimes(
+    element: HTMLElement,
+    containerWidth: number,
+    settings: Settings
+  ) {
+    const millis = Number(settings.speed) * 1000
     const w = element.offsetWidth
     const v = (containerWidth + w) / millis
     const t = w / v
@@ -269,8 +237,13 @@ export default class FlowController {
       didDisappear: n + millis
     }
   }
-  _createAnimation(element: HTMLElement, containerWidth: number) {
-    const millis = this._settings.speed * 1000
+
+  private createAnimation(
+    element: HTMLElement,
+    containerWidth: number,
+    settings: Settings
+  ) {
+    const millis = Number(settings.speed) * 1000
     const keyframes = [
       { transform: `translate(${containerWidth}px, 0px)` },
       { transform: `translate(-${element.offsetWidth}px, 0px)` }
@@ -279,68 +252,133 @@ export default class FlowController {
     animation.pause()
     return animation
   }
-  _isDeniedIndex(index: number) {
+
+  private isDeniedIndex(index: number, rows: number) {
     // e.g. if rows value is "12", denied index is "23", "47", "71" ...
-    return index % (this._settings.rows * 2) === this._settings.rows * 2 - 1
+    return index % (rows * 2) === rows * 2 - 1
   }
-  _getIndex(messageRows: number, times: any) {
-    let index = this._rows.findIndex((_, i, rows) => {
-      const mod = (i + messageRows) % this._settings.rows
+
+  private getIndex(messageRows: number, times: Times, settings: Settings) {
+    const rows = Number(settings.rows)
+    let index = this.animations.findIndex((_, i, animations) => {
+      const mod = (i + messageRows) % rows
       if (mod > 0 && mod < messageRows) {
         return false
       }
       return Array(messageRows)
         .fill(1)
         .every((_, j) => {
-          if (this._isDeniedIndex(i + j)) {
+          if (this.isDeniedIndex(i + j, rows)) {
             return false
           }
 
-          const messages = rows[i + j]
-          if (!messages) {
+          const anims = animations[i + j]
+          if (!anims) {
             return true
           }
 
-          const message = messages[messages.length - 1]
-          if (!message) {
+          const animation = anims[anims.length - 1]
+          if (!animation) {
             return true
           }
 
           return (
-            message.times.didDisappear < times.willDisappear &&
-            message.times.didAppear < times.willAppear
+            animation.times.didDisappear < times.willDisappear &&
+            animation.times.didAppear < times.willAppear
           )
         })
     })
     if (index === -1) {
-      index = this._rows.length
-      const mod = (index + messageRows) % this._settings.rows
+      index = this.animations.length
+      const mod = (index + messageRows) % rows
       if (mod > 0 && mod < messageRows) {
         index += messageRows - mod
       }
-      if (this._isDeniedIndex(index + messageRows - 1)) {
+      if (this.isDeniedIndex(index + messageRows - 1, rows)) {
         index += messageRows
       }
     }
     return index
   }
-  _pushMessage(message: any, index: number, messageRows: number) {
+
+  private pushAnimation(
+    animation: MessageAnimation,
+    index: number,
+    messageRows: number
+  ) {
     Array(messageRows)
       .fill(1)
       .forEach((_, j) => {
         const i = index + j
-        if (!this._rows[i]) {
-          this._rows[i] = []
+        if (!this.animations[i]) {
+          this.animations[i] = []
         }
-        this._rows[i].push(message)
+        this.animations[i].push(animation)
       })
   }
-  _shiftMessage(index: number, messageRows: number) {
+
+  private shiftAnimation(index: number, messageRows: number) {
     Array(messageRows)
       .fill(1)
       .forEach((_, j) => {
         const i = index + j
-        this._rows[i].shift()
+        this.animations[i].shift()
       })
+  }
+
+  async observe() {
+    const items = await querySelectorAsync(
+      '#items.yt-live-chat-item-list-renderer'
+    )
+    if (!items) {
+      return
+    }
+
+    this.observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        const nodes = Array.from(mutation.addedNodes)
+        nodes.forEach((node: Node) => {
+          if (node instanceof HTMLElement) {
+            this.flow(node)
+          }
+        })
+      })
+    })
+
+    this.observer.observe(items, { childList: true })
+  }
+
+  disconnect() {
+    this.observer?.disconnect()
+  }
+
+  play() {
+    this.animations
+      .reduce(
+        (carry: Animation[], animations) => [
+          ...carry,
+          ...animations.map((animation) => animation.animation)
+        ],
+        []
+      )
+      .forEach((animation) => animation.play())
+  }
+
+  pause() {
+    this.animations
+      .reduce(
+        (carry: Animation[], animations) => [
+          ...carry,
+          ...animations.map((animation) => animation.animation)
+        ],
+        []
+      )
+      .forEach((animation) => animation.pause())
+  }
+
+  clear() {
+    parent.document.querySelectorAll(`.${className.message}`).forEach((e) => {
+      e.remove()
+    })
   }
 }

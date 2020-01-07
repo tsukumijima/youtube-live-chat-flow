@@ -7,7 +7,7 @@ const classNames = [
   'injected',
   'focused',
   'message',
-  'messageInfo',
+  'infoIcon',
   'controlButton',
   'controller',
   'smallController',

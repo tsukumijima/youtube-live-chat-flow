@@ -1,5 +1,6 @@
 import Color from 'color'
-import DOMHelper from './dom-helper'
+import Message from '~/models/message'
+import { getImageSourceAsync } from './dom-helper'
 
 const getBackgroundColor = (el: HTMLElement, opacity: number) => {
   const backgroundColor = getComputedStyle(el).backgroundColor
@@ -7,93 +8,87 @@ const getBackgroundColor = (el: HTMLElement, opacity: number) => {
   return `rgba(${o.r}, ${o.g}, ${o.b}, ${opacity})`
 }
 
-const parseTextMessage = async (el: HTMLElement) => {
-  const html = el.querySelector('#message')?.innerHTML
+const parseCommonElements = async (el: HTMLElement) => {
   const author = el.querySelector('#author-name')?.textContent ?? undefined
+  const authorType = el.getAttribute('author-type') ?? undefined
   const avatorImage = el.querySelector('#img') as HTMLImageElement | null
   const avatarUrl =
-    (avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))) ??
-    undefined
+    (avatorImage && (await getImageSourceAsync(avatorImage))) ?? undefined
+  const message = el.querySelector('#message')?.textContent ?? undefined
+
+  return { message, author, authorType, avatarUrl }
+}
+
+const parseTextMessage = async (el: HTMLElement) => {
+  const params = await parseCommonElements(el)
+
+  const html = el.querySelector('#message')?.innerHTML
 
   return {
+    ...params,
     html,
-    author,
-    avatarUrl
+    messageType: 'text-message'
   }
 }
 
 const parsePaidMessage = async (el: HTMLElement) => {
+  const params = await parseCommonElements(el)
+
   const html = el.querySelector('#message')?.innerHTML
-  const author = el.querySelector('#author-name')?.textContent ?? ''
-  const avatorImage = el.querySelector('#img') as HTMLImageElement | null
-  const avatarUrl =
-    (avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))) ??
-    undefined
-  const amount = el.querySelector('#purchase-amount')?.textContent ?? ''
+  const purchaseAmount =
+    el.querySelector('#purchase-amount')?.textContent ?? undefined
   const card = el.querySelector('#card > #header') as HTMLElement | null
   const backgroundColor = (card && getBackgroundColor(card, 0.8)) ?? undefined
 
   return {
+    ...params,
     html,
-    author: `${author} - ${amount}`,
-    avatarUrl,
-    backgroundColor
+    backgroundColor,
+    purchaseAmount,
+    messageType: 'paid-message'
   }
 }
 
 const parsePaidSticker = async (el: HTMLElement) => {
-  const author = el.querySelector('#author-name')?.textContent
-  const avatorImage = el.querySelector('#img') as HTMLImageElement | null
-  const avatarUrl =
-    (avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))) ??
-    undefined
-  const amount = el.querySelector('#purchase-amount-chip')?.textContent ?? ''
+  const params = await parseCommonElements(el)
+
+  const purchaseAmount =
+    el.querySelector('#purchase-amount-chip')?.textContent ?? ''
   const card = el.querySelector('#card') as HTMLElement | null
   const backgroundColor = (card && getBackgroundColor(card, 0.8)) ?? undefined
   const stickerImage = el.querySelector(
     '#sticker > #img'
   ) as HTMLImageElement | null
   const stickerUrl =
-    (stickerImage && (await DOMHelper.getImageSourceAsync(stickerImage))) ??
-    undefined
+    (stickerImage && (await getImageSourceAsync(stickerImage))) ?? undefined
 
   return {
+    ...params,
     stickerUrl,
-    author: `${author} - ${amount}`,
-    avatarUrl,
-    backgroundColor
+    backgroundColor,
+    purchaseAmount,
+    messageType: 'paid-sticker'
   }
 }
 
 const parseMembershipItem = async (el: HTMLElement) => {
-  const eventText = el.querySelector('#author-name')?.textContent ?? undefined
+  const params = await parseCommonElements(el)
+
   const detailText =
     el.querySelector('#header-subtext')?.textContent ?? undefined
-  const avatorImage = el.querySelector('#img') as HTMLImageElement | null
-  const avatarUrl =
-    (avatorImage && (await DOMHelper.getImageSourceAsync(avatorImage))) ??
-    undefined
   const header = el.querySelector('#card > #header') as HTMLElement | null
   const backgroundColor =
     (header && getBackgroundColor(header, 0.8)) ?? undefined
 
   return {
+    ...params,
     html: detailText,
-    author: eventText,
-    avatarUrl,
-    backgroundColor
+    backgroundColor,
+    messageType: 'membership-item'
   }
 }
 
-type Params = {
-  html?: string
-  author?: string
-  avatarUrl?: string
-  stickerUrl?: string
-  backgroundColor?: string
-}
-
-export const parse = async (el: HTMLElement): Promise<Params | undefined> => {
+export const parse = async (el: HTMLElement): Promise<Message | undefined> => {
   const tagName = el.tagName.toLowerCase()
   switch (tagName) {
     case 'yt-live-chat-text-message-renderer':

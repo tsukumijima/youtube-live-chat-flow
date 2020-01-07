@@ -3,7 +3,7 @@
     <v-subheader class="pl-0">Format</v-subheader>
     <v-row align="center">
       <v-col cols="3" class="py-0"><v-subheader>Guest</v-subheader></v-col>
-      <v-col cols="6" class="py-0">
+      <v-col cols="4" class="py-0">
         <v-row class="align-center ma-0">
           <v-btn
             slot="activator"
@@ -16,25 +16,25 @@
           </v-btn>
           <v-text-field
             v-model="color"
-            class="color mt-0 pt-0"
+            class="color mt-0 ml-3 pt-0"
             type="color"
             hide-details
           />
         </v-row>
       </v-col>
-      <v-col cols="3" class="py-0">
+      <v-col cols="5" class="py-0">
         <v-select
           v-model="style"
           :items="styles"
           dense
           hide-details
-          class="mt-0 pt-0"
+          class="mt-0 pt-0 body-2"
         />
       </v-col>
     </v-row>
     <v-row align="center">
       <v-col cols="3" class="py-0"><v-subheader>Member</v-subheader></v-col>
-      <v-col cols="6" class="py-0">
+      <v-col cols="4" class="py-0">
         <v-row class="align-center ma-0">
           <v-btn
             slot="activator"
@@ -47,25 +47,25 @@
           </v-btn>
           <v-text-field
             v-model="memberColor"
-            class="color mt-0 pt-0"
+            class="color mt-0 ml-3 pt-0"
             type="color"
             hide-details
           />
         </v-row>
       </v-col>
-      <v-col cols="3" class="py-0">
+      <v-col cols="5" class="py-0">
         <v-select
           v-model="memberStyle"
           :items="styles"
           dense
           hide-details
-          class="mt-0 pt-0"
+          class="mt-0 pt-0 body-2"
         />
       </v-col>
     </v-row>
     <v-row align="center">
       <v-col cols="3" class="py-0"><v-subheader>Moderator</v-subheader></v-col>
-      <v-col cols="6" class="py-0">
+      <v-col cols="4" class="py-0">
         <v-row class="align-center ma-0">
           <v-btn
             slot="activator"
@@ -78,25 +78,25 @@
           </v-btn>
           <v-text-field
             v-model="moderatorColor"
-            class="color mt-0 pt-0"
+            class="color mt-0 ml-3 pt-0"
             type="color"
             hide-details
           />
         </v-row>
       </v-col>
-      <v-col cols="3" class="py-0">
+      <v-col cols="5" class="py-0">
         <v-select
           v-model="moderatorStyle"
           :items="styles"
           dense
           hide-details
-          class="mt-0 pt-0"
+          class="mt-0 pt-0 body-2"
         />
       </v-col>
     </v-row>
     <v-row align="center">
       <v-col cols="3" class="py-0"><v-subheader>Owner</v-subheader></v-col>
-      <v-col cols="6" class="py-0">
+      <v-col cols="4" class="py-0">
         <v-row class="align-center ma-0">
           <v-btn
             slot="activator"
@@ -109,25 +109,25 @@
           </v-btn>
           <v-text-field
             v-model="ownerColor"
-            class="color mt-0 pt-0"
+            class="color mt-0 ml-3 pt-0"
             type="color"
             hide-details
           />
         </v-row>
       </v-col>
-      <v-col cols="3" class="py-0">
+      <v-col cols="5" class="py-0">
         <v-select
           v-model="ownerStyle"
           :items="styles"
           dense
           hide-details
-          class="mt-0 pt-0"
+          class="mt-0 pt-0 body-2"
         />
       </v-col>
     </v-row>
     <v-row align="center">
       <v-col cols="3" class="py-0"><v-subheader>You</v-subheader></v-col>
-      <v-col cols="6" class="py-0">
+      <v-col cols="4" class="py-0">
         <v-row class="align-center ma-0">
           <v-btn
             slot="activator"
@@ -140,19 +140,19 @@
           </v-btn>
           <v-text-field
             v-model="yourColor"
-            class="color mt-0 pt-0"
+            class="color mt-0 ml-3 pt-0"
             type="color"
             hide-details
           />
         </v-row>
       </v-col>
-      <v-col cols="3" class="py-0">
+      <v-col cols="5" class="py-0">
         <v-select
           v-model="yourStyle"
           :items="styles"
           dense
           hide-details
-          class="mt-0 pt-0"
+          class="mt-0 pt-0 body-2"
         />
       </v-col>
     </v-row>
@@ -201,42 +201,49 @@
         </v-btn>
       </v-col>
     </v-row>
-    <v-text-field
-      v-model="opacity"
-      :placeholder="placeholder.opacity"
-      class="mt-3"
-      label="Opacity"
-      type="number"
-      min="0"
-      max="1"
-      step="0.1"
-    />
-    <v-text-field
-      v-model="rows"
-      :placeholder="placeholder.rows"
-      :label="`Height (Video Height / ${rows})`"
-      type="number"
-      min="1"
-      max="20"
-    />
-    <v-text-field
-      v-model="speed"
-      :placeholder="placeholder.speed"
-      label="Display Time"
-      type="number"
-      min="1"
-      max="10"
-      step="0.1"
-      suffix="sec"
-    />
-    <v-select v-model="overflow" :items="overflows" label="Message Overflow" />
-    <v-textarea
-      v-model="extendedStyle"
-      :placeholder="placeholder.extendedStyle"
-      label="Extended Style"
-      rows="1"
-      auto-grow
-    />
+    <v-subheader class="pl-0">Behavior</v-subheader>
+    <div class="pl-4">
+      <v-text-field
+        v-model="opacity"
+        :placeholder="placeholder.opacity"
+        class="mt-3"
+        label="Opacity"
+        type="number"
+        min="0"
+        max="1"
+        step="0.1"
+      />
+      <v-text-field
+        v-model="rows"
+        :placeholder="placeholder.rows"
+        :label="`Max Rows (Message Height = Video Height / ${rows})`"
+        type="number"
+        min="1"
+        max="20"
+      />
+      <v-text-field
+        v-model="speed"
+        :placeholder="placeholder.speed"
+        label="Display Time"
+        type="number"
+        min="1"
+        max="10"
+        step="0.1"
+        suffix="sec"
+      />
+      <v-select
+        v-model="overflow"
+        :items="overflows"
+        label="Message Overflow"
+      />
+      <v-textarea
+        v-model="extendedStyle"
+        :placeholder="placeholder.extendedStyle"
+        label="Extended Style"
+        rows="1"
+        auto-grow
+      />
+    </div>
     <v-btn class="mt-3" depressed block @click="onResetClick">
       Reset Settings to Default
     </v-btn>
@@ -260,8 +267,9 @@ export default class MessageTabItem extends Vue {
     { text: 'Overlay', value: 'overlay' }
   ]
   styles = [
-    { text: 'Simple', value: 'simple' },
-    { text: '2 lines', value: 'two-line' }
+    { text: '1 line (without author)', value: 'one-line-without-author' },
+    { text: '1 line (with author)', value: 'one-line-with-author' },
+    { text: '2 lines (with author)', value: 'two-line' }
   ]
 
   get color() {
@@ -444,13 +452,15 @@ export default class MessageTabItem extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.color ::v-deep .v-input__slot:before,
-.color ::v-deep .v-input__slot:after {
-  border: none !important;
-}
-.color ::v-deep input {
-  cursor: pointer;
-  height: 32px;
-  padding: 0;
+.color ::v-deep {
+  .v-input__slot:before,
+  .v-input__slot:after {
+    border: none !important;
+  }
+  input {
+    cursor: pointer;
+    height: 32px;
+    padding: 0;
+  }
 }
 </style>

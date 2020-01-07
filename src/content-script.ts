@@ -107,7 +107,7 @@ const addMenuButtons = () => {
 }
 
 const addInputControl = () => {
-  if (!controller.settings.bottomChatFormEnabled) {
+  if (!controller.settings?.bottomChatFormEnabled) {
     return
   }
 

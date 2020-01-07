@@ -1,4 +1,4 @@
-const querySelectorAsync = (
+export const querySelectorAsync = (
   selector: string,
   interval = 100,
   timeout = 1000
@@ -15,7 +15,7 @@ const querySelectorAsync = (
   })
 }
 
-const getImageSourceAsync = (
+export const getImageSourceAsync = (
   img: HTMLImageElement,
   interval = 100,
   timeout = 1000
@@ -31,7 +31,7 @@ const getImageSourceAsync = (
   })
 }
 
-const waitImageLoaded = (
+export const waitImageLoaded = (
   img: HTMLImageElement,
   interval = 100,
   timeout = 1000
@@ -47,7 +47,7 @@ const waitImageLoaded = (
   })
 }
 
-const waitAllImagesLoaded = (
+export const waitAllImagesLoaded = (
   element: HTMLElement,
   interval = 100,
   timeout = 1000
@@ -60,11 +60,4 @@ const waitAllImagesLoaded = (
       return waitImageLoaded(img, interval, timeout)
     })
   )
-}
-
-export default {
-  querySelectorAsync,
-  getImageSourceAsync,
-  waitImageLoaded,
-  waitAllImagesLoaded
 }

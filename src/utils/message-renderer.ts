@@ -1,3 +1,5 @@
+import Color from 'color'
+
 const fixContainedImageHeight = (element: Element, height: number) => {
   const children = element.childNodes
   if (!children) {
@@ -17,7 +19,25 @@ const fixContainedImageHeight = (element: Element, height: number) => {
   })
 }
 
-const buildAvatar = (url: string, height: number) => {
+const getOutlineStyle = (fontColor: string, height: number) => {
+  const n = ((height * 0.8) / 48).toFixed(2)
+  const c = Color(fontColor)
+    .darken(0.6)
+    .hex()
+  return `
+          text-shadow:
+            -${n}px -${n}px 0 ${c},
+            ${n}px -${n}px 0 ${c},
+            -${n}px ${n}px 0 ${c},
+            ${n}px ${n}px 0 ${c},
+            0 ${n}px 0 ${c},
+            0 -${n}px 0 ${c},
+            ${n}px 0 0 ${c},
+            -${n}px 0 0 ${c};
+        `
+}
+
+const renderAvatar = (url: string, height: number) => {
   const el = document.createElement('img')
   el.src = url
   el.style.height = `${height}px`
@@ -26,7 +46,7 @@ const buildAvatar = (url: string, height: number) => {
   return el
 }
 
-const buildAuthor = (author: string, height: number) => {
+const renderAuthor = (author: string, height: number) => {
   const textHeight = height * 0.8
   const padding = height * 0.1
   const el = document.createElement('span')
@@ -38,28 +58,30 @@ const buildAuthor = (author: string, height: number) => {
   return el
 }
 
-const buildMessage = (html: string, height: number) => {
+const renderMessage = (html: string, height: number) => {
   const el = document.createElement('span')
   el.innerHTML = html
   fixContainedImageHeight(el, height)
   return el
 }
 
-const buildStickerImage = (url: string, height: number) => {
+const renderStickerImage = (url: string, height: number) => {
   const el = document.createElement('img')
   el.src = url
   el.style.height = `${height}px`
   return el
 }
 
-const buildOneLineMessage = ({
+const renderOneLineMessage = ({
   html,
+  author,
   avatarUrl,
   fontColor,
   fontStyle,
   height
 }: {
   html?: string
+  author?: string
   avatarUrl?: string
   fontColor?: string
   fontStyle?: string
@@ -73,16 +95,22 @@ const buildOneLineMessage = ({
   el.setAttribute('style', el.getAttribute('style') + (fontStyle ?? ''))
 
   if (avatarUrl) {
-    const avatar = buildAvatar(avatarUrl, height * 0.8)
+    const avatar = renderAvatar(avatarUrl, height * 0.8)
     avatar.style.marginRight = `${height * 0.2}px`
     el.append(avatar)
   }
 
-  el.append(buildMessage(html ?? '', height * 0.8))
+  if (author) {
+    const a = renderAuthor(author + ':', height * 0.8)
+    a.style.marginRight = `${height * 0.2}px`
+    el.append(a)
+  }
+
+  el.append(renderMessage(html ?? '', height * 0.8))
   return el
 }
 
-const buildTwoLineMessage = ({
+const renderTwoLineMessage = ({
   html,
   author,
   avatarUrl,
@@ -106,7 +134,7 @@ const buildTwoLineMessage = ({
   el.setAttribute('style', el.getAttribute('style') + (fontStyle ?? ''))
 
   if (avatarUrl) {
-    const avatar = buildAvatar(avatarUrl, height * 0.8)
+    const avatar = renderAvatar(avatarUrl, height * 0.8)
     avatar.style.marginRight = `${height * 0.2}px`
     el.append(avatar)
   }
@@ -115,8 +143,8 @@ const buildTwoLineMessage = ({
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
   wrapper.style.alignItems = 'start'
-  wrapper.append(buildAuthor(author ?? '', height * 0.8))
-  const message = buildMessage(html ?? '', height * 0.8)
+  wrapper.append(renderAuthor(author ?? '', height * 0.8))
+  const message = renderMessage(html ?? '', height * 0.8)
   message.style.marginTop = `${height * 0.1}px`
   wrapper.append(message)
 
@@ -124,9 +152,10 @@ const buildTwoLineMessage = ({
   return el
 }
 
-const buildCardMessage = ({
+const renderCardMessage = ({
   html,
   author,
+  purchaseAmount,
   avatarUrl,
   fontColor,
   fontStyle,
@@ -135,6 +164,7 @@ const buildCardMessage = ({
 }: {
   html?: string
   author?: string
+  purchaseAmount?: string
   avatarUrl?: string
   fontColor?: string
   fontStyle?: string
@@ -159,7 +189,7 @@ const buildCardMessage = ({
   el.append(container)
 
   if (avatarUrl) {
-    const avatar = buildAvatar(avatarUrl, height * 0.8)
+    const avatar = renderAvatar(avatarUrl, height * 0.8)
     avatar.style.marginRight = `${height * 0.2}px`
     container.append(avatar)
   }
@@ -168,9 +198,14 @@ const buildCardMessage = ({
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
   wrapper.style.alignItems = 'start'
-  wrapper.append(buildAuthor(author ?? '', height * 0.8))
+  wrapper.append(
+    renderAuthor(
+      (author ?? '') + (purchaseAmount ? ` - ${purchaseAmount}` : ''),
+      height * 0.8
+    )
+  )
   if (html) {
-    const message = buildMessage(html, height * 0.8)
+    const message = renderMessage(html, height * 0.8)
     message.style.marginTop = `${height * 0.1}px`
     wrapper.append(message)
   }
@@ -178,9 +213,10 @@ const buildCardMessage = ({
   return el
 }
 
-const buildSticker = ({
+const renderSticker = ({
   stickerUrl,
   author,
+  purchaseAmount,
   avatarUrl,
   fontColor,
   fontStyle,
@@ -189,6 +225,7 @@ const buildSticker = ({
 }: {
   stickerUrl?: string
   author?: string
+  purchaseAmount?: string
   avatarUrl?: string
   fontColor?: string
   fontStyle?: string
@@ -213,7 +250,7 @@ const buildSticker = ({
   el.append(container)
 
   if (avatarUrl) {
-    const avatar = buildAvatar(avatarUrl, height * 0.8)
+    const avatar = renderAvatar(avatarUrl, height * 0.8)
     avatar.style.marginRight = `${height * 0.2}px`
     container.append(avatar)
   }
@@ -222,9 +259,14 @@ const buildSticker = ({
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
   wrapper.style.alignItems = 'start'
-  wrapper.append(buildAuthor(author ?? '', height * 0.8))
+  wrapper.append(
+    renderAuthor(
+      (author ?? '') + (purchaseAmount ? ` - ${purchaseAmount}` : ''),
+      height * 0.8
+    )
+  )
   if (stickerUrl) {
-    const sticker = buildStickerImage(stickerUrl, height * 1.9)
+    const sticker = renderStickerImage(stickerUrl, height * 1.9)
     sticker.style.marginTop = `${height * 0.1}px`
     wrapper.append(sticker)
   }
@@ -232,7 +274,7 @@ const buildSticker = ({
   return el
 }
 
-type Style =
+export type Template =
   | 'one-line-message'
   | 'two-line-message'
   | 'card-message'
@@ -241,6 +283,7 @@ type Style =
 type Params = {
   html?: string
   author?: string
+  paymentAmount?: string
   avatarUrl?: string
   stickerUrl?: string
   fontColor?: string
@@ -249,18 +292,24 @@ type Params = {
   height: number
 }
 
-export const build = (
-  style: Style,
+export const render = (
+  template: Template,
   params: Params
 ): HTMLElement | undefined => {
-  switch (style) {
+  const newParams = {
+    ...params,
+    fontStyle:
+      params.fontStyle +
+      getOutlineStyle(params.fontColor ?? 'white', params.height)
+  }
+  switch (template) {
     case 'one-line-message':
-      return buildOneLineMessage(params)
+      return renderOneLineMessage(newParams)
     case 'two-line-message':
-      return buildTwoLineMessage(params)
+      return renderTwoLineMessage(newParams)
     case 'card-message':
-      return buildCardMessage(params)
+      return renderCardMessage(newParams)
     case 'sticker':
-      return buildSticker(params)
+      return renderSticker(newParams)
   }
 }

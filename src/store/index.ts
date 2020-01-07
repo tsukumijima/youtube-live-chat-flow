@@ -30,26 +30,26 @@ const vuexPersist = new VuexPersistence({
   }
 })
 
-const store = new Vuex.Store({
-  state: {},
-  modules: {
-    settings
-  },
-  plugins: [
-    vuexPersist.plugin,
-    (store) => {
-      store.subscribe(() => {
-        browser.runtime.sendMessage({ id: 'settingsChanged' })
-      })
-    }
-  ]
-})
-
-export default store
+const createStore = () =>
+  new Vuex.Store({
+    state: {},
+    modules: {
+      settings
+    },
+    plugins: [
+      vuexPersist.plugin,
+      (store) => {
+        store.subscribe(() => {
+          browser.runtime.sendMessage({ id: 'settingsChanged' })
+        })
+      }
+    ]
+  })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function readyStore(): Promise<Store<any>> {
   return new Promise((resolve) => {
+    const store = createStore()
     // wait for async storage restore
     // @see https://github.com/championswimmer/vuex-persist/issues/15
     const timeout = Date.now() + 1000
@@ -62,4 +62,4 @@ export function readyStore(): Promise<Store<any>> {
   })
 }
 
-export const settingsStore = getModule(settings, store)
+export const settingsStore = getModule(settings, createStore())
