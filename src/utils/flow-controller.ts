@@ -95,7 +95,7 @@ export default class FlowController {
 
     const reason = this.filterMessage(message, this.settings)
     if (reason) {
-      const div = parent.document.createElement('div')
+      const div = document.createElement('div')
       div.classList.add(className.infoIcon)
       div.style.marginTop = '4px'
       div.style.marginRight = '8px'
