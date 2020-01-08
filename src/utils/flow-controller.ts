@@ -119,7 +119,7 @@ export default class FlowController {
     await waitAllImagesLoaded(me)
     me.style.display = 'flex'
 
-    const messageRows = Math.ceil(me.offsetHeight / height)
+    const messageRows = Math.ceil(me.offsetHeight / Math.ceil(height))
     const containerWidth = container.offsetWidth
     const times = this.createTimes(me, containerWidth, this.settings)
 
