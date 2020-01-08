@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill'
+import { browser } from 'webextension-polyfill-ts'
 
 const id = 'e' + browser.runtime.id.replace('@', '')
 
@@ -7,15 +7,7 @@ const classNames = [
   'injected',
   'focused',
   'message',
-  'messageTwoLine',
-  'messageSuperChat',
-  'messageSuperSticker',
-  'messageMembership',
-  'messageAvatar',
-  'messageAuthor',
-  'messageMessage',
-  'messagePurchaseAmount',
-  'messageInfo',
+  'infoIcon',
   'controlButton',
   'controller',
   'smallController',
@@ -35,4 +27,4 @@ export default classNames.reduce((carry, className) => {
     ...carry,
     [className]: `${id}-${kebabName}`
   }
-}, {})
+}, {}) as { [key: string]: string }

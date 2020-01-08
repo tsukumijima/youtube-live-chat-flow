@@ -1,12 +1,10 @@
-import webpack from 'webpack'
-import CopyWebpackPlugin from 'copy-webpack-plugin'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import { VueLoaderPlugin } from 'vue-loader'
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
-const mode = process.env.NODE_ENV || 'development'
-
-export default {
-  mode,
+module.exports = {
+  mode: 'development',
   target: 'web',
   context: `${__dirname}/src`,
   entry: {
@@ -22,17 +20,28 @@ export default {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        options: {
+          appendTsSuffixTo: [/\.vue$/]
+        }
       },
       {
         test: /\.vue$/,
         loader: 'vue-loader'
       },
       {
-        test: /\.css$/,
-        use: ['vue-style-loader', 'css-loader']
+        test: /\.s(c|a)ss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: require('sass')
+            }
+          }
+        ]
       },
       {
         test: /\.(jpg|gif|png|woff|woff2|eot|ttf)$/,
@@ -48,11 +57,6 @@ export default {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(mode)
-      }
-    }),
     new CopyWebpackPlugin([
       {
         from: 'manifest.json',
@@ -73,10 +77,11 @@ export default {
       filename: './assets/options.html',
       chunks: ['options']
     }),
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new VuetifyLoaderPlugin()
   ],
   resolve: {
-    extensions: ['.js', '.json', '.vue'],
+    extensions: ['.js', '.ts', '.vue'],
     alias: {
       '~~': `${__dirname}/`,
       '~': `${__dirname}/src/`,

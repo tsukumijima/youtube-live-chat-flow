@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": [
+      "esnext",
+      "esnext.asynciterable",
+      "dom"
+    ],
+    "esModuleInterop": true,
+    "allowJs": false,
+    "sourceMap": true,
+    "strict": true,
+    "noEmit": false,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"],
+      "@/*": ["./src/*"],
+      "~~/*": ["./*"],
+      "@@/*": ["./*"]
+    },
+    "typeRoots": [
+      "node_modules/@types",
+      "src/@types"
+    ],
+    "types": [
+      "vuetify"
+    ],
+    "experimentalDecorators": true
+  },
+  "exclude": ["node_modules"]
+}

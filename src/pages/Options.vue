@@ -17,26 +17,24 @@
   </v-app>
 </template>
 
-<script>
-import FilterTabItem from './FilterTabItem'
-import MessageTabItem from './MessageTabItem'
-import OthersTabItem from './OthersTabItem'
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator'
+import FilterTabItem from '~/components/FilterTabItem.vue'
+import MessageTabItem from '~/components/MessageTabItem.vue'
+import OthersTabItem from '~/components/OthersTabItem.vue'
 
-export default {
-  data() {
-    return {
-      tabIndex: null,
-      tabs: [
-        { title: 'Message', item: MessageTabItem },
-        { title: 'Banned Words', item: FilterTabItem },
-        { title: 'Others', item: OthersTabItem }
-      ]
-    }
-  }
+@Component
+export default class Options extends Vue {
+  tabIndex = 0
+  tabs = [
+    { title: 'Message', item: MessageTabItem },
+    { title: 'Banned Words', item: FilterTabItem },
+    { title: 'Others', item: OthersTabItem }
+  ]
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .v-application {
   min-width: 640px;
 }

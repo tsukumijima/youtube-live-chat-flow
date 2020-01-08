@@ -1,4 +1,8 @@
-const querySelectorAsync = (selector, interval = 100, timeout = 1000) => {
+export const querySelectorAsync = (
+  selector: string,
+  interval = 100,
+  timeout = 1000
+): Promise<Element | null> => {
   return new Promise((resolve) => {
     const expireTime = Date.now() + timeout
     const timer = setInterval(() => {
@@ -11,7 +15,11 @@ const querySelectorAsync = (selector, interval = 100, timeout = 1000) => {
   })
 }
 
-const getImageSourceAsync = (img, interval = 100, timeout = 1000) => {
+export const getImageSourceAsync = (
+  img: HTMLImageElement,
+  interval = 100,
+  timeout = 1000
+): Promise<string> => {
   return new Promise((resolve) => {
     const expireTime = Date.now() + timeout
     const timer = setInterval(() => {
@@ -23,7 +31,11 @@ const getImageSourceAsync = (img, interval = 100, timeout = 1000) => {
   })
 }
 
-const waitImageLoaded = (img, interval = 100, timeout = 1000) => {
+export const waitImageLoaded = (
+  img: HTMLImageElement,
+  interval = 100,
+  timeout = 1000
+): Promise<string> => {
   return new Promise((resolve) => {
     const expireTime = Date.now() + timeout
     const timer = setInterval(() => {
@@ -35,20 +47,17 @@ const waitImageLoaded = (img, interval = 100, timeout = 1000) => {
   })
 }
 
-const waitAllImagesLoaded = (element, interval = 100, timeout = 1000) => {
-  if (element.tagName.toLowerCase() === 'img') {
-    return waitImageLoaded(element, interval, timeout)
+export const waitAllImagesLoaded = (
+  element: HTMLElement,
+  interval = 100,
+  timeout = 1000
+): Promise<string[]> => {
+  if (element instanceof HTMLImageElement) {
+    return Promise.all([waitImageLoaded(element, interval, timeout)])
   }
   return Promise.all(
     Array.from(element.querySelectorAll('img')).map((img) => {
       return waitImageLoaded(img, interval, timeout)
     })
   )
-}
-
-export default {
-  querySelectorAsync,
-  getImageSourceAsync,
-  waitImageLoaded,
-  waitAllImagesLoaded
 }

@@ -9,19 +9,19 @@
   </v-card>
 </template>
 
-<script>
-export default {
-  computed: {
-    bottomChatFormEnabled: {
-      get() {
-        return this.$store.state.bottomChatFormEnabled
-      },
-      set(value) {
-        this.$store.commit('setBottomChatFormEnabled', {
-          bottomChatFormEnabled: value
-        })
-      }
-    }
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator'
+import { settingsStore } from '~/store'
+
+@Component
+export default class OthersTabItem extends Vue {
+  get bottomChatFormEnabled() {
+    return settingsStore.bottomChatFormEnabled
+  }
+  set bottomChatFormEnabled(value) {
+    settingsStore.setBottomChatFormEnabled({
+      bottomChatFormEnabled: value
+    })
   }
 }
 </script>

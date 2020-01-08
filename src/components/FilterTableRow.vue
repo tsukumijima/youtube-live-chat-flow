@@ -4,62 +4,59 @@
     <td class="keyword text-truncate" v-text="item.keyword" />
     <td v-text="regExp" />
     <td>
-      <v-icon class="mr-2" color="teal" @click="onEditClick">mdi-pencil</v-icon>
-      <v-icon color="pink" @click="onDeleteClick">mdi-delete</v-icon>
+      <v-btn class="mr-1" icon @click="onEditClick">
+        <v-icon color="teal">mdi-pencil</v-icon>
+      </v-btn>
+      <v-btn icon @click="onDeleteClick">
+        <v-icon color="pink">mdi-delete</v-icon>
+      </v-btn>
     </td>
     <filter-dialog v-model="dialog" :inputs.sync="form" title="Edit Rule" />
   </tr>
 </template>
 
-<script>
-import { mapMutations } from 'vuex'
-import FilterDialog from './FilterDialog'
+<script lang="ts">
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { settingsStore } from '~/store'
+import Filter from '~/models/filter'
+import FilterDialog from '~/components/FilterDialog.vue'
 
-export default {
+@Component({
   components: {
     FilterDialog
-  },
-  props: {
-    item: {
-      type: Object,
-      required: true
+  }
+})
+export default class FilterTableRow extends Vue {
+  @Prop({ type: Object, required: true }) readonly item!: Filter
+
+  dialog = false
+  form = {}
+
+  get regExp() {
+    return this.item.regExp ? 'Used' : 'Not used'
+  }
+
+  @Watch('dialog')
+  onDialogChanged(value: boolean) {
+    if (!value && this.form) {
+      settingsStore.setFilter({
+        ...this.form,
+        id: this.item.id
+      })
     }
-  },
-  data() {
-    return {
-      dialog: false,
-      form: {}
-    }
-  },
-  computed: {
-    regExp() {
-      return this.item.regExp ? 'Used' : 'Not used'
-    }
-  },
-  watch: {
-    dialog(value) {
-      if (!value && this.form) {
-        this.setFilter({
-          id: this.item.id,
-          filter: this.form
-        })
-      }
-    }
-  },
-  methods: {
-    onEditClick() {
-      this.form = this.item
-      this.dialog = true
-    },
-    onDeleteClick() {
-      this.removeFilter({ id: this.item.id })
-    },
-    ...mapMutations(['setFilter', 'removeFilter'])
+  }
+
+  onEditClick() {
+    this.form = this.item
+    this.dialog = true
+  }
+  onDeleteClick() {
+    settingsStore.removeFilter({ id: this.item.id })
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .keyword {
   max-width: 256px;
 }
