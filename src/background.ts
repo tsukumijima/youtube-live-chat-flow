@@ -1,8 +1,8 @@
 import { browser } from 'webextension-polyfill-ts'
-import { readyStore } from './store'
-import { parentCode, code } from './constants/stylesheet'
-import icon from './assets/icon.png'
-import iconOn from './assets/icon-on.png'
+import { readyStore } from '~/store'
+import { parentCode, code } from '~/constants/stylesheet'
+import icon from '~/assets/icon.png'
+import iconOn from '~/assets/icon-on.png'
 
 interface TabState {
   enabled: boolean
