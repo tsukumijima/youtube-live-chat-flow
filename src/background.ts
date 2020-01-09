@@ -53,7 +53,7 @@ const toggleEnabled = async (tabId: number) => {
   initialState.enabled = enabled
   tabStates = {
     ...tabStates,
-    [tabId]: { ...(tabStates[tabId] || {}), enabled }
+    [tabId]: { ...(tabStates[tabId] ?? {}), enabled }
   }
 
   await setIcon(tabId)
@@ -69,7 +69,7 @@ const toggleFollowing = async (tabId: number) => {
   initialState.following = following
   tabStates = {
     ...tabStates,
-    [tabId]: { ...(tabStates[tabId] || {}), following }
+    [tabId]: { ...(tabStates[tabId] ?? {}), following }
   }
 
   await setIcon(tabId)
