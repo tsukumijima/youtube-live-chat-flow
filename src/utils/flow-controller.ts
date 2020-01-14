@@ -109,6 +109,12 @@ export default class FlowController {
       return
     }
 
+    const displays = Number(this.settings.displays)
+    const messages = this.getMessages()
+    if (displays > 0 && displays <= messages) {
+      return
+    }
+
     const me = await this.createMessageElement(message, height, this.settings)
     if (!me) {
       return
@@ -256,6 +262,12 @@ export default class FlowController {
   private isDeniedIndex(index: number, rows: number) {
     // e.g. if rows value is "12", denied index is "23", "47", "71" ...
     return index % (rows * 2) === rows * 2 - 1
+  }
+
+  private getMessages() {
+    return this.animations.reduce((carry, animations) => {
+      return carry + animations.length
+    }, 0)
   }
 
   private getIndex(messageRows: number, times: Times, settings: Settings) {
