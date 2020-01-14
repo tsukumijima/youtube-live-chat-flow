@@ -20,8 +20,9 @@ export default interface Settings {
   superStickerHidden: boolean
   membershipHidden: boolean
   opacity: string
-  rows: string
   speed: string
+  displays: string
+  rows: string
   overflow: string
   extendedStyle: string
   filters: Filter[]

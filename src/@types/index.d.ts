@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 // @see https://github.com/vuejs/vue-class-component/issues/219
 declare module '*.vue' {
   import Vue from 'vue'

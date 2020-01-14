@@ -214,14 +214,6 @@
         step="0.1"
       />
       <v-text-field
-        v-model="rows"
-        :placeholder="placeholder.rows"
-        :label="`Max Rows (Message Height = Video Height / ${rows})`"
-        type="number"
-        min="1"
-        max="20"
-      />
-      <v-text-field
         v-model="speed"
         :placeholder="placeholder.speed"
         label="Display Time"
@@ -231,11 +223,22 @@
         step="0.1"
         suffix="sec"
       />
-      <v-select
-        v-model="overflow"
-        :items="overflows"
-        label="Message Overflow"
+      <v-text-field
+        v-model="displays"
+        :placeholder="placeholder.displays"
+        label="Max Displays (Infinite if set to 0)"
+        type="number"
+        min="0"
       />
+      <v-text-field
+        v-model="rows"
+        :placeholder="placeholder.rows"
+        label="Max Rows"
+        type="number"
+        min="1"
+        max="20"
+      />
+      <v-select v-model="overflow" :items="overflows" label="Overflow Mode" />
       <v-textarea
         v-model="extendedStyle"
         :placeholder="placeholder.extendedStyle"
@@ -258,8 +261,9 @@ import { settingsStore } from '~/store'
 export default class MessageTabItem extends Vue {
   placeholder = {
     opacity: '0.8',
-    rows: '12',
     speed: '5',
+    displays: '0',
+    rows: '12',
     extendedStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;'
   }
   overflows = [
@@ -415,18 +419,25 @@ export default class MessageTabItem extends Vue {
     settingsStore.setOpacity({ opacity: value })
   }
 
-  get rows() {
-    return settingsStore.rows
-  }
-  set rows(value) {
-    settingsStore.setRows({ rows: value })
-  }
-
   get speed() {
     return settingsStore.speed
   }
   set speed(value) {
     settingsStore.setSpeed({ speed: value })
+  }
+
+  get displays() {
+    return settingsStore.displays
+  }
+  set displays(value) {
+    settingsStore.setDisplays({ displays: value })
+  }
+
+  get rows() {
+    return settingsStore.rows
+  }
+  set rows(value) {
+    settingsStore.setRows({ rows: value })
   }
 
   get overflow() {

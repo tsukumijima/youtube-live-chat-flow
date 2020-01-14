@@ -1,9 +1,9 @@
 import { browser } from 'webextension-polyfill-ts'
-import className from './constants/class-name'
-import FlowController from './utils/flow-controller'
-import message from './assets/message.svg'
-import downArrow from './assets/down-arrow.svg'
-import refresh from './assets/refresh.svg'
+import className from '~/constants/class-name'
+import FlowController from '~/utils/flow-controller'
+import message from '~/assets/message.svg'
+import downArrow from '~/assets/down-arrow.svg'
+import refresh from '~/assets/refresh.svg'
 
 const controller = new FlowController()
 

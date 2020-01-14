@@ -21,8 +21,9 @@ const initialState = {
   superStickerHidden: false,
   membershipHidden: false,
   opacity: '0.8',
-  rows: '12',
   speed: '5',
+  displays: '0',
+  rows: '12',
   overflow: 'overlay',
   extendedStyle: ''
 }
@@ -48,8 +49,9 @@ export default class SettingsModule extends VuexModule {
   superStickerHidden = initialState.superStickerHidden
   membershipHidden = initialState.membershipHidden
   opacity = initialState.opacity
-  rows = initialState.rows
   speed = initialState.speed
+  displays = initialState.displays
+  rows = initialState.rows
   overflow = initialState.overflow
   extendedStyle = initialState.extendedStyle
   filters: Filter[] = []
@@ -142,12 +144,16 @@ export default class SettingsModule extends VuexModule {
     this.opacity = opacity
   }
   @Mutation
-  setRows({ rows }: { rows: string }) {
-    this.rows = rows
-  }
-  @Mutation
   setSpeed({ speed }: { speed: string }) {
     this.speed = speed
+  }
+  @Mutation
+  setDisplays({ displays }: { displays: string }) {
+    this.displays = displays
+  }
+  @Mutation
+  setRows({ rows }: { rows: string }) {
+    this.rows = rows
   }
   @Mutation
   setOverflow({ overflow }: { overflow: string }) {
