@@ -3,7 +3,14 @@
     <v-switch
       v-model="bottomChatFormEnabled"
       label="Bottom Chat Form"
-      hint="Move chat form to bottom controls on video (Page reload required)"
+      hint="Move chat form to the bottom controls on video (Page reload required)"
+      persistent-hint
+    />
+    <v-switch
+      v-model="growChatFormEnabled"
+      :disabled="!bottomChatFormEnabled"
+      label="Grow Chat Form"
+      hint="Grow chat form on the bottom controls on focus (Page reload required)"
       persistent-hint
     />
   </v-card>
@@ -21,6 +28,14 @@ export default class OthersTabItem extends Vue {
   set bottomChatFormEnabled(value) {
     settingsStore.setBottomChatFormEnabled({
       bottomChatFormEnabled: value
+    })
+  }
+  get growChatFormEnabled() {
+    return settingsStore.growChatFormEnabled
+  }
+  set growChatFormEnabled(value) {
+    settingsStore.setGrowChatFormEnabled({
+      growChatFormEnabled: value
     })
   }
 }

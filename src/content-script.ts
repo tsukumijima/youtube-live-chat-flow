@@ -24,6 +24,13 @@ const menuButtonConfigs = [
   }
 ]
 
+const updateBodyClass = () => {
+  if (!controller.settings?.growChatFormEnabled) {
+    return
+  }
+  parent.document.body.classList.add(className.grow)
+}
+
 const updateControlButton = () => {
   const button = parent.document.querySelector(`.${className.controlButton}`)
   button && button.setAttribute('aria-pressed', String(controller.enabled))
@@ -205,9 +212,9 @@ const addInputControl = () => {
   const controlsObserver = new ResizeObserver((entries) => {
     const [entry] = entries
     if (entry.contentRect.width < 512) {
-      controls.classList.add(className.smallController)
+      parent.document.body.classList.add(className.small)
     } else {
-      controls.classList.remove(className.smallController)
+      parent.document.body.classList.remove(className.small)
     }
   })
   controlsObserver.observe(controls)
@@ -272,6 +279,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   controller.following = data.following
   controller.settings = data.settings
   await controller.observe()
+  updateBodyClass()
   addControlButton()
   addMenuButtons()
   addVideoEventListener()
