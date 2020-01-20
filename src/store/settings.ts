@@ -56,6 +56,7 @@ export default class SettingsModule extends VuexModule {
   extendedStyle = initialState.extendedStyle
   filters: Filter[] = []
   bottomChatFormEnabled = true
+  growChatFormEnabled = true
 
   get getFilter() {
     return ({ id }: { id: number }) => {
@@ -208,5 +209,13 @@ export default class SettingsModule extends VuexModule {
     bottomChatFormEnabled: boolean
   }) {
     this.bottomChatFormEnabled = bottomChatFormEnabled
+  }
+  @Mutation
+  setGrowChatFormEnabled({
+    growChatFormEnabled
+  }: {
+    growChatFormEnabled: boolean
+  }) {
+    this.growChatFormEnabled = growChatFormEnabled
   }
 }

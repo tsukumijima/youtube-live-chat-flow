@@ -8,6 +8,19 @@ export const parentCode = `
   display: block!important;
   opacity: 1!important;
 }
+.${className.focused}.${className.grow} .ytp-chrome-bottom .ytp-chrome-controls .ytp-left-controls,
+.${className.focused}.${className.grow} .ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls {
+  max-width: 0;
+}
+.${className.grow} .ytp-chrome-bottom .ytp-chrome-controls .ytp-left-controls,
+.${className.grow} .ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls {
+  overflow: hidden;
+  max-width: 256px;
+  transition: max-width .5s;
+}
+.${className.small} .${className.controller} #top #input-container yt-live-chat-author-chip {
+  display: none;
+}
 
 .html5-video-player.ytp-fullscreen
 .${className.controller} #top yt-img-shadow#avatar img {
@@ -65,11 +78,6 @@ yt-live-chat-text-input-field-renderer#input #input {
   fill: white;
 }
 .ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls .ytp-fullerscreen-edu-button {
-  display: none;
-}
-
-.${className.controller}.${className.smallController}
-#top #input-container yt-live-chat-author-chip {
   display: none;
 }
 
@@ -143,8 +151,12 @@ yt-live-chat-text-input-field-renderer#input #label {
   position: absolute;
   top: unset!important;
   left: 1px;
+  right: 1px;
   padding-left: 4px;
   pointer-events: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .${className.controller} #top #input-container
 yt-live-chat-text-input-field-renderer#input #input {
@@ -157,6 +169,7 @@ yt-live-chat-text-input-field-renderer#input #input {
   padding: 0 4px;
   outline: none;
   transition: border-color .5s;
+  white-space: nowrap;
 }
 .${className.controller} #top #input-container
 yt-live-chat-text-input-field-renderer#input[focused] #input {

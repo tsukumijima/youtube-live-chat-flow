@@ -6,16 +6,17 @@ const classNames = [
   // parent window
   'injected',
   'focused',
+  'small',
+  'grow',
   'message',
-  'infoIcon',
   'controlButton',
   'controller',
-  'smallController',
   // window
   'menuButton',
   'menuButtonActive',
   'followButton',
   'reloadButton',
+  'infoIcon',
   'description'
 ]
 

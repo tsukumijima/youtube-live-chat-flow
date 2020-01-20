@@ -27,4 +27,5 @@ export default interface Settings {
   extendedStyle: string
   filters: Filter[]
   bottomChatFormEnabled: boolean
+  growChatFormEnabled: boolean
 }
