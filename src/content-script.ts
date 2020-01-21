@@ -25,7 +25,7 @@ const menuButtonConfigs = [
 ]
 
 const updateBodyClass = () => {
-  if (!controller.settings?.growChatFormEnabled) {
+  if (!controller.settings?.growBottomChatInputEnabled) {
     return
   }
   parent.document.body.classList.add(className.grow)
@@ -114,7 +114,7 @@ const addMenuButtons = () => {
 }
 
 const addInputControl = () => {
-  if (!controller.settings?.bottomChatFormEnabled) {
+  if (!controller.settings?.bottomChatInputEnabled) {
     return
   }
 

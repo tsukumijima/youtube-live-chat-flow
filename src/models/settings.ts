@@ -26,6 +26,6 @@ export default interface Settings {
   overflow: string
   extendedStyle: string
   filters: Filter[]
-  bottomChatFormEnabled: boolean
-  growChatFormEnabled: boolean
+  bottomChatInputEnabled: boolean
+  growBottomChatInputEnabled: boolean
 }
