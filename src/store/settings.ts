@@ -55,8 +55,8 @@ export default class SettingsModule extends VuexModule {
   overflow = initialState.overflow
   extendedStyle = initialState.extendedStyle
   filters: Filter[] = []
-  bottomChatFormEnabled = true
-  growChatFormEnabled = true
+  bottomChatInputEnabled = true
+  growBottomChatInputEnabled = true
 
   get getFilter() {
     return ({ id }: { id: number }) => {
@@ -203,19 +203,19 @@ export default class SettingsModule extends VuexModule {
     })
   }
   @Mutation
-  setBottomChatFormEnabled({
-    bottomChatFormEnabled
+  setBottomChatInputEnabled({
+    bottomChatInputEnabled
   }: {
-    bottomChatFormEnabled: boolean
+    bottomChatInputEnabled: boolean
   }) {
-    this.bottomChatFormEnabled = bottomChatFormEnabled
+    this.bottomChatInputEnabled = bottomChatInputEnabled
   }
   @Mutation
-  setGrowChatFormEnabled({
-    growChatFormEnabled
+  setGrowBottomChatInputEnabled({
+    growBottomChatInputEnabled
   }: {
-    growChatFormEnabled: boolean
+    growBottomChatInputEnabled: boolean
   }) {
-    this.growChatFormEnabled = growChatFormEnabled
+    this.growBottomChatInputEnabled = growBottomChatInputEnabled
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <v-card class="pa-5" flat>
-    <v-subheader class="pl-0">Format</v-subheader>
+    <v-subheader class="pl-0">Style</v-subheader>
     <v-row align="center">
       <v-col cols="3" class="py-0"><v-subheader>Guest</v-subheader></v-col>
       <v-col cols="4" class="py-0">

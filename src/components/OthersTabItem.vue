@@ -1,16 +1,16 @@
 <template>
   <v-card class="pa-5" flat>
     <v-switch
-      v-model="bottomChatFormEnabled"
-      label="Bottom Chat Form"
-      hint="Move chat form to the bottom controls on video (Page reload required)"
+      v-model="bottomChatInputEnabled"
+      label="Bottom Chat Input"
+      hint="Move the chat input to the bottom controls on video (Page reload required)"
       persistent-hint
     />
     <v-switch
-      v-model="growChatFormEnabled"
-      :disabled="!bottomChatFormEnabled"
-      label="Grow Chat Form"
-      hint="Grow chat form on the bottom controls on focus (Page reload required)"
+      v-model="growBottomChatInputEnabled"
+      :disabled="!bottomChatInputEnabled"
+      label="Grow Bottom Chat Input"
+      hint="Grow the bottom chat input on focus (Page reload required)"
       persistent-hint
     />
   </v-card>
@@ -22,20 +22,20 @@ import { settingsStore } from '~/store'
 
 @Component
 export default class OthersTabItem extends Vue {
-  get bottomChatFormEnabled() {
-    return settingsStore.bottomChatFormEnabled
+  get bottomChatInputEnabled() {
+    return settingsStore.bottomChatInputEnabled
   }
-  set bottomChatFormEnabled(value) {
-    settingsStore.setBottomChatFormEnabled({
-      bottomChatFormEnabled: value
+  set bottomChatInputEnabled(value) {
+    settingsStore.setBottomChatInputEnabled({
+      bottomChatInputEnabled: value
     })
   }
-  get growChatFormEnabled() {
-    return settingsStore.growChatFormEnabled
+  get growBottomChatInputEnabled() {
+    return settingsStore.growBottomChatInputEnabled
   }
-  set growChatFormEnabled(value) {
-    settingsStore.setGrowChatFormEnabled({
-      growChatFormEnabled: value
+  set growBottomChatInputEnabled(value) {
+    settingsStore.setGrowBottomChatInputEnabled({
+      growBottomChatInputEnabled: value
     })
   }
 }
