@@ -24,7 +24,7 @@ const menuButtonConfigs = [
   }
 ]
 
-const updateBodyClass = () => {
+const updateBody = () => {
   if (!controller.settings?.growBottomChatInputEnabled) {
     return
   }
@@ -113,7 +113,7 @@ const addMenuButtons = () => {
   updateMenuButtons()
 }
 
-const addInputControl = () => {
+const moveChatInputControl = () => {
   if (!controller.settings?.bottomChatInputEnabled) {
     return
   }
@@ -179,7 +179,7 @@ const addInputControl = () => {
 
   // add description
   const button = document.createElement('button')
-  button.textContent = 'Chat Form is Moved to Bottom Controls'
+  button.textContent = 'Chat Input is Moved to Bottom Controls'
   button.addEventListener('click', () => {
     input.focus()
   })
@@ -220,7 +220,7 @@ const addInputControl = () => {
   controlsObserver.observe(controls)
 }
 
-const removeInputControl = () => {
+const removeChatInputControl = () => {
   const button = parent.document.querySelector(`.${className.controller}`)
   button && button.remove()
 }
@@ -239,10 +239,10 @@ const addVideoEventListener = () => {
   if (video.readyState === 0) {
     // wait until video is started
     video.addEventListener('loadeddata', () => {
-      addInputControl()
+      moveChatInputControl()
     })
   } else {
-    addInputControl()
+    moveChatInputControl()
   }
 }
 
@@ -279,15 +279,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   controller.following = data.following
   controller.settings = data.settings
   await controller.observe()
-  updateBodyClass()
+  updateBody()
+  addVideoEventListener()
   addControlButton()
   addMenuButtons()
-  addVideoEventListener()
 
   window.addEventListener('unload', () => {
     controller.clear()
     controller.disconnect()
     removeControlButton()
-    removeInputControl()
+    removeChatInputControl()
   })
 })
