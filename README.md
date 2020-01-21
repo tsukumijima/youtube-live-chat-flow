@@ -2,16 +2,17 @@
 
 ![badge](https://github.com/fiahfy/youtube-live-chat-flow/workflows/Web%20Extension%20CI/badge.svg)
 
-> Chrome Extension for Chat Messages Flow on YouTube Videos.
+> Chrome Extension to Flow Chat Messages on YouTube Videos.
 
 ## Features
 
-- Messages flow over a video.
-- Change message color, size and speed.
+- Flow messages over the video.
+- Change color, size and speed for messages.
 - Show author and avatar on messages.
 - Show super chats and super stickers.
 - Filter banned words.
-- Move chat form to bottom controls on video.
+- Move the chat input to bottom controls on the video.
+- Add helper menu buttons on the chat list.
 
 ## Screenshots
 
