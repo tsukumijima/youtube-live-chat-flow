@@ -69,6 +69,7 @@ yt-live-chat-text-input-field-renderer#input #input {
   vertical-align: bottom;
   white-space: nowrap;
   box-sizing: border-box;
+  user-select: none;
 }
 
 .ytp-chrome-bottom .ytp-chrome-controls {

@@ -24,6 +24,7 @@ const initialState = {
   speed: '5',
   displays: '0',
   rows: '12',
+  stackDirection: 'top_to_bottom',
   overflow: 'overlay',
   extendedStyle: ''
 }
@@ -52,6 +53,7 @@ export default class SettingsModule extends VuexModule {
   speed = initialState.speed
   displays = initialState.displays
   rows = initialState.rows
+  stackDirection = initialState.stackDirection
   overflow = initialState.overflow
   extendedStyle = initialState.extendedStyle
   filters: Filter[] = []
@@ -155,6 +157,10 @@ export default class SettingsModule extends VuexModule {
   @Mutation
   setRows({ rows }: { rows: string }) {
     this.rows = rows
+  }
+  @Mutation
+  setStackDirection({ stackDirection }: { stackDirection: string }) {
+    this.stackDirection = stackDirection
   }
   @Mutation
   setOverflow({ overflow }: { overflow: string }) {
