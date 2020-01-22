@@ -242,14 +242,8 @@
         v-model="stackDirection"
         :items="stackDirections"
         label="Stack Directions"
-        dense
       />
-      <v-select
-        v-model="overflow"
-        :items="overflows"
-        label="Overflow Mode"
-        dense
-      />
+      <v-select v-model="overflow" :items="overflows" label="Overflow Mode" />
       <v-textarea
         v-model="extendedStyle"
         :placeholder="placeholder.extendedStyle"
