@@ -24,13 +24,6 @@ const menuButtonConfigs = [
   }
 ]
 
-const updateBodyClass = () => {
-  if (!controller.settings?.growBottomChatInputEnabled) {
-    return
-  }
-  parent.document.body.classList.add(className.grow)
-}
-
 const updateControlButton = () => {
   const button = parent.document.querySelector(`.${className.controlButton}`)
   button && button.setAttribute('aria-pressed', String(controller.enabled))
@@ -104,7 +97,7 @@ const addMenuButtons = () => {
     iconButton.onclick = config.onclick
     iconButton.append(icon)
 
-    refIconButton.parentNode?.insertBefore(iconButton, refIconButton)
+    refIconButton.parentElement?.insertBefore(iconButton, refIconButton)
 
     // insert svg after wrapper button appended
     icon.innerHTML = config.svg
@@ -113,7 +106,7 @@ const addMenuButtons = () => {
   updateMenuButtons()
 }
 
-const addInputControl = () => {
+const moveChatInputControl = () => {
   if (!controller.settings?.bottomChatInputEnabled) {
     return
   }
@@ -179,7 +172,7 @@ const addInputControl = () => {
 
   // add description
   const button = document.createElement('button')
-  button.textContent = 'Chat Form is Moved to Bottom Controls'
+  button.textContent = 'Chat Input is Moved to Bottom Controls'
   button.addEventListener('click', () => {
     input.focus()
   })
@@ -196,7 +189,7 @@ const addInputControl = () => {
   controls.append(top)
   controls.append(messageButtons)
   message && controls.append(message)
-  rightControls.parentNode?.insertBefore(controls, rightControls)
+  rightControls.parentElement?.insertBefore(controls, rightControls)
 
   // setup resize observers
   const leftControlsObserver = new ResizeObserver((entries) => {
@@ -218,9 +211,28 @@ const addInputControl = () => {
     }
   })
   controlsObserver.observe(controls)
+
+  // setup for grow input
+  if (!controller.settings?.growBottomChatInputEnabled) {
+    return
+  }
+
+  const wrapper = rightControls.parentElement
+  if (!wrapper) {
+    return
+  }
+
+  parent.document.body.classList.add(className.grow)
+
+  const updateMaxWidth = () => {
+    leftControls.style.maxWidth = `${wrapper.offsetWidth / 2}px`
+    rightControls.style.maxWidth = `${wrapper.offsetWidth / 2}px`
+  }
+  const wrapperObserver = new ResizeObserver(updateMaxWidth)
+  wrapperObserver.observe(wrapper)
 }
 
-const removeInputControl = () => {
+const removeChatInputControl = () => {
   const button = parent.document.querySelector(`.${className.controller}`)
   button && button.remove()
 }
@@ -239,10 +251,10 @@ const addVideoEventListener = () => {
   if (video.readyState === 0) {
     // wait until video is started
     video.addEventListener('loadeddata', () => {
-      addInputControl()
+      moveChatInputControl()
     })
   } else {
-    addInputControl()
+    moveChatInputControl()
   }
 }
 
@@ -279,15 +291,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   controller.following = data.following
   controller.settings = data.settings
   await controller.observe()
-  updateBodyClass()
+  addVideoEventListener()
   addControlButton()
   addMenuButtons()
-  addVideoEventListener()
 
   window.addEventListener('unload', () => {
     controller.clear()
     controller.disconnect()
     removeControlButton()
-    removeInputControl()
+    removeChatInputControl()
   })
 })

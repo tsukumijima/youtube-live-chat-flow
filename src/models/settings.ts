@@ -23,6 +23,7 @@ export default interface Settings {
   speed: string
   displays: string
   rows: string
+  stackDirection: string
   overflow: string
   extendedStyle: string
   filters: Filter[]

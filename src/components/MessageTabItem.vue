@@ -238,6 +238,11 @@
         min="1"
         max="20"
       />
+      <v-select
+        v-model="stackDirection"
+        :items="stackDirections"
+        label="Stack Directions"
+      />
       <v-select v-model="overflow" :items="overflows" label="Overflow Mode" />
       <v-textarea
         v-model="extendedStyle"
@@ -266,14 +271,18 @@ export default class MessageTabItem extends Vue {
     rows: '12',
     extendedStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;'
   }
-  overflows = [
-    { text: 'Hidden', value: 'hidden' },
-    { text: 'Overlay', value: 'overlay' }
-  ]
   styles = [
     { text: '1 line (without author)', value: 'one-line-without-author' },
     { text: '1 line (with author)', value: 'one-line-with-author' },
     { text: '2 lines (with author)', value: 'two-line' }
+  ]
+  stackDirections = [
+    { text: 'Top to Bottom', value: 'top_to_bottom' },
+    { text: 'Bottom to Top', value: 'bottom_to_top' }
+  ]
+  overflows = [
+    { text: 'Hidden', value: 'hidden' },
+    { text: 'Overlay', value: 'overlay' }
   ]
 
   get color() {
@@ -438,6 +447,13 @@ export default class MessageTabItem extends Vue {
   }
   set rows(value) {
     settingsStore.setRows({ rows: value })
+  }
+
+  get stackDirection() {
+    return settingsStore.stackDirection
+  }
+  set stackDirection(value) {
+    settingsStore.setStackDirection({ stackDirection: value })
   }
 
   get overflow() {

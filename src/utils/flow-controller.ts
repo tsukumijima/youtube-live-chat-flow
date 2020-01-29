@@ -138,7 +138,10 @@ export default class FlowController {
     const z = Math.floor(index / rows)
     const y = (index % rows) + (z % 2 > 0 ? 0.5 : 0)
     const opacity = Number(this.settings.opacity) ** (z + 1)
-    const top = height * (y + 0.1)
+    const top =
+      this.settings.stackDirection === 'bottom_to_top'
+        ? video.offsetHeight - height * (y + messageRows + 0.1)
+        : height * (y + 0.1)
 
     me.style.top = `${top}px`
     me.style.opacity = String(opacity)
@@ -249,12 +252,12 @@ export default class FlowController {
     containerWidth: number,
     settings: Settings
   ) {
-    const millis = Number(settings.speed) * 1000
+    const duration = Number(settings.speed) * 1000
     const keyframes = [
       { transform: `translate(${containerWidth}px, 0px)` },
       { transform: `translate(-${element.offsetWidth}px, 0px)` }
     ]
-    const animation = element.animate(keyframes, millis)
+    const animation = element.animate(keyframes, { duration })
     animation.pause()
     return animation
   }
