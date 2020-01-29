@@ -10,12 +10,11 @@ export const parentCode = `
 }
 .${className.focused}.${className.grow} .ytp-chrome-bottom .ytp-chrome-controls .ytp-left-controls,
 .${className.focused}.${className.grow} .ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls {
-  max-width: 0;
+  max-width: 0!important;
 }
 .${className.grow} .ytp-chrome-bottom .ytp-chrome-controls .ytp-left-controls,
 .${className.grow} .ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls {
   overflow: hidden;
-  max-width: 256px;
   transition: max-width .5s;
 }
 .${className.small} .${className.controller} #top #input-container yt-live-chat-author-chip {

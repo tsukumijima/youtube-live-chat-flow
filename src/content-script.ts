@@ -24,13 +24,6 @@ const menuButtonConfigs = [
   }
 ]
 
-const updateBody = () => {
-  if (!controller.settings?.growBottomChatInputEnabled) {
-    return
-  }
-  parent.document.body.classList.add(className.grow)
-}
-
 const updateControlButton = () => {
   const button = parent.document.querySelector(`.${className.controlButton}`)
   button && button.setAttribute('aria-pressed', String(controller.enabled))
@@ -104,7 +97,7 @@ const addMenuButtons = () => {
     iconButton.onclick = config.onclick
     iconButton.append(icon)
 
-    refIconButton.parentNode?.insertBefore(iconButton, refIconButton)
+    refIconButton.parentElement?.insertBefore(iconButton, refIconButton)
 
     // insert svg after wrapper button appended
     icon.innerHTML = config.svg
@@ -196,7 +189,7 @@ const moveChatInputControl = () => {
   controls.append(top)
   controls.append(messageButtons)
   message && controls.append(message)
-  rightControls.parentNode?.insertBefore(controls, rightControls)
+  rightControls.parentElement?.insertBefore(controls, rightControls)
 
   // setup resize observers
   const leftControlsObserver = new ResizeObserver((entries) => {
@@ -218,6 +211,25 @@ const moveChatInputControl = () => {
     }
   })
   controlsObserver.observe(controls)
+
+  // setup for grow input
+  if (!controller.settings?.growBottomChatInputEnabled) {
+    return
+  }
+
+  const wrapper = rightControls.parentElement
+  if (!wrapper) {
+    return
+  }
+
+  parent.document.body.classList.add(className.grow)
+
+  const updateMaxWidth = () => {
+    leftControls.style.maxWidth = `${wrapper.offsetWidth / 2}px`
+    rightControls.style.maxWidth = `${wrapper.offsetWidth / 2}px`
+  }
+  const wrapperObserver = new ResizeObserver(updateMaxWidth)
+  wrapperObserver.observe(wrapper)
 }
 
 const removeChatInputControl = () => {
@@ -279,7 +291,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   controller.following = data.following
   controller.settings = data.settings
   await controller.observe()
-  updateBody()
   addVideoEventListener()
   addControlButton()
   addMenuButtons()
