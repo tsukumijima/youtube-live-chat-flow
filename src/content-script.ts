@@ -179,7 +179,7 @@ const moveChatInputControl = () => {
   const description = document.createElement('div')
   description.classList.add(className.description)
   description.append(button)
-  buttons.append(description)
+  buttons.parentElement?.insertBefore(description, buttons)
 
   // add controls
   const controls = document.createElement('div')

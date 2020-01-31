@@ -99,7 +99,7 @@ yt-live-chat-text-input-field-renderer#input #input {
   display: flex;
   flex: 1;
   min-width: 0;
-  align-items: center;
+  align-items: center!important;
   height: 100%;
 }
 .${className.controller} #top yt-img-shadow#avatar {
@@ -127,6 +127,7 @@ yt-live-chat-author-chip {
 .${className.controller} #top #input-container
 yt-live-chat-author-chip #author-name {
   color: inherit;
+  user-select: none;
 }
 .${className.controller} #top #input-container
 yt-live-chat-text-input-field-renderer#input {
@@ -137,6 +138,7 @@ yt-live-chat-text-input-field-renderer#input {
   align-items: center;
   height: 100%;
   margin-right: 8px;
+  margin-top: 0;
 }
 .${className.controller} #top #input-container
 yt-live-chat-text-input-field-renderer#input #label {
@@ -184,6 +186,8 @@ yt-live-chat-text-input-field-renderer#input[focused] #input {
 }
 .${className.controller} #message-buttons #count {
   margin-right: 8px;
+  color: inherit;
+  user-select: none;
 }
 .${className.controller} #message-buttons #send-button yt-button-renderer {
   color: inherit!important;
@@ -274,6 +278,7 @@ yt-live-chat-header-renderer > #primary-content > #view-selector > yt-sort-filte
   flex: 1;
   display: flex;
   align-items: center;
+  padding: 15px 0;
 }
 .${className.description} {
   flex: 1;
