@@ -217,19 +217,7 @@ const moveChatInputControl = () => {
     return
   }
 
-  const wrapper = rightControls.parentElement
-  if (!wrapper) {
-    return
-  }
-
   parent.document.body.classList.add(className.grow)
-
-  const updateMaxWidth = () => {
-    leftControls.style.maxWidth = `${wrapper.offsetWidth / 2}px`
-    rightControls.style.maxWidth = `${wrapper.offsetWidth / 2}px`
-  }
-  const wrapperObserver = new ResizeObserver(updateMaxWidth)
-  wrapperObserver.observe(wrapper)
 }
 
 const removeChatInputControl = () => {
