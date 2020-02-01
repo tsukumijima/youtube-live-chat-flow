@@ -58,7 +58,7 @@ export default class SettingsModule extends VuexModule {
   extendedStyle = initialState.extendedStyle
   filters: Filter[] = []
   bottomChatInputEnabled = true
-  growBottomChatInputEnabled = true
+  growBottomChatInputEnabled = false
 
   get getFilter() {
     return ({ id }: { id: number }) => {
