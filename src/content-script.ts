@@ -220,7 +220,7 @@ const moveChatInputControl = () => {
 }
 
 const removeChatInputControl = () => {
-  const button = parent.document.querySelector('ylcf-controller')
+  const button = parent.document.querySelector('.ylcf-controller')
   button && button.remove()
 }
 

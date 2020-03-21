@@ -87,18 +87,6 @@ yt-live-chat-text-input-field-renderer#input #input {
   height: 100%;
   box-sizing: border-box;
 }
-.ylcf-controller:hover #interaction-message {
-  display: block;
-}
-.ylcf-controller #interaction-message {
-  height: 100%;
-}
-.ylcf-controller #interaction-message > yt-live-chat-message-renderer {
-  opacity: 1;
-  padding-left: 0;
-  padding-right: 0;
-  background: transparent;
-}
 
 .ylcf-controller #top {
   display: flex;
@@ -240,20 +228,30 @@ paper-ripple {
 }
 
 .ylcf-controller #interaction-message {
+  display: none;
   position: absolute;
   left: 8px;
   right: 8px;
+  height: 100%;
+}
+.ylcf-controller #interaction-message > yt-live-chat-message-renderer {
+  opacity: 1;
+  padding-left: 0;
+  padding-right: 0;
+  background: transparent;
+}
+.ylcf-controller #interaction-message > yt-live-chat-message-renderer #subtext {
   display: none;
 }
-.ylcf-controller #interaction-message yt-live-chat-message-renderer #subtext {
-  display: none;
-}
-.ylcf-controller #interaction-message yt-live-chat-message-renderer #button yt-button-renderer {
+.ylcf-controller #interaction-message > yt-live-chat-message-renderer #button yt-button-renderer {
   width: 100%;
   margin: 4px 0;
 }
-.ylcf-controller #interaction-message yt-live-chat-message-renderer #button paper-button {
+.ylcf-controller #interaction-message > yt-live-chat-message-renderer #button paper-button {
   font-size: 10px;
   padding: 0 8px;
   height: 28px;
+}
+.ylcf-controller:hover #interaction-message:not(:empty) {
+  display: block;
 }

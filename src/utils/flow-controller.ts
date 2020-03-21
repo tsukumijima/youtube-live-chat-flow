@@ -25,6 +25,7 @@ export default class FlowController {
   private animations: MessageAnimation[][] = []
   private observer: MutationObserver | undefined
   private timer = -1
+  private queues: any = []
   settings: Settings | undefined
 
   get enabled() {
@@ -149,7 +150,7 @@ export default class FlowController {
     const animation = this.createAnimation(me, containerWidth, this.settings)
     animation.onfinish = () => {
       me.remove()
-      this.shiftAnimation(index, messageRows)
+      // this.shiftAnimation(index, messageRows)
     }
 
     const messageAnimation = {
@@ -353,13 +354,35 @@ export default class FlowController {
         const nodes = Array.from(mutation.addedNodes)
         nodes.forEach((node: Node) => {
           if (node instanceof HTMLElement) {
-            this.flow(node)
+            this.queues.push(node)
           }
         })
       })
     })
 
     this.observer.observe(items, { childList: true })
+
+    setTimeout(async () => {
+      const wait = () => {
+        return new Promise((r) => {
+          setTimeout(() => {
+            r()
+          }, 10)
+        })
+      }
+
+      for (;;) {
+        for (;;) {
+          const node = this.queues.shift()
+          console.log(node)
+          if (!node) {
+            break
+          }
+          await this.flow(node)
+        }
+        await wait()
+      }
+    })
   }
 
   disconnect() {
