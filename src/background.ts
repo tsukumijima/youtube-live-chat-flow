@@ -2,8 +2,8 @@ import { browser } from 'webextension-polyfill-ts'
 import { readyStore } from '~/store'
 import iconOff from '~/assets/icon-off.png'
 import iconOn from '~/assets/icon-on.png'
-import injectParent from '~/assets/inject.css'
-import inject from '~/assets/inject-parent.css'
+import inject from '~/assets/inject.css'
+import parent from '~/assets/parent.css'
 
 interface TabState {
   enabled: boolean
@@ -40,7 +40,7 @@ const contentLoaded = async (
 
   // window.parent
   if (needCSSInject) {
-    await browser.tabs.insertCSS(tabId, { file: injectParent })
+    await browser.tabs.insertCSS(tabId, { file: parent })
     await browser.tabs.sendMessage(tabId, { id: 'cssInjected' })
   }
 

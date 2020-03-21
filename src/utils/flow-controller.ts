@@ -7,25 +7,23 @@ import MessageSettings from './message-settings'
 import { parse } from './message-parser'
 import { render } from './message-renderer'
 
-interface Times {
+interface Timeline {
   willAppear: number
   didAppear: number
   willDisappear: number
   didDisappear: number
 }
 
-interface MessageAnimation {
-  animation: Animation
-  times: Times
-}
-
 export default class FlowController {
   private _enabled = false
   private _following = false
-  private animations: MessageAnimation[][] = []
+  private timelines: Timeline[][] = []
   private observer: MutationObserver | undefined
-  private timer = -1
-  private queues: any = []
+  private followingTimer = -1
+  private cleanupTimer = -1
+  private processTimer = -1
+  private processing = false
+  private queues: HTMLElement[] = []
   settings: Settings | undefined
 
   get enabled() {
@@ -57,9 +55,9 @@ export default class FlowController {
         }
       }
       scrollToBottom()
-      this.timer = window.setInterval(scrollToBottom, 1000)
+      this.followingTimer = window.setInterval(scrollToBottom, 1000)
     } else {
-      clearInterval(this.timer)
+      clearInterval(this.followingTimer)
     }
   }
 
@@ -127,13 +125,14 @@ export default class FlowController {
 
     const messageRows = Math.ceil(me.offsetHeight / Math.ceil(height))
     const containerWidth = container.offsetWidth
-    const times = this.createTimes(me, containerWidth, this.settings)
+    const timeline = this.createTimeline(me, containerWidth, this.settings)
 
-    const index = this.getIndex(messageRows, times, this.settings)
+    const index = this.getIndex(messageRows, timeline, this.settings)
     if (index + messageRows > rows && this.settings.overflow === 'hidden') {
       me.remove()
       return
     }
+    this.pushTimeline(timeline, index, messageRows)
 
     const z = Math.floor(index / rows)
     const y = (index % rows) + (z % 2 > 0 ? 0.5 : 0)
@@ -150,17 +149,6 @@ export default class FlowController {
     const animation = this.createAnimation(me, containerWidth, this.settings)
     animation.onfinish = () => {
       me.remove()
-      // this.shiftAnimation(index, messageRows)
-    }
-
-    const messageAnimation = {
-      animation,
-      times
-    }
-    this.pushAnimation(messageAnimation, index, messageRows)
-
-    if (video.paused) {
-      return
     }
     animation.play()
   }
@@ -228,7 +216,7 @@ export default class FlowController {
       return reason
     }, '')
   }
-  private createTimes(
+  private createTimeline(
     element: HTMLElement,
     containerWidth: number,
     settings: Settings
@@ -268,14 +256,18 @@ export default class FlowController {
   }
 
   private getMessages() {
-    return this.animations.reduce((carry, animations) => {
-      return carry + animations.length
+    return this.timelines.reduce((carry, timelines) => {
+      return carry + timelines.length
     }, 0)
   }
 
-  private getIndex(messageRows: number, times: Times, settings: Settings) {
+  private getIndex(
+    messageRows: number,
+    timeline: Timeline,
+    settings: Settings
+  ) {
     const rows = Number(settings.rows)
-    let index = this.animations.findIndex((_, i, animations) => {
+    let index = this.timelines.findIndex((_, i, timelines) => {
       const mod = (i + messageRows) % rows
       if (mod > 0 && mod < messageRows) {
         return false
@@ -287,24 +279,24 @@ export default class FlowController {
             return false
           }
 
-          const anims = animations[i + j]
-          if (!anims) {
+          const ts = timelines[i + j]
+          if (!ts) {
             return true
           }
 
-          const animation = anims[anims.length - 1]
-          if (!animation) {
+          const t = ts[ts.length - 1]
+          if (!t) {
             return true
           }
 
           return (
-            animation.times.didDisappear < times.willDisappear &&
-            animation.times.didAppear < times.willAppear
+            t.didDisappear < timeline.willDisappear &&
+            t.didAppear < timeline.willAppear
           )
         })
     })
     if (index === -1) {
-      index = this.animations.length
+      index = this.timelines.length
       const mod = (index + messageRows) % rows
       if (mod > 0 && mod < messageRows) {
         index += messageRows - mod
@@ -316,28 +308,15 @@ export default class FlowController {
     return index
   }
 
-  private pushAnimation(
-    animation: MessageAnimation,
-    index: number,
-    messageRows: number
-  ) {
+  private pushTimeline(timeline: Timeline, index: number, messageRows: number) {
     Array(messageRows)
       .fill(1)
       .forEach((_, j) => {
         const i = index + j
-        if (!this.animations[i]) {
-          this.animations[i] = []
+        if (!this.timelines[i]) {
+          this.timelines[i] = []
         }
-        this.animations[i].push(animation)
-      })
-  }
-
-  private shiftAnimation(index: number, messageRows: number) {
-    Array(messageRows)
-      .fill(1)
-      .forEach((_, j) => {
-        const i = index + j
-        this.animations[i].shift()
+        this.timelines[i].push(timeline)
       })
   }
 
@@ -362,60 +341,35 @@ export default class FlowController {
 
     this.observer.observe(items, { childList: true })
 
-    setTimeout(async () => {
-      const wait = () => {
-        return new Promise((r) => {
-          setTimeout(() => {
-            r()
-          }, 10)
+    this.cleanupTimer = setInterval(() => {
+      this.timelines = this.timelines.map((timelines) => {
+        return timelines.filter((timeline) => {
+          return timeline.didDisappear > Date.now()
         })
-      }
+      })
+    }, 1000)
 
-      for (;;) {
-        for (;;) {
-          const node = this.queues.shift()
-          console.log(node)
-          if (!node) {
-            break
-          }
-          await this.flow(node)
-        }
-        await wait()
+    this.processTimer = setInterval(async () => {
+      if (this.processing) {
+        return
       }
-    })
+      this.processing = true
+      const node = this.queues.shift()
+      node && (await this.flow(node))
+      this.processing = false
+    }, 10)
   }
 
   disconnect() {
+    clearInterval(this.processTimer)
+    clearInterval(this.cleanupTimer)
     this.observer?.disconnect()
-  }
-
-  play() {
-    this.animations
-      .reduce(
-        (carry: Animation[], animations) => [
-          ...carry,
-          ...animations.map((animation) => animation.animation)
-        ],
-        []
-      )
-      .forEach((animation) => animation.play())
-  }
-
-  pause() {
-    this.animations
-      .reduce(
-        (carry: Animation[], animations) => [
-          ...carry,
-          ...animations.map((animation) => animation.animation)
-        ],
-        []
-      )
-      .forEach((animation) => animation.pause())
   }
 
   clear() {
     parent.document.querySelectorAll('.ylcf-flow-message').forEach((e) => {
       e.remove()
     })
+    this.timelines = []
   }
 }

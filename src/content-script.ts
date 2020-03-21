@@ -232,9 +232,6 @@ const addVideoEventListener = () => {
     return
   }
 
-  video.addEventListener('play', () => controller.play())
-  video.addEventListener('pause', () => controller.pause())
-
   if (video.readyState === 0) {
     // wait until video is started
     video.addEventListener('loadeddata', () => {
