@@ -2,7 +2,7 @@
 
 ![badge](https://github.com/fiahfy/youtube-live-chat-flow/workflows/Web%20Extension%20CI/badge.svg)
 
-> Chrome Extension to Flow Chat Messages on YouTube Videos.
+> Chrome Extension for Flowing Chat Messages on YouTube Live.
 
 ## Features
 
