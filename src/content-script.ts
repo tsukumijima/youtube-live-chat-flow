@@ -1,5 +1,4 @@
 import { browser } from 'webextension-polyfill-ts'
-import className from '~/constants/class-name'
 import FlowController from '~/utils/flow-controller'
 import message from '~/assets/message.svg'
 import downArrow from '~/assets/down-arrow.svg'
@@ -11,21 +10,21 @@ const menuButtonConfigs = [
   {
     svg: downArrow,
     title: 'Follow New Messages',
-    className: className.followButton,
+    className: 'ylcf-follow-button',
     onclick: () => browser.runtime.sendMessage({ id: 'menuButtonClicked' }),
     isActive: () => controller.following
   },
   {
     svg: refresh,
     title: 'Reload Frame',
-    className: className.reloadButton,
+    className: 'ylcf-reload-button',
     onclick: () => location.reload(),
     isActive: () => false
   }
 ]
 
 const updateControlButton = () => {
-  const button = parent.document.querySelector(`.${className.controlButton}`)
+  const button = parent.document.querySelector('.ylcf-control-button')
   button && button.setAttribute('aria-pressed', String(controller.enabled))
 }
 
@@ -38,7 +37,7 @@ const addControlButton = () => {
   }
 
   const button = document.createElement('button')
-  button.classList.add('ytp-button', className.controlButton)
+  button.classList.add('ytp-button', 'ylcf-control-button')
   button.title = 'Flow messages'
   button.onclick = () => {
     browser.runtime.sendMessage({ id: 'controlButtonClicked' })
@@ -55,7 +54,7 @@ const addControlButton = () => {
 }
 
 const removeControlButton = () => {
-  const button = parent.document.querySelector(`.${className.controlButton}`)
+  const button = parent.document.querySelector('.ylcf-control-button')
   button && button.remove()
 }
 
@@ -66,9 +65,9 @@ const updateMenuButtons = () => {
       return
     }
     if (config.isActive()) {
-      button.classList.add(className.menuButtonActive)
+      button.classList.add('ylcf-active-menu-button')
     } else {
-      button.classList.remove(className.menuButtonActive)
+      button.classList.remove('ylcf-active-menu-button')
     }
   }
 }
@@ -90,7 +89,7 @@ const addMenuButtons = () => {
     iconButton.classList.add(
       'yt-live-chat-header-renderer',
       'style-scope',
-      className.menuButton,
+      'ylcf-menu-button',
       config.className
     )
     iconButton.title = config.title
@@ -159,10 +158,10 @@ const moveChatInputControl = () => {
     }
   })
   input.addEventListener('focus', () => {
-    parent.document.body.classList.add(className.focused)
+    parent.document.body.classList.add('ylcf-focused-input')
   })
   input.addEventListener('blur', () => {
-    parent.document.body.classList.remove(className.focused)
+    parent.document.body.classList.remove('ylcf-focused-input')
   })
   parent.window.addEventListener('keydown', (e) => {
     if (e.keyCode === 13) {
@@ -177,13 +176,13 @@ const moveChatInputControl = () => {
     input.focus()
   })
   const description = document.createElement('div')
-  description.classList.add(className.description)
+  description.classList.add('ylcf-description')
   description.append(button)
   buttons.parentElement?.insertBefore(description, buttons)
 
   // add controls
   const controls = document.createElement('div')
-  controls.classList.add(className.controller)
+  controls.classList.add('ylcf-controller')
   controls.style.left = `${leftControls.offsetWidth}px`
   controls.style.right = `${rightControls.offsetWidth}px`
   controls.append(top)
@@ -205,9 +204,9 @@ const moveChatInputControl = () => {
   const controlsObserver = new ResizeObserver((entries) => {
     const [entry] = entries
     if (entry.contentRect.width < 512) {
-      parent.document.body.classList.add(className.small)
+      parent.document.body.classList.add('ylcf-small-input')
     } else {
-      parent.document.body.classList.remove(className.small)
+      parent.document.body.classList.remove('ylcf-small-input')
     }
   })
   controlsObserver.observe(controls)
@@ -217,11 +216,11 @@ const moveChatInputControl = () => {
     return
   }
 
-  parent.document.body.classList.add(className.grow)
+  parent.document.body.classList.add('ylcf-grow-input')
 }
 
 const removeChatInputControl = () => {
-  const button = parent.document.querySelector(`.${className.controller}`)
+  const button = parent.document.querySelector('ylcf-controller')
   button && button.remove()
 }
 
@@ -250,7 +249,7 @@ browser.runtime.onMessage.addListener((message) => {
   const { id, data } = message
   switch (id) {
     case 'cssInjected':
-      parent.document.body.classList.add(className.injected)
+      parent.document.body.classList.add('ylcf-css-injected')
       break
     case 'enabledChanged':
       controller.enabled = data.enabled
@@ -268,7 +267,7 @@ browser.runtime.onMessage.addListener((message) => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const needCSSInject = !parent.document.body.classList.contains(
-    className.injected
+    'ylcf-css-injected'
   )
   const data = await browser.runtime.sendMessage({
     id: 'contentLoaded',

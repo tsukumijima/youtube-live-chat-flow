@@ -1,4 +1,3 @@
-import className from '~/constants/class-name'
 import error from '~/assets/error.svg'
 import Filter from '~/models/filter'
 import Settings from '~/models/settings'
@@ -90,13 +89,13 @@ export default class FlowController {
       return
     }
 
-    const infoIcon = element.querySelector(`.${className.infoIcon}`)
+    const infoIcon = element.querySelector('.ylcf-info-icon')
     infoIcon && infoIcon.remove()
 
     const reason = this.filterMessage(message, this.settings)
     if (reason) {
       const div = document.createElement('div')
-      div.classList.add(className.infoIcon)
+      div.classList.add('ylcf-info-icon')
       div.style.marginTop = '4px'
       div.style.marginRight = '8px'
       div.style.cursor = 'pointer'
@@ -188,7 +187,7 @@ export default class FlowController {
       return null
     }
 
-    element.classList.add(className.message)
+    element.classList.add('ylcf-flow-message')
 
     return element
   }
@@ -392,7 +391,7 @@ export default class FlowController {
   }
 
   clear() {
-    parent.document.querySelectorAll(`.${className.message}`).forEach((e) => {
+    parent.document.querySelectorAll('.ylcf-flow-message').forEach((e) => {
       e.remove()
     })
   }

@@ -2,20 +2,13 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "esnext",
-    "lib": [
-      "esnext",
-      "esnext.asynciterable",
-      "dom"
-    ],
     "sourceMap": true,
     "strict": true,
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
-      "@/*": ["./src/*"],
-      "~~/*": ["./*"],
-      "@@/*": ["./*"]
+      "~~/*": ["./*"]
     },
     "types": [
       "vuetify"
