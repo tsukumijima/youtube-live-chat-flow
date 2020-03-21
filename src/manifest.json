@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "icons": {
-    "128": "assets/icon.png"
+    "128": "icon.png"
   },
   "background": {
     "scripts": ["background.js"]
@@ -15,10 +15,10 @@
     }
   ],
   "page_action": {
-    "default_icon": "assets/icon.png"
+    "default_icon": "icon.png"
   },
   "options_ui": {
-    "page": "assets/options.html",
+    "page": "options.html",
     "open_in_tab": false
   },
   "permissions": [

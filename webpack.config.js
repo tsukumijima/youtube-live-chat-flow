@@ -15,7 +15,7 @@ module.exports = {
   output: {
     path: `${__dirname}/app/`,
     filename: '[name].js',
-    publicPath: '../'
+    publicPath: './'
   },
   module: {
     rules: [
@@ -44,7 +44,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(jpg|gif|png|woff|woff2|eot|ttf)$/,
+        test: /\.(css|jpg|gif|png|woff|woff2|eot|ttf)$/,
         loader: 'file-loader',
         options: {
           name: 'assets/[name].[ext]'
@@ -58,6 +58,7 @@ module.exports = {
   },
   plugins: [
     new CopyWebpackPlugin([
+      'icon.png',
       {
         from: 'manifest.json',
         transform: function(content) {
@@ -73,8 +74,8 @@ module.exports = {
       }
     ]),
     new HtmlWebpackPlugin({
-      template: './assets/options.html',
-      filename: './assets/options.html',
+      template: './options.html',
+      filename: './options.html',
       chunks: ['options']
     }),
     new VueLoaderPlugin(),

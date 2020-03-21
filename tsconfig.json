@@ -2,32 +2,20 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "esnext",
-    "moduleResolution": "node",
-    "lib": [
-      "esnext",
-      "esnext.asynciterable",
-      "dom"
-    ],
-    "esModuleInterop": true,
-    "allowJs": false,
     "sourceMap": true,
     "strict": true,
-    "noEmit": false,
+    "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
-      "@/*": ["./src/*"],
-      "~~/*": ["./*"],
-      "@@/*": ["./*"]
+      "~~/*": ["./*"]
     },
-    "typeRoots": [
-      "node_modules/@types",
-      "src/@types"
-    ],
     "types": [
       "vuetify"
     ],
-    "experimentalDecorators": true
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["node_modules"]
+  "include": ["src/**/*"]
 }
