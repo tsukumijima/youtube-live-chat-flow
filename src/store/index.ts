@@ -21,20 +21,20 @@ const vuexPersist = new VuexPersistence({
 
     return {
       ...state,
-      __storageReady: true
+      __storageReady: true,
     }
   },
   saveState: async (key, state, storage) => {
     const json = JSON.stringify(state)
     await storage?.set({ [key]: json })
-  }
+  },
 })
 
 const createStore = () =>
   new Vuex.Store({
     state: {},
     modules: {
-      settings
+      settings,
     },
     plugins: [
       vuexPersist.plugin,
@@ -42,8 +42,8 @@ const createStore = () =>
         store.subscribe(() => {
           browser.runtime.sendMessage({ id: 'settingsChanged' })
         })
-      }
-    ]
+      },
+    ],
   })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

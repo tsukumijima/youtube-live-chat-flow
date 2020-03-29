@@ -54,14 +54,14 @@ const toggleEnabled = async (tabId: number) => {
   initialState.enabled = enabled
   tabStates = {
     ...tabStates,
-    [tabId]: { ...(tabStates[tabId] ?? {}), enabled }
+    [tabId]: { ...(tabStates[tabId] ?? {}), enabled },
   }
 
   await setIcon(tabId)
 
   await browser.tabs.sendMessage(tabId, {
     id: 'enabledChanged',
-    data: { enabled }
+    data: { enabled },
   })
 }
 
@@ -70,14 +70,14 @@ const toggleFollowing = async (tabId: number) => {
   initialState.following = following
   tabStates = {
     ...tabStates,
-    [tabId]: { ...(tabStates[tabId] ?? {}), following }
+    [tabId]: { ...(tabStates[tabId] ?? {}), following },
   }
 
   await setIcon(tabId)
 
   await browser.tabs.sendMessage(tabId, {
     id: 'followingChanged',
-    data: { following }
+    data: { following },
   })
 }
 
@@ -89,7 +89,7 @@ const settingsChanged = async () => {
       tab.id &&
         (await browser.tabs.sendMessage(tab.id, {
           id: 'settingsChanged',
-          data: { settings }
+          data: { settings },
         }))
     } catch (e) {} // eslint-disable-line no-empty
   }

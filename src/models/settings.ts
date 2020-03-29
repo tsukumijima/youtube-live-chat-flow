@@ -1,5 +1,3 @@
-import Filter from '~/models/filter'
-
 export default interface Settings {
   color: string
   avatar: boolean
@@ -22,11 +20,10 @@ export default interface Settings {
   opacity: string
   speed: string
   displays: string
-  rows: string
+  lines: string
   stackDirection: string
   overflow: string
   extendedStyle: string
-  filters: Filter[]
   bottomChatInputEnabled: boolean
   growBottomChatInputEnabled: boolean
 }

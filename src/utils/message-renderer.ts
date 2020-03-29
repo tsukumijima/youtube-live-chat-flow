@@ -21,9 +21,7 @@ const fixContainedImageHeight = (element: Element, height: number) => {
 
 const getOutlineStyle = (fontColor: string, height: number) => {
   const n = ((height * 0.8) / 48).toFixed(2)
-  const c = Color(fontColor)
-    .darken(0.6)
-    .hex()
+  const c = Color(fontColor).darken(0.6).hex()
   return `
           text-shadow:
             -${n}px -${n}px 0 ${c},
@@ -78,7 +76,7 @@ const renderOneLineMessage = ({
   avatarUrl,
   fontColor,
   fontStyle,
-  height
+  height,
 }: {
   html?: string
   author?: string
@@ -116,7 +114,7 @@ const renderTwoLineMessage = ({
   avatarUrl,
   fontColor,
   fontStyle,
-  height
+  height,
 }: {
   html?: string
   author?: string
@@ -160,7 +158,7 @@ const renderCardMessage = ({
   fontColor,
   fontStyle,
   backgroundColor,
-  height
+  height,
 }: {
   html?: string
   author?: string
@@ -221,7 +219,7 @@ const renderSticker = ({
   fontColor,
   fontStyle,
   backgroundColor,
-  height
+  height,
 }: {
   stickerUrl?: string
   author?: string
@@ -300,7 +298,7 @@ export const render = (
     ...params,
     fontStyle:
       params.fontStyle +
-      getOutlineStyle(params.fontColor ?? 'white', params.height)
+      getOutlineStyle(params.fontColor ?? 'white', params.height),
   }
   switch (template) {
     case 'one-line-message':

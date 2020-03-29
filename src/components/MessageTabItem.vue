@@ -231,9 +231,9 @@
         min="0"
       />
       <v-text-field
-        v-model="rows"
-        :placeholder="placeholder.rows"
-        label="Max Rows"
+        v-model="lines"
+        :placeholder="placeholder.lines"
+        label="Lines"
         type="number"
         min="1"
         max="20"
@@ -268,21 +268,21 @@ export default class MessageTabItem extends Vue {
     opacity: '0.8',
     speed: '5',
     displays: '0',
-    rows: '12',
-    extendedStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;'
+    lines: '12',
+    extendedStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;',
   }
   styles = [
     { text: '1 line (without author)', value: 'one-line-without-author' },
     { text: '1 line (with author)', value: 'one-line-with-author' },
-    { text: '2 lines (with author)', value: 'two-line' }
+    { text: '2 lines (with author)', value: 'two-line' },
   ]
   stackDirections = [
     { text: 'Top to Bottom', value: 'top_to_bottom' },
-    { text: 'Bottom to Top', value: 'bottom_to_top' }
+    { text: 'Bottom to Top', value: 'bottom_to_top' },
   ]
   overflows = [
     { text: 'Hidden', value: 'hidden' },
-    { text: 'Overlay', value: 'overlay' }
+    { text: 'Overlay', value: 'overlay' },
   ]
 
   get color() {
@@ -332,7 +332,7 @@ export default class MessageTabItem extends Vue {
   }
   set moderatorColor(value) {
     settingsStore.setModeratorColor({
-      moderatorColor: value
+      moderatorColor: value,
     })
   }
 
@@ -341,7 +341,7 @@ export default class MessageTabItem extends Vue {
   }
   set moderatorAvatar(value) {
     settingsStore.setModeratorAvatar({
-      moderatorAvatar: value
+      moderatorAvatar: value,
     })
   }
 
@@ -399,7 +399,7 @@ export default class MessageTabItem extends Vue {
   }
   set superChatHidden(value) {
     settingsStore.setSuperChatHidden({
-      superChatHidden: value
+      superChatHidden: value,
     })
   }
 
@@ -408,7 +408,7 @@ export default class MessageTabItem extends Vue {
   }
   set superStickerHidden(value) {
     settingsStore.setSuperStickerHidden({
-      superStickerHidden: value
+      superStickerHidden: value,
     })
   }
 
@@ -417,7 +417,7 @@ export default class MessageTabItem extends Vue {
   }
   set membershipHidden(value) {
     settingsStore.setMembershipHidden({
-      membershipHidden: value
+      membershipHidden: value,
     })
   }
 
@@ -442,11 +442,11 @@ export default class MessageTabItem extends Vue {
     settingsStore.setDisplays({ displays: value })
   }
 
-  get rows() {
-    return settingsStore.rows
+  get lines() {
+    return settingsStore.lines
   }
-  set rows(value) {
-    settingsStore.setRows({ rows: value })
+  set lines(value) {
+    settingsStore.setLines({ lines: value })
   }
 
   get stackDirection() {
@@ -468,7 +468,7 @@ export default class MessageTabItem extends Vue {
   }
   set extendedStyle(value) {
     settingsStore.setExtendedStyle({
-      extendedStyle: value
+      extendedStyle: value,
     })
   }
 

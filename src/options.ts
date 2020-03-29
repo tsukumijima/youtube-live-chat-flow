@@ -6,5 +6,5 @@ new Vue({
   el: '#app',
   components: { Options },
   template: '<Options />',
-  vuetify
+  vuetify,
 })

@@ -1,5 +1,4 @@
 import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
-import Filter from '~/models/filter'
 
 const initialState = {
   color: '#ffffff',
@@ -23,10 +22,10 @@ const initialState = {
   opacity: '0.8',
   speed: '5',
   displays: '0',
-  rows: '12',
+  lines: '12',
   stackDirection: 'top_to_bottom',
   overflow: 'overlay',
-  extendedStyle: ''
+  extendedStyle: '',
 }
 
 @Module({ name: 'settings' })
@@ -52,19 +51,12 @@ export default class SettingsModule extends VuexModule {
   opacity = initialState.opacity
   speed = initialState.speed
   displays = initialState.displays
-  rows = initialState.rows
+  lines = initialState.lines
   stackDirection = initialState.stackDirection
   overflow = initialState.overflow
   extendedStyle = initialState.extendedStyle
-  filters: Filter[] = []
   bottomChatInputEnabled = true
   growBottomChatInputEnabled = false
-
-  get getFilter() {
-    return ({ id }: { id: number }) => {
-      return this.filters.find((filter) => filter.id === id)
-    }
-  }
 
   @Mutation
   setColor({ color }: { color: string }) {
@@ -132,7 +124,7 @@ export default class SettingsModule extends VuexModule {
   }
   @Mutation
   setSuperStickerHidden({
-    superStickerHidden
+    superStickerHidden,
   }: {
     superStickerHidden: boolean
   }) {
@@ -155,8 +147,8 @@ export default class SettingsModule extends VuexModule {
     this.displays = displays
   }
   @Mutation
-  setRows({ rows }: { rows: string }) {
-    this.rows = rows
+  setLines({ lines }: { lines: string }) {
+    this.lines = lines
   }
   @Mutation
   setStackDirection({ stackDirection }: { stackDirection: string }) {
@@ -177,40 +169,8 @@ export default class SettingsModule extends VuexModule {
     }
   }
   @Mutation
-  addFilter(params: Partial<Filter>) {
-    const id =
-      Math.max.apply(null, [0, ...this.filters.map((item) => item.id)]) + 1
-
-    this.filters = [
-      ...this.filters,
-      {
-        subject: '',
-        keyword: '',
-        regExp: false,
-        ...params,
-        id: id + 1
-      }
-    ]
-  }
-  @Mutation
-  removeFilter({ id }: { id: number }) {
-    this.filters = this.filters.filter((item) => item.id !== id)
-  }
-  @Mutation
-  setFilter({ id, ...params }: Partial<Filter>) {
-    this.filters = this.filters.map((item) => {
-      if (item.id !== id) {
-        return item
-      }
-      return {
-        ...item,
-        ...params
-      }
-    })
-  }
-  @Mutation
   setBottomChatInputEnabled({
-    bottomChatInputEnabled
+    bottomChatInputEnabled,
   }: {
     bottomChatInputEnabled: boolean
   }) {
@@ -218,7 +178,7 @@ export default class SettingsModule extends VuexModule {
   }
   @Mutation
   setGrowBottomChatInputEnabled({
-    growBottomChatInputEnabled
+    growBottomChatInputEnabled,
   }: {
     growBottomChatInputEnabled: boolean
   }) {

@@ -1,5 +1,3 @@
-import error from '~/assets/error.svg'
-import Filter from '~/models/filter'
 import Settings from '~/models/settings'
 import Message from '~/models/message'
 import { querySelectorAsync, waitAllImagesLoaded } from './dom-helper'
@@ -80,8 +78,12 @@ export default class FlowController {
       return
     }
 
-    const rows = Number(this.settings.rows)
-    const height = video.offsetHeight / (rows + 0.2)
+    const lines = Number(this.settings.lines)
+    const height = video.offsetHeight / (lines + 0.2)
+
+    if (element.classList.contains('ylcf-deleted-message')) {
+      return
+    }
 
     const message = await parse(element)
     if (!message) {
@@ -90,22 +92,6 @@ export default class FlowController {
 
     const infoIcon = element.querySelector('.ylcf-info-icon')
     infoIcon && infoIcon.remove()
-
-    const reason = this.filterMessage(message, this.settings)
-    if (reason) {
-      const div = document.createElement('div')
-      div.classList.add('ylcf-info-icon')
-      div.style.marginTop = '4px'
-      div.style.marginRight = '8px'
-      div.style.cursor = 'pointer'
-      div.title = reason
-      div.innerHTML = error
-      const svg = div.querySelector('svg') as SVGElement
-      svg.style.fill = 'var(--yt-live-chat-secondary-text-color)'
-      svg.style.width = '16px'
-      element.prepend(div)
-      return
-    }
 
     const displays = Number(this.settings.displays)
     const messages = this.getMessages()
@@ -128,14 +114,14 @@ export default class FlowController {
     const timeline = this.createTimeline(me, containerWidth, this.settings)
 
     const index = this.getIndex(messageRows, timeline, this.settings)
-    if (index + messageRows > rows && this.settings.overflow === 'hidden') {
+    if (index + messageRows > lines && this.settings.overflow === 'hidden') {
       me.remove()
       return
     }
     this.pushTimeline(timeline, index, messageRows)
 
-    const z = Math.floor(index / rows)
-    const y = (index % rows) + (z % 2 > 0 ? 0.5 : 0)
+    const z = Math.floor(index / lines)
+    const y = (index % lines) + (z % 2 > 0 ? 0.5 : 0)
     const opacity = Number(this.settings.opacity) ** (z + 1)
     const top =
       this.settings.stackDirection === 'bottom_to_top'
@@ -169,7 +155,7 @@ export default class FlowController {
       avatarUrl: ms.avatar ? message.avatarUrl : undefined,
       fontColor: ms.fontColor,
       fontStyle: ms.fontStyle,
-      height
+      height,
     })
 
     if (!element) {
@@ -181,41 +167,6 @@ export default class FlowController {
     return element
   }
 
-  private filterMessage(message: Message, settings: Settings) {
-    return settings.filters.reduce((carry: string, filter: Filter) => {
-      if (carry) {
-        return carry
-      }
-
-      const { subject, keyword, regExp } = filter
-      if (!subject || !keyword) {
-        return carry
-      }
-
-      let reg
-      try {
-        const pattern = regExp
-          ? keyword
-          : keyword.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
-
-        reg = new RegExp(`(${pattern})`, 'i')
-      } catch (e) {
-        return carry
-      }
-
-      const text = subject === 'author' ? message.author : message.message
-      if (!text || !reg.test(text)) {
-        return carry
-      }
-
-      let reason = `Match keyword "${keyword}" in ${subject}`
-      if (regExp) {
-        reason += ' with regexp'
-      }
-
-      return reason
-    }, '')
-  }
   private createTimeline(
     element: HTMLElement,
     containerWidth: number,
@@ -231,7 +182,7 @@ export default class FlowController {
       willAppear: n,
       didAppear: n + t,
       willDisappear: n + millis - t,
-      didDisappear: n + millis
+      didDisappear: n + millis,
     }
   }
 
@@ -243,16 +194,16 @@ export default class FlowController {
     const duration = Number(settings.speed) * 1000
     const keyframes = [
       { transform: `translate(${containerWidth}px, 0px)` },
-      { transform: `translate(-${element.offsetWidth}px, 0px)` }
+      { transform: `translate(-${element.offsetWidth}px, 0px)` },
     ]
     const animation = element.animate(keyframes, { duration })
     animation.pause()
     return animation
   }
 
-  private isDeniedIndex(index: number, rows: number) {
-    // e.g. if rows value is "12", denied index is "23", "47", "71" ...
-    return index % (rows * 2) === rows * 2 - 1
+  private isDeniedIndex(index: number, lines: number) {
+    // e.g. if lines value is "12", denied index is "23", "47", "71" ...
+    return index % (lines * 2) === lines * 2 - 1
   }
 
   private getMessages() {
@@ -266,16 +217,16 @@ export default class FlowController {
     timeline: Timeline,
     settings: Settings
   ) {
-    const rows = Number(settings.rows)
+    const lines = Number(settings.lines)
     let index = this.timelines.findIndex((_, i, timelines) => {
-      const mod = (i + messageRows) % rows
+      const mod = (i + messageRows) % lines
       if (mod > 0 && mod < messageRows) {
         return false
       }
       return Array(messageRows)
         .fill(1)
         .every((_, j) => {
-          if (this.isDeniedIndex(i + j, rows)) {
+          if (this.isDeniedIndex(i + j, lines)) {
             return false
           }
 
@@ -297,11 +248,11 @@ export default class FlowController {
     })
     if (index === -1) {
       index = this.timelines.length
-      const mod = (index + messageRows) % rows
+      const mod = (index + messageRows) % lines
       if (mod > 0 && mod < messageRows) {
         index += messageRows - mod
       }
-      if (this.isDeniedIndex(index + messageRows - 1, rows)) {
+      if (this.isDeniedIndex(index + messageRows - 1, lines)) {
         index += messageRows
       }
     }

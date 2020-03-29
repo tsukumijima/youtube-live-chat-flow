@@ -27,7 +27,7 @@ export default class OthersTabItem extends Vue {
   }
   set bottomChatInputEnabled(value) {
     settingsStore.setBottomChatInputEnabled({
-      bottomChatInputEnabled: value
+      bottomChatInputEnabled: value,
     })
   }
   get growBottomChatInputEnabled() {
@@ -35,7 +35,7 @@ export default class OthersTabItem extends Vue {
   }
   set growBottomChatInputEnabled(value) {
     settingsStore.setGrowBottomChatInputEnabled({
-      growBottomChatInputEnabled: value
+      growBottomChatInputEnabled: value,
     })
   }
 }

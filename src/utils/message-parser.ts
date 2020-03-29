@@ -27,7 +27,7 @@ const parseTextMessage = async (el: HTMLElement) => {
   return {
     ...params,
     html,
-    messageType: 'text-message'
+    messageType: 'text-message',
   }
 }
 
@@ -45,7 +45,7 @@ const parsePaidMessage = async (el: HTMLElement) => {
     html,
     backgroundColor,
     purchaseAmount,
-    messageType: 'paid-message'
+    messageType: 'paid-message',
   }
 }
 
@@ -67,7 +67,7 @@ const parsePaidSticker = async (el: HTMLElement) => {
     stickerUrl,
     backgroundColor,
     purchaseAmount,
-    messageType: 'paid-sticker'
+    messageType: 'paid-sticker',
   }
 }
 
@@ -84,7 +84,7 @@ const parseMembershipItem = async (el: HTMLElement) => {
     ...params,
     html: detailText,
     backgroundColor,
-    messageType: 'membership-item'
+    messageType: 'membership-item',
   }
 }
 

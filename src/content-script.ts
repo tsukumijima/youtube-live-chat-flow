@@ -12,15 +12,15 @@ const menuButtonConfigs = [
     title: 'Follow New Messages',
     className: 'ylcf-follow-button',
     onclick: () => browser.runtime.sendMessage({ id: 'menuButtonClicked' }),
-    isActive: () => controller.following
+    isActive: () => controller.following,
   },
   {
     svg: refresh,
     title: 'Reload Frame',
     className: 'ylcf-reload-button',
     onclick: () => location.reload(),
-    isActive: () => false
-  }
+    isActive: () => false,
+  },
 ]
 
 const updateControlButton = () => {
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   )
   const data = await browser.runtime.sendMessage({
     id: 'contentLoaded',
-    data: { needCSSInject }
+    data: { needCSSInject },
   })
 
   controller.enabled = data.enabled
