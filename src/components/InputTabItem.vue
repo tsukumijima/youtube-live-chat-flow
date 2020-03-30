@@ -5,6 +5,7 @@
       label="Bottom Chat Input"
       hint="Move the chat input to the bottom controls on video (Page reload required)"
       persistent-hint
+      dense
     />
     <v-switch
       v-model="growBottomChatInputEnabled"
@@ -12,6 +13,7 @@
       label="Grow Bottom Chat Input"
       hint="Grow the bottom chat input on focus (Page reload required)"
       persistent-hint
+      dense
     />
   </v-card>
 </template>
