@@ -266,10 +266,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   controller.enabled = data.enabled
   controller.following = data.following
   controller.settings = data.settings
-  await controller.observe()
   addVideoEventListener()
   addControlButton()
   addMenuButtons()
+  await controller.observe()
 
   window.addEventListener('unload', () => {
     controller.clear()

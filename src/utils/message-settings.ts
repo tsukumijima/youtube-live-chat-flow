@@ -1,4 +1,4 @@
-import Settings from '~/models/settings'
+import Settings, { AuthorType } from '~/models/settings'
 import Message from '~/models/message'
 
 export default class MessageSettings {
@@ -44,24 +44,18 @@ export default class MessageSettings {
   }
 
   private get style() {
-    switch (this.authorType) {
-      case 'you':
-        return this.settings.yourStyle
-      case 'owner':
-        return this.settings.ownerStyle
-      case 'moderator':
-        return this.settings.moderatorStyle
-      case 'member':
-        return this.settings.memberStyle
-      default:
-        return this.settings.style
-    }
+    const authorType =
+      this.authorType &&
+      ['guest', 'member', 'moderator', 'owner', 'you'].includes(this.authorType)
+        ? this.authorType
+        : 'guest'
+    return this.settings.styles[authorType as AuthorType]
   }
 
   get template() {
     switch (this.message.messageType) {
       case 'text-message':
-        return this.style === 'two-line'
+        return this.style.template === 'two-line'
           ? 'two-line-message'
           : 'one-line-message'
       case 'paid-message':
@@ -76,7 +70,7 @@ export default class MessageSettings {
   get author() {
     switch (this.message.messageType) {
       case 'text-message':
-        return this.style !== 'one-line-without-author'
+        return this.style.template !== 'one-line-without-author'
       case 'paid-message':
         return true
       case 'paid-sticker':
@@ -87,39 +81,11 @@ export default class MessageSettings {
   }
 
   get avatar() {
-    if (this.paid) {
-      return true
-    }
-    switch (this.authorType) {
-      case 'you':
-        return this.settings.yourAvatar
-      case 'owner':
-        return this.settings.ownerAvatar
-      case 'moderator':
-        return this.settings.moderatorAvatar
-      case 'member':
-        return this.settings.memberAvatar
-      default:
-        return this.settings.avatar
-    }
+    return this.paid ? true : this.style.avatar
   }
 
   get fontColor() {
-    if (this.paid) {
-      return '#ffffff'
-    }
-    switch (this.authorType) {
-      case 'you':
-        return this.settings.yourColor
-      case 'owner':
-        return this.settings.ownerColor
-      case 'moderator':
-        return this.settings.moderatorColor
-      case 'member':
-        return this.settings.memberColor
-      default:
-        return this.settings.color
-    }
+    return this.paid ? '#ffffff' : this.style.color
   }
 
   get fontStyle() {

@@ -1,21 +1,37 @@
 import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
+import Setting, { AuthorType, Style } from '~/models/settings'
 
-const initialState = {
-  color: '#ffffff',
-  avatar: false,
-  style: 'one-line-without-author',
-  memberColor: '#66ff66',
-  memberAvatar: true,
-  memberStyle: 'one-line-with-author',
-  moderatorColor: '#6666ff',
-  moderatorAvatar: true,
-  moderatorStyle: 'two-line',
-  ownerColor: '#ffff66',
-  ownerAvatar: true,
-  ownerStyle: 'two-line',
-  yourColor: '#ff6666',
-  yourAvatar: true,
-  yourStyle: 'one-line-with-author',
+const initialState: Omit<
+  Setting,
+  'bottomChatInputEnabled' | 'growBottomChatInputEnabled'
+> = {
+  styles: {
+    guest: {
+      avatar: false,
+      color: '#ffffff',
+      template: 'one-line-without-author',
+    },
+    member: {
+      avatar: true,
+      color: '#66ff66',
+      template: 'one-line-with-author',
+    },
+    moderator: {
+      avatar: true,
+      color: '#6666ff',
+      template: 'two-line',
+    },
+    owner: {
+      avatar: true,
+      color: '#ffff66',
+      template: 'two-line',
+    },
+    you: {
+      avatar: true,
+      color: '#ff6666',
+      template: 'one-line-with-author',
+    },
+  },
   superChatHidden: false,
   superStickerHidden: false,
   membershipHidden: false,
@@ -30,21 +46,7 @@ const initialState = {
 
 @Module({ name: 'settings' })
 export default class SettingsModule extends VuexModule {
-  color = initialState.color
-  avatar = initialState.avatar
-  style = initialState.style
-  memberColor = initialState.memberColor
-  memberAvatar = initialState.memberAvatar
-  memberStyle = initialState.memberStyle
-  moderatorColor = initialState.moderatorColor
-  moderatorAvatar = initialState.moderatorAvatar
-  moderatorStyle = initialState.moderatorStyle
-  ownerColor = initialState.ownerColor
-  ownerAvatar = initialState.ownerAvatar
-  ownerStyle = initialState.ownerStyle
-  yourColor = initialState.yourColor
-  yourAvatar = initialState.yourAvatar
-  yourStyle = initialState.yourStyle
+  styles = initialState.styles
   superChatHidden = initialState.superChatHidden
   superStickerHidden = initialState.superStickerHidden
   membershipHidden = initialState.membershipHidden
@@ -59,64 +61,17 @@ export default class SettingsModule extends VuexModule {
   growBottomChatInputEnabled = false
 
   @Mutation
-  setColor({ color }: { color: string }) {
-    this.color = color
-  }
-  @Mutation
-  setAvatar({ avatar }: { avatar: boolean }) {
-    this.avatar = avatar
-  }
-  @Mutation
-  setStyle({ style }: { style: string }) {
-    this.style = style
-  }
-  @Mutation
-  setMemberColor({ memberColor }: { memberColor: string }) {
-    this.memberColor = memberColor
-  }
-  @Mutation
-  setMemberAvatar({ memberAvatar }: { memberAvatar: boolean }) {
-    this.memberAvatar = memberAvatar
-  }
-  @Mutation
-  setMemberStyle({ memberStyle }: { memberStyle: string }) {
-    this.memberStyle = memberStyle
-  }
-  @Mutation
-  setModeratorColor({ moderatorColor }: { moderatorColor: string }) {
-    this.moderatorColor = moderatorColor
-  }
-  @Mutation
-  setModeratorAvatar({ moderatorAvatar }: { moderatorAvatar: boolean }) {
-    this.moderatorAvatar = moderatorAvatar
-  }
-  @Mutation
-  setModeratorStyle({ moderatorStyle }: { moderatorStyle: string }) {
-    this.moderatorStyle = moderatorStyle
-  }
-  @Mutation
-  setOwnerColor({ ownerColor }: { ownerColor: string }) {
-    this.ownerColor = ownerColor
-  }
-  @Mutation
-  setOwnerAvatar({ ownerAvatar }: { ownerAvatar: boolean }) {
-    this.ownerAvatar = ownerAvatar
-  }
-  @Mutation
-  setOwnerStyle({ ownerStyle }: { ownerStyle: string }) {
-    this.ownerStyle = ownerStyle
-  }
-  @Mutation
-  setYourColor({ yourColor }: { yourColor: string }) {
-    this.yourColor = yourColor
-  }
-  @Mutation
-  setYourAvatar({ yourAvatar }: { yourAvatar: boolean }) {
-    this.yourAvatar = yourAvatar
-  }
-  @Mutation
-  setYourStyle({ yourStyle }: { yourStyle: string }) {
-    this.yourStyle = yourStyle
+  updateStyle({
+    authorType,
+    ...params
+  }: { authorType: AuthorType } & Partial<Style>) {
+    this.styles = {
+      ...this.styles,
+      [authorType]: {
+        ...this.styles[authorType],
+        ...params,
+      },
+    }
   }
   @Mutation
   setSuperChatHidden({ superChatHidden }: { superChatHidden: boolean }) {

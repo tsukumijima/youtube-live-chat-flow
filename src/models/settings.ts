@@ -1,19 +1,18 @@
-export default interface Settings {
-  color: string
+export type AuthorType = 'guest' | 'member' | 'moderator' | 'owner' | 'you'
+
+export type Template =
+  | 'one-line-without-author'
+  | 'one-line-with-author'
+  | 'two-line'
+
+export type Style = {
   avatar: boolean
-  style: string
-  memberColor: string
-  memberAvatar: boolean
-  memberStyle: string
-  moderatorColor: string
-  moderatorAvatar: boolean
-  moderatorStyle: string
-  ownerColor: string
-  ownerAvatar: boolean
-  ownerStyle: string
-  yourColor: string
-  yourAvatar: boolean
-  yourStyle: string
+  color: string
+  template: Template
+}
+
+export default interface Settings {
+  styles: { [authorType in AuthorType]: Style }
   superChatHidden: boolean
   superStickerHidden: boolean
   membershipHidden: boolean

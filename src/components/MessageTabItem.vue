@@ -1,161 +1,7 @@
 <template>
-  <v-card class="pa-5" flat>
-    <v-subheader class="pl-0">Style</v-subheader>
-    <v-row align="center">
-      <v-col cols="3" class="py-0"><v-subheader>Guest</v-subheader></v-col>
-      <v-col cols="4" class="py-0">
-        <v-row class="align-center ma-0">
-          <v-btn
-            slot="activator"
-            :color="avatar ? 'primary' : 'grey darken-1'"
-            text
-            icon
-            @click="avatar = !avatar"
-          >
-            <v-icon>mdi-account-circle</v-icon>
-          </v-btn>
-          <v-text-field
-            v-model="color"
-            class="color mt-0 ml-3 pt-0"
-            type="color"
-            hide-details
-          />
-        </v-row>
-      </v-col>
-      <v-col cols="5" class="py-0">
-        <v-select
-          v-model="style"
-          :items="styles"
-          dense
-          hide-details
-          class="mt-0 pt-0 body-2"
-        />
-      </v-col>
-    </v-row>
-    <v-row align="center">
-      <v-col cols="3" class="py-0"><v-subheader>Member</v-subheader></v-col>
-      <v-col cols="4" class="py-0">
-        <v-row class="align-center ma-0">
-          <v-btn
-            slot="activator"
-            :color="memberAvatar ? 'primary' : 'grey darken-1'"
-            text
-            icon
-            @click="memberAvatar = !memberAvatar"
-          >
-            <v-icon>mdi-account-circle</v-icon>
-          </v-btn>
-          <v-text-field
-            v-model="memberColor"
-            class="color mt-0 ml-3 pt-0"
-            type="color"
-            hide-details
-          />
-        </v-row>
-      </v-col>
-      <v-col cols="5" class="py-0">
-        <v-select
-          v-model="memberStyle"
-          :items="styles"
-          dense
-          hide-details
-          class="mt-0 pt-0 body-2"
-        />
-      </v-col>
-    </v-row>
-    <v-row align="center">
-      <v-col cols="3" class="py-0"><v-subheader>Moderator</v-subheader></v-col>
-      <v-col cols="4" class="py-0">
-        <v-row class="align-center ma-0">
-          <v-btn
-            slot="activator"
-            :color="moderatorAvatar ? 'primary' : 'grey darken-1'"
-            text
-            icon
-            @click="moderatorAvatar = !moderatorAvatar"
-          >
-            <v-icon>mdi-account-circle</v-icon>
-          </v-btn>
-          <v-text-field
-            v-model="moderatorColor"
-            class="color mt-0 ml-3 pt-0"
-            type="color"
-            hide-details
-          />
-        </v-row>
-      </v-col>
-      <v-col cols="5" class="py-0">
-        <v-select
-          v-model="moderatorStyle"
-          :items="styles"
-          dense
-          hide-details
-          class="mt-0 pt-0 body-2"
-        />
-      </v-col>
-    </v-row>
-    <v-row align="center">
-      <v-col cols="3" class="py-0"><v-subheader>Owner</v-subheader></v-col>
-      <v-col cols="4" class="py-0">
-        <v-row class="align-center ma-0">
-          <v-btn
-            slot="activator"
-            :color="ownerAvatar ? 'primary' : 'grey darken-1'"
-            text
-            icon
-            @click="ownerAvatar = !ownerAvatar"
-          >
-            <v-icon>mdi-account-circle</v-icon>
-          </v-btn>
-          <v-text-field
-            v-model="ownerColor"
-            class="color mt-0 ml-3 pt-0"
-            type="color"
-            hide-details
-          />
-        </v-row>
-      </v-col>
-      <v-col cols="5" class="py-0">
-        <v-select
-          v-model="ownerStyle"
-          :items="styles"
-          dense
-          hide-details
-          class="mt-0 pt-0 body-2"
-        />
-      </v-col>
-    </v-row>
-    <v-row align="center">
-      <v-col cols="3" class="py-0"><v-subheader>You</v-subheader></v-col>
-      <v-col cols="4" class="py-0">
-        <v-row class="align-center ma-0">
-          <v-btn
-            slot="activator"
-            :color="yourAvatar ? 'primary' : 'grey darken-1'"
-            text
-            icon
-            @click="yourAvatar = !yourAvatar"
-          >
-            <v-icon>mdi-account-circle</v-icon>
-          </v-btn>
-          <v-text-field
-            v-model="yourColor"
-            class="color mt-0 ml-3 pt-0"
-            type="color"
-            hide-details
-          />
-        </v-row>
-      </v-col>
-      <v-col cols="5" class="py-0">
-        <v-select
-          v-model="yourStyle"
-          :items="styles"
-          dense
-          hide-details
-          class="mt-0 pt-0 body-2"
-        />
-      </v-col>
-    </v-row>
+  <v-card class="" flat>
+    <v-subheader>Style</v-subheader>
+    <message-style-table />
     <v-subheader class="pl-0">Visibility</v-subheader>
     <v-row align="center">
       <v-col cols="3" class="py-0"><v-subheader>Super Chat</v-subheader></v-col>
@@ -260,9 +106,14 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import MessageStyleTable from '~/components/MessageStyleTable.vue'
 import { settingsStore } from '~/store'
 
-@Component
+@Component({
+  components: {
+    MessageStyleTable,
+  },
+})
 export default class MessageTabItem extends Vue {
   placeholder = {
     opacity: '0.8',
@@ -271,11 +122,6 @@ export default class MessageTabItem extends Vue {
     lines: '12',
     extendedStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;',
   }
-  styles = [
-    { text: '1 line (without author)', value: 'one-line-without-author' },
-    { text: '1 line (with author)', value: 'one-line-with-author' },
-    { text: '2 lines (with author)', value: 'two-line' },
-  ]
   stackDirections = [
     { text: 'Top to Bottom', value: 'top_to_bottom' },
     { text: 'Bottom to Top', value: 'bottom_to_top' },
@@ -284,115 +130,6 @@ export default class MessageTabItem extends Vue {
     { text: 'Hidden', value: 'hidden' },
     { text: 'Overlay', value: 'overlay' },
   ]
-
-  get color() {
-    return settingsStore.color
-  }
-  set color(value) {
-    settingsStore.setColor({ color: value })
-  }
-
-  get avatar() {
-    return settingsStore.avatar
-  }
-  set avatar(value) {
-    settingsStore.setAvatar({ avatar: value })
-  }
-
-  get style() {
-    return settingsStore.style
-  }
-  set style(value) {
-    settingsStore.setStyle({ style: value })
-  }
-
-  get memberColor() {
-    return settingsStore.memberColor
-  }
-  set memberColor(value) {
-    settingsStore.setMemberColor({ memberColor: value })
-  }
-
-  get memberAvatar() {
-    return settingsStore.memberAvatar
-  }
-  set memberAvatar(value) {
-    settingsStore.setMemberAvatar({ memberAvatar: value })
-  }
-
-  get memberStyle() {
-    return settingsStore.memberStyle
-  }
-  set memberStyle(value) {
-    settingsStore.setMemberStyle({ memberStyle: value })
-  }
-
-  get moderatorColor() {
-    return settingsStore.moderatorColor
-  }
-  set moderatorColor(value) {
-    settingsStore.setModeratorColor({
-      moderatorColor: value,
-    })
-  }
-
-  get moderatorAvatar() {
-    return settingsStore.moderatorAvatar
-  }
-  set moderatorAvatar(value) {
-    settingsStore.setModeratorAvatar({
-      moderatorAvatar: value,
-    })
-  }
-
-  get moderatorStyle() {
-    return settingsStore.moderatorStyle
-  }
-  set moderatorStyle(value) {
-    settingsStore.setModeratorStyle({ moderatorStyle: value })
-  }
-
-  get ownerColor() {
-    return settingsStore.ownerColor
-  }
-  set ownerColor(value) {
-    settingsStore.setOwnerColor({ ownerColor: value })
-  }
-
-  get ownerAvatar() {
-    return settingsStore.ownerAvatar
-  }
-  set ownerAvatar(value) {
-    settingsStore.setOwnerAvatar({ ownerAvatar: value })
-  }
-
-  get ownerStyle() {
-    return settingsStore.ownerStyle
-  }
-  set ownerStyle(value) {
-    settingsStore.setOwnerStyle({ ownerStyle: value })
-  }
-
-  get yourColor() {
-    return settingsStore.yourColor
-  }
-  set yourColor(value) {
-    settingsStore.setYourColor({ yourColor: value })
-  }
-
-  get yourAvatar() {
-    return settingsStore.yourAvatar
-  }
-  set yourAvatar(value) {
-    settingsStore.setYourAvatar({ yourAvatar: value })
-  }
-
-  get yourStyle() {
-    return settingsStore.yourStyle
-  }
-  set yourStyle(value) {
-    settingsStore.setYourStyle({ yourStyle: value })
-  }
 
   get superChatHidden() {
     return settingsStore.superChatHidden
