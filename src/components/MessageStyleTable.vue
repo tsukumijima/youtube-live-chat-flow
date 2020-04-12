@@ -21,7 +21,7 @@
               class="color mt-0 pt-0"
               type="color"
               hide-details
-              @input="setColor(authorType, $event.target.value)"
+              @input="(value) => setColor(authorType, value)"
             />
           </td>
           <td>
@@ -31,7 +31,7 @@
               dense
               hide-details
               class="mt-0 pt-0 body-2"
-              @input="setTemplate(authorType, $event.target.value)"
+              @input="(value) => setTemplate(authorType, value)"
             />
           </td>
         </tr>
@@ -46,7 +46,7 @@ import { AuthorType, Template } from '~/models/settings'
 import { settingsStore } from '~/store'
 
 @Component
-export default class MessageTabItem extends Vue {
+export default class MessageStyleTable extends Vue {
   authorTypes = ['guest', 'member', 'moderator', 'owner', 'you']
   templates = [
     { text: '1 line (without author)', value: 'one-line-without-author' },
@@ -77,6 +77,9 @@ export default class MessageTabItem extends Vue {
 </script>
 
 <style lang="scss" scoped>
+td:first-child {
+  width: 120px;
+}
 .color {
   width: 32px;
   ::v-deep {

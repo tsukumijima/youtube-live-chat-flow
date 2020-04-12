@@ -1,4 +1,5 @@
 export type AuthorType = 'guest' | 'member' | 'moderator' | 'owner' | 'you'
+export type MessageType = 'super-chat' | 'super-sticker' | 'membership'
 
 export type Template =
   | 'one-line-without-author'
@@ -13,16 +14,16 @@ export type Style = {
 
 export default interface Settings {
   styles: { [authorType in AuthorType]: Style }
-  superChatHidden: boolean
-  superStickerHidden: boolean
-  membershipHidden: boolean
-  opacity: string
-  speed: string
-  displays: string
-  lines: string
+  visibilities: MessageType[]
+  heightType: string
+  lines: number
+  lineHeight: number
+  opacity: number
+  extendedStyle: string
+  speed: number
+  displays: number
   stackDirection: string
   overflow: string
-  extendedStyle: string
   bottomChatInputEnabled: boolean
   growBottomChatInputEnabled: boolean
 }

@@ -78,8 +78,10 @@ export default class FlowController {
       return
     }
 
-    const lines = Number(this.settings.lines)
-    const height = video.offsetHeight / (lines + 0.2)
+    const [lines, height] = this.getLinesAndHeight(
+      video.offsetHeight,
+      this.settings
+    )
 
     if (element.classList.contains('ylcf-deleted-message')) {
       return
@@ -93,7 +95,7 @@ export default class FlowController {
     const infoIcon = element.querySelector('.ylcf-info-icon')
     infoIcon && infoIcon.remove()
 
-    const displays = Number(this.settings.displays)
+    const displays = this.settings.displays
     const messages = this.getMessages()
     if (displays > 0 && displays <= messages) {
       return
@@ -122,7 +124,7 @@ export default class FlowController {
 
     const z = Math.floor(index / lines)
     const y = (index % lines) + (z % 2 > 0 ? 0.5 : 0)
-    const opacity = Number(this.settings.opacity) ** (z + 1)
+    const opacity = this.settings.opacity ** (z + 1)
     const top =
       this.settings.stackDirection === 'bottom_to_top'
         ? video.offsetHeight - height * (y + messageRows + 0.1)
@@ -137,6 +139,18 @@ export default class FlowController {
       me.remove()
     }
     animation.play()
+  }
+
+  private getLinesAndHeight(videoHeight: number, settings: Settings) {
+    if (settings.heightType === 'fixed') {
+      const height = settings.lineHeight
+      const lines = Math.floor((videoHeight - height * 0.2) / height)
+      return [lines, height]
+    } else {
+      const lines = settings.lines
+      const height = videoHeight / (lines + 0.2)
+      return [lines, height]
+    }
   }
 
   private async createMessageElement(
@@ -172,7 +186,7 @@ export default class FlowController {
     containerWidth: number,
     settings: Settings
   ) {
-    const millis = Number(settings.speed) * 1000
+    const millis = settings.speed * 1000
     const w = element.offsetWidth
     const v = (containerWidth + w) / millis
     const t = w / v
@@ -191,7 +205,7 @@ export default class FlowController {
     containerWidth: number,
     settings: Settings
   ) {
-    const duration = Number(settings.speed) * 1000
+    const duration = settings.speed * 1000
     const keyframes = [
       { transform: `translate(${containerWidth}px, 0px)` },
       { transform: `translate(-${element.offsetWidth}px, 0px)` },
@@ -217,7 +231,7 @@ export default class FlowController {
     timeline: Timeline,
     settings: Settings
   ) {
-    const lines = Number(settings.lines)
+    const lines = settings.lines
     let index = this.timelines.findIndex((_, i, timelines) => {
       const mod = (i + messageRows) % lines
       if (mod > 0 && mod < messageRows) {

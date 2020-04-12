@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
-import Setting, { AuthorType, Style } from '~/models/settings'
+import Setting, { AuthorType, MessageType, Style } from '~/models/settings'
 
 const initialState: Omit<
   Setting,
@@ -32,31 +32,31 @@ const initialState: Omit<
       template: 'one-line-with-author',
     },
   },
-  superChatHidden: false,
-  superStickerHidden: false,
-  membershipHidden: false,
-  opacity: '0.8',
-  speed: '5',
-  displays: '0',
-  lines: '12',
+  visibilities: ['super-chat', 'super-sticker', 'membership'],
+  heightType: 'flexible',
+  lines: 12,
+  lineHeight: 64,
+  opacity: 0.8,
+  extendedStyle: '',
+  speed: 5,
+  displays: 0,
   stackDirection: 'top_to_bottom',
   overflow: 'overlay',
-  extendedStyle: '',
 }
 
 @Module({ name: 'settings' })
 export default class SettingsModule extends VuexModule {
   styles = initialState.styles
-  superChatHidden = initialState.superChatHidden
-  superStickerHidden = initialState.superStickerHidden
-  membershipHidden = initialState.membershipHidden
+  visibilities = initialState.visibilities
+  heightType = initialState.heightType
+  lines = initialState.lines
+  lineHeight = initialState.lineHeight
   opacity = initialState.opacity
+  extendedStyle = initialState.extendedStyle
   speed = initialState.speed
   displays = initialState.displays
-  lines = initialState.lines
   stackDirection = initialState.stackDirection
   overflow = initialState.overflow
-  extendedStyle = initialState.extendedStyle
   bottomChatInputEnabled = true
   growBottomChatInputEnabled = false
 
@@ -74,36 +74,36 @@ export default class SettingsModule extends VuexModule {
     }
   }
   @Mutation
-  setSuperChatHidden({ superChatHidden }: { superChatHidden: boolean }) {
-    this.superChatHidden = superChatHidden
+  setVisibilities({ visibilities }: { visibilities: MessageType[] }) {
+    this.visibilities = visibilities
   }
   @Mutation
-  setSuperStickerHidden({
-    superStickerHidden,
-  }: {
-    superStickerHidden: boolean
-  }) {
-    this.superStickerHidden = superStickerHidden
+  setHeightType({ heightType }: { heightType: string }) {
+    this.heightType = heightType
   }
   @Mutation
-  setMembershipHidden({ membershipHidden }: { membershipHidden: boolean }) {
-    this.membershipHidden = membershipHidden
+  setLines({ lines }: { lines: number }) {
+    this.lines = lines
   }
   @Mutation
-  setOpacity({ opacity }: { opacity: string }) {
+  setLineHeight({ lineHeight }: { lineHeight: number }) {
+    this.lineHeight = lineHeight
+  }
+  @Mutation
+  setOpacity({ opacity }: { opacity: number }) {
     this.opacity = opacity
   }
   @Mutation
-  setSpeed({ speed }: { speed: string }) {
+  setExtendedStyle({ extendedStyle }: { extendedStyle: string }) {
+    this.extendedStyle = extendedStyle
+  }
+  @Mutation
+  setSpeed({ speed }: { speed: number }) {
     this.speed = speed
   }
   @Mutation
-  setDisplays({ displays }: { displays: string }) {
+  setDisplays({ displays }: { displays: number }) {
     this.displays = displays
-  }
-  @Mutation
-  setLines({ lines }: { lines: string }) {
-    this.lines = lines
   }
   @Mutation
   setStackDirection({ stackDirection }: { stackDirection: string }) {
@@ -112,10 +112,6 @@ export default class SettingsModule extends VuexModule {
   @Mutation
   setOverflow({ overflow }: { overflow: string }) {
     this.overflow = overflow
-  }
-  @Mutation
-  setExtendedStyle({ extendedStyle }: { extendedStyle: string }) {
-    this.extendedStyle = extendedStyle
   }
   @Mutation
   resetState() {

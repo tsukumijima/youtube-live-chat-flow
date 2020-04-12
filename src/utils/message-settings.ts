@@ -1,4 +1,4 @@
-import Settings, { AuthorType } from '~/models/settings'
+import Settings, { AuthorType, MessageType } from '~/models/settings'
 import Message from '~/models/message'
 
 export default class MessageSettings {
@@ -59,11 +59,17 @@ export default class MessageSettings {
           ? 'two-line-message'
           : 'one-line-message'
       case 'paid-message':
-        return this.settings.superChatHidden ? undefined : 'card-message'
+        return this.settings.visibilities.includes('super-chat')
+          ? 'card-message'
+          : undefined
       case 'paid-sticker':
-        return this.settings.superStickerHidden ? undefined : 'sticker'
+        return this.settings.visibilities.includes('super-sticker')
+          ? 'sticker'
+          : undefined
       case 'membership-item':
-        return this.settings.membershipHidden ? undefined : 'card-message'
+        return this.settings.visibilities.includes('membership')
+          ? 'card-message'
+          : undefined
     }
   }
 
