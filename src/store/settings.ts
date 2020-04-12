@@ -1,5 +1,12 @@
 import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
-import Setting, { AuthorType, MessageType, Style } from '~/models/settings'
+import Setting, {
+  AuthorType,
+  MessageType,
+  HeightType,
+  StackDirection,
+  Overflow,
+  Style,
+} from '~/models/settings'
 
 const initialState: Omit<
   Setting,
@@ -78,7 +85,7 @@ export default class SettingsModule extends VuexModule {
     this.visibilities = visibilities
   }
   @Mutation
-  setHeightType({ heightType }: { heightType: string }) {
+  setHeightType({ heightType }: { heightType: HeightType }) {
     this.heightType = heightType
   }
   @Mutation
@@ -106,11 +113,11 @@ export default class SettingsModule extends VuexModule {
     this.displays = displays
   }
   @Mutation
-  setStackDirection({ stackDirection }: { stackDirection: string }) {
+  setStackDirection({ stackDirection }: { stackDirection: StackDirection }) {
     this.stackDirection = stackDirection
   }
   @Mutation
-  setOverflow({ overflow }: { overflow: string }) {
+  setOverflow({ overflow }: { overflow: Overflow }) {
     this.overflow = overflow
   }
   @Mutation

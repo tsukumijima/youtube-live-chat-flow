@@ -3,7 +3,7 @@
     <template v-slot:default>
       <tbody>
         <tr v-for="messageType in messageTypes" :key="messageType">
-          <td class="text-capitalize">{{ messageType }}</td>
+          <td class="text-capitalize">{{ title(messageType) }}</td>
           <td class="px-0">
             <v-btn
               slot="activator"
@@ -30,6 +30,9 @@ import { settingsStore } from '~/store'
 export default class MessageVisibilityTable extends Vue {
   messageTypes = ['super-chat', 'super-sticker', 'membership']
 
+  title(messageType: MessageType) {
+    return messageType.replace('-', ' ')
+  }
   isVisible(messageType: MessageType) {
     return settingsStore.visibilities.includes(messageType)
   }
