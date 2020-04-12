@@ -81,7 +81,7 @@ td:first-child {
   width: 120px;
 }
 .color {
-  width: 32px;
+  width: 30px;
   ::v-deep {
     .v-input__slot:before,
     .v-input__slot:after {
