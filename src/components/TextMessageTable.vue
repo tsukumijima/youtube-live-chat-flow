@@ -7,6 +7,17 @@
           <td class="px-0">
             <v-btn
               slot="activator"
+              :color="isVisible(authorType) ? 'primary' : 'grey darken-1'"
+              text
+              icon
+              @click="toggleVisible(authorType)"
+            >
+              <v-icon>mdi-eye</v-icon>
+            </v-btn>
+          </td>
+          <td class="px-0">
+            <v-btn
+              slot="activator"
               :color="getAvatar(authorType) ? 'primary' : 'grey darken-1'"
               text
               icon
@@ -54,6 +65,19 @@ export default class MessageStyleTable extends Vue {
     { text: '2 lines (with author)', value: 'two-line' },
   ]
 
+  isVisible(authorType: AuthorType) {
+    return settingsStore.visibilities.includes(authorType)
+  }
+  toggleVisible(authorType: AuthorType) {
+    let visibilities = settingsStore.visibilities
+    const visible = visibilities.includes(authorType)
+    if (visible) {
+      visibilities = visibilities.filter((v) => v !== authorType)
+    } else {
+      visibilities = [...visibilities, authorType]
+    }
+    return settingsStore.setVisibilities({ visibilities })
+  }
   getAvatar(authorType: AuthorType) {
     return settingsStore.styles[authorType].avatar
   }

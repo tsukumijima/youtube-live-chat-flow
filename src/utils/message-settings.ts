@@ -34,7 +34,12 @@ export default class MessageSettings {
   private get authorType() {
     const author = this.message.author
     const you = author && author === this.yourName
-    return you ? 'you' : this.message.authorType
+    const authorType = you ? 'you' : this.message.authorType ?? 'guest'
+    return (['guest', 'member', 'moderator', 'owner', 'you'].includes(
+      authorType
+    )
+      ? authorType
+      : 'guest') as AuthorType
   }
 
   private get paid() {
@@ -44,20 +49,17 @@ export default class MessageSettings {
   }
 
   private get style() {
-    const authorType =
-      this.authorType &&
-      ['guest', 'member', 'moderator', 'owner', 'you'].includes(this.authorType)
-        ? this.authorType
-        : 'guest'
-    return this.settings.styles[authorType as AuthorType]
+    return this.settings.styles[this.authorType]
   }
 
   get template() {
     switch (this.message.messageType) {
       case 'text-message':
-        return this.style.template === 'two-line'
-          ? 'two-line-message'
-          : 'one-line-message'
+        return this.settings.visibilities.includes(this.authorType)
+          ? this.style.template === 'two-line'
+            ? 'two-line-message'
+            : 'one-line-message'
+          : undefined
       case 'paid-message':
         return this.settings.visibilities.includes('super-chat')
           ? 'card-message'

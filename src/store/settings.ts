@@ -39,13 +39,23 @@ const initialState: Omit<
       template: 'one-line-with-author',
     },
   },
-  visibilities: ['super-chat', 'super-sticker', 'membership'],
+  visibilities: [
+    'guest',
+    'member',
+    'moderator',
+    'owner',
+    'you',
+    'super-chat',
+    'super-sticker',
+    'membership',
+  ],
   heightType: 'flexible',
   lines: 12,
   lineHeight: 64,
   opacity: 0.8,
+  outlineRatio: 0.025,
   extendedStyle: '',
-  speed: 5,
+  displayTime: 5,
   displays: 0,
   stackDirection: 'top_to_bottom',
   overflow: 'overlay',
@@ -59,8 +69,9 @@ export default class SettingsModule extends VuexModule {
   lines = initialState.lines
   lineHeight = initialState.lineHeight
   opacity = initialState.opacity
+  outlineRatio = initialState.outlineRatio
   extendedStyle = initialState.extendedStyle
-  speed = initialState.speed
+  displayTime = initialState.displayTime
   displays = initialState.displays
   stackDirection = initialState.stackDirection
   overflow = initialState.overflow
@@ -81,7 +92,11 @@ export default class SettingsModule extends VuexModule {
     }
   }
   @Mutation
-  setVisibilities({ visibilities }: { visibilities: MessageType[] }) {
+  setVisibilities({
+    visibilities,
+  }: {
+    visibilities: (AuthorType | MessageType)[]
+  }) {
     this.visibilities = visibilities
   }
   @Mutation
@@ -101,12 +116,16 @@ export default class SettingsModule extends VuexModule {
     this.opacity = opacity
   }
   @Mutation
+  setOutlineRatio({ outlineRatio }: { outlineRatio: number }) {
+    this.outlineRatio = outlineRatio
+  }
+  @Mutation
   setExtendedStyle({ extendedStyle }: { extendedStyle: string }) {
     this.extendedStyle = extendedStyle
   }
   @Mutation
-  setSpeed({ speed }: { speed: number }) {
-    this.speed = speed
+  setDisplayTime({ displayTime }: { displayTime: number }) {
+    this.displayTime = displayTime
   }
   @Mutation
   setDisplays({ displays }: { displays: number }) {

@@ -17,13 +17,14 @@ export type Style = {
 
 export default interface Settings {
   styles: { [authorType in AuthorType]: Style }
-  visibilities: MessageType[]
+  visibilities: (AuthorType | MessageType)[]
   heightType: HeightType
   lines: number
   lineHeight: number
   opacity: number
+  outlineRatio: number
   extendedStyle: string
-  speed: number
+  displayTime: number
   displays: number
   stackDirection: StackDirection
   overflow: Overflow

@@ -1,9 +1,9 @@
 <template>
   <v-card flat>
-    <v-subheader>Style</v-subheader>
-    <message-style-table />
-    <v-subheader class="mt-5">Visibility</v-subheader>
-    <Message-visibility-table />
+    <v-subheader>Text Message</v-subheader>
+    <text-message-table />
+    <v-subheader class="mt-5">Card Message</v-subheader>
+    <card-message-table />
     <v-subheader class="mt-5">Appearance</v-subheader>
     <div class="px-4">
       <div class="d-flex">
@@ -49,6 +49,18 @@
         step="0.1"
         class="pt-3"
       />
+      <v-text-field
+        v-model="outlineRatio"
+        :placeholder="placeholder.outlineRatio"
+        label="Outline Ratio"
+        type="number"
+        dense
+        min="0"
+        max="5"
+        step="0.1"
+        suffix="%"
+        class="pt-3"
+      />
       <v-textarea
         v-model="extendedStyle"
         :placeholder="placeholder.extendedStyle"
@@ -62,8 +74,8 @@
     <v-subheader class="mt-5">Behavior</v-subheader>
     <div class="px-4">
       <v-text-field
-        v-model="speed"
-        :placeholder="placeholder.speed"
+        v-model="displayTime"
+        :placeholder="placeholder.displayTime"
         label="Display Time"
         type="number"
         dense
@@ -105,14 +117,14 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import MessageStyleTable from '~/components/MessageStyleTable.vue'
-import MessageVisibilityTable from '~/components/MessageVisibilityTable.vue'
+import CardMessageTable from '~/components/CardMessageTable.vue'
+import TextMessageTable from '~/components/TextMessageTable.vue'
 import { settingsStore } from '~/store'
 
 @Component({
   components: {
-    MessageStyleTable,
-    MessageVisibilityTable,
+    CardMessageTable,
+    TextMessageTable,
   },
 })
 export default class MessageTabItem extends Vue {
@@ -120,6 +132,7 @@ export default class MessageTabItem extends Vue {
     lines: '12',
     lineHeight: '64',
     opacity: '0.8',
+    outlineRatio: '2.5',
     extendedStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;',
     speed: '5',
     displays: '0',
@@ -165,6 +178,13 @@ export default class MessageTabItem extends Vue {
     settingsStore.setOpacity({ opacity: Number(value) })
   }
 
+  get outlineRatio() {
+    return (settingsStore.outlineRatio * 1000) / 10
+  }
+  set outlineRatio(value) {
+    settingsStore.setOutlineRatio({ outlineRatio: (Number(value) * 10) / 1000 })
+  }
+
   get extendedStyle() {
     return settingsStore.extendedStyle
   }
@@ -174,11 +194,11 @@ export default class MessageTabItem extends Vue {
     })
   }
 
-  get speed() {
-    return settingsStore.speed
+  get displayTime() {
+    return settingsStore.displayTime
   }
-  set speed(value) {
-    settingsStore.setSpeed({ speed: Number(value) })
+  set displayTime(value) {
+    settingsStore.setDisplayTime({ displayTime: Number(value) })
   }
 
   get displays() {

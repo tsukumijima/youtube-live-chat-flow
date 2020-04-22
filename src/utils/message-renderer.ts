@@ -19,8 +19,8 @@ const fixContainedImageHeight = (element: Element, height: number) => {
   })
 }
 
-const getOutlineStyle = (fontColor: string, height: number) => {
-  const n = ((height * 0.8) / 48).toFixed(2)
+const getOutlineStyle = (fontColor: string, height: number, outlineRatio: number) => {
+  const n = (height * outlineRatio).toFixed(2)
   const c = Color(fontColor).darken(0.6).hex()
   return `
           text-shadow:
@@ -288,6 +288,7 @@ type Params = {
   fontStyle?: string
   backgroundColor?: string
   height: number
+  outlineRatio: number
 }
 
 export const render = (
@@ -298,7 +299,7 @@ export const render = (
     ...params,
     fontStyle:
       params.fontStyle +
-      getOutlineStyle(params.fontColor ?? 'white', params.height),
+      getOutlineStyle(params.fontColor ?? 'white', params.height, params.outlineRatio),
   }
   switch (template) {
     case 'one-line-message':

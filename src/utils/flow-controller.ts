@@ -170,6 +170,7 @@ export default class FlowController {
       fontColor: ms.fontColor,
       fontStyle: ms.fontStyle,
       height,
+      outlineRatio: settings.outlineRatio,
     })
 
     if (!element) {
@@ -186,7 +187,7 @@ export default class FlowController {
     containerWidth: number,
     settings: Settings
   ) {
-    const millis = settings.speed * 1000
+    const millis = settings.displayTime * 1000
     const w = element.offsetWidth
     const v = (containerWidth + w) / millis
     const t = w / v
@@ -205,7 +206,7 @@ export default class FlowController {
     containerWidth: number,
     settings: Settings
   ) {
-    const duration = settings.speed * 1000
+    const duration = settings.displayTime * 1000
     const keyframes = [
       { transform: `translate(${containerWidth}px, 0px)` },
       { transform: `translate(-${element.offsetWidth}px, 0px)` },
