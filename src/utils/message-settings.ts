@@ -1,4 +1,4 @@
-import Settings, { AuthorType, MessageType } from '~/models/settings'
+import Settings, { AuthorType } from '~/models/settings'
 import Message from '~/models/message'
 
 export default class MessageSettings {
