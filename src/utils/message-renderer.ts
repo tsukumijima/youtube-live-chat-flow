@@ -8,6 +8,10 @@ const fixContainedImageHeight = (element: Element, height: number) => {
 
   Array.from(children).map((node) => {
     if (node instanceof HTMLImageElement) {
+      node.src = node.src.replace(
+        /(=w)\d+(-h)\d+/,
+        `$1${Math.ceil(height)}$2${Math.ceil(height)}`
+      )
       node.style.height = `${height}px`
       node.style.verticalAlign = 'bottom'
       return node
@@ -19,7 +23,11 @@ const fixContainedImageHeight = (element: Element, height: number) => {
   })
 }
 
-const getOutlineStyle = (fontColor: string, height: number, outlineRatio: number) => {
+const getOutlineStyle = (
+  fontColor: string,
+  height: number,
+  outlineRatio: number
+) => {
   if (!outlineRatio) {
     return ''
   }
@@ -40,7 +48,7 @@ const getOutlineStyle = (fontColor: string, height: number, outlineRatio: number
 
 const renderAvatar = (url: string, height: number) => {
   const el = document.createElement('img')
-  el.src = url
+  el.src = url.replace(/(\/s)\d+/, `$1${Math.ceil(height)}`)
   el.style.height = `${height}px`
   el.style.borderRadius = '50%'
   el.style.objectFit = 'cover'
@@ -68,7 +76,7 @@ const renderMessage = (html: string, height: number) => {
 
 const renderStickerImage = (url: string, height: number) => {
   const el = document.createElement('img')
-  el.src = url
+  el.src = url.replace(/(=s)\d+/, `$1${Math.ceil(height)}`)
   el.style.height = `${height}px`
   return el
 }
@@ -302,7 +310,11 @@ export const render = (
     ...params,
     fontStyle:
       params.fontStyle +
-      getOutlineStyle(params.fontColor ?? 'white', params.height, params.outlineRatio),
+      getOutlineStyle(
+        params.fontColor ?? 'white',
+        params.height,
+        params.outlineRatio
+      ),
   }
   switch (template) {
     case 'one-line-message':
