@@ -266,9 +266,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   controller.enabled = data.enabled
   controller.following = data.following
   controller.settings = data.settings
+
+  removeChatInputControl()
+  removeControlButton()
+
   addVideoEventListener()
   addControlButton()
   addMenuButtons()
+
   await controller.observe()
 
   window.addEventListener('unload', () => {

@@ -1,113 +1,220 @@
 <template>
   <v-card flat>
-    <v-subheader>Text Message</v-subheader>
-    <text-message-table />
-    <v-subheader class="mt-5">Card Message</v-subheader>
-    <card-message-table />
+    <div class="mt-5">
+      <message-table />
+    </div>
+
     <v-subheader class="mt-5">Appearance</v-subheader>
     <div class="px-4">
       <div class="d-flex">
-        <v-select
-          v-model="heightType"
-          :items="heightTypes"
-          label="Height"
-          dense
-          class="pt-3 mr-3 flex-grow-0"
-          style="width: 120px;"
-        />
-        <v-text-field
-          v-if="heightType === 'fixed'"
-          v-model="lineHeight"
-          :placeholder="placeholder.lineHeight"
-          label="Line Height"
-          type="number"
-          dense
-          min="1"
-          step="2"
-          suffix="px"
-          class="pt-3"
-        />
-        <v-text-field
-          v-else
-          v-model="lines"
-          :placeholder="placeholder.lines"
-          label="Lines"
-          type="number"
-          dense
-          min="1"
-          class="pt-3"
-        />
+        <div class="mr-3">
+          <div class="caption">Height</div>
+          <v-select
+            v-model="heightType"
+            :items="heightTypes"
+            dense
+            single-line
+            class="pt-0 mt-1"
+            style="width: 120px;"
+          />
+        </div>
+        <div class="flex-grow-1">
+          <template v-if="heightType === 'fixed'">
+            <div class="caption">Line Height</div>
+            <v-slider
+              v-model="lineHeight"
+              class="align-center mb-5"
+              min="1"
+              max="256"
+              step="1"
+              dense
+              hide-details
+            >
+              <template v-slot:prepend>
+                <v-text-field
+                  v-model="lineHeight"
+                  class="mt-0 pt-0"
+                  dense
+                  hide-details
+                  single-line
+                  type="number"
+                  min="1"
+                  max="256"
+                  step="1"
+                  suffix="px"
+                  style="width: 70px;"
+                />
+              </template>
+            </v-slider>
+          </template>
+          <template v-else>
+            <div class="caption">Lines</div>
+            <v-slider
+              v-model="lines"
+              class="align-center mb-5"
+              min="1"
+              max="64"
+              step="1"
+              dense
+              hide-details
+            >
+              <template v-slot:prepend>
+                <v-text-field
+                  v-model="lines"
+                  class="mt-0 pt-0"
+                  dense
+                  hide-details
+                  single-line
+                  type="number"
+                  min="1"
+                  max="64"
+                  step="1"
+                  style="width: 70px;"
+                />
+              </template>
+            </v-slider>
+          </template>
+        </div>
       </div>
-      <v-text-field
+
+      <div class="caption">Opacity</div>
+      <v-slider
         v-model="opacity"
-        :placeholder="placeholder.opacity"
-        label="Opacity"
-        type="number"
-        dense
+        class="align-center mb-5"
         min="0"
         max="1"
         step="0.1"
-        class="pt-3"
-      />
-      <v-text-field
-        v-model="outlineRatio"
-        :placeholder="placeholder.outlineRatio"
-        label="Outline Ratio"
-        type="number"
         dense
+        hide-details
+      >
+        <template v-slot:prepend>
+          <v-text-field
+            v-model="opacity"
+            class="mt-0 pt-0"
+            dense
+            hide-details
+            single-line
+            type="number"
+            min="0"
+            max="1"
+            step="0.1"
+            style="width: 70px;"
+          />
+        </template>
+      </v-slider>
+
+      <div class="caption">Outline Ratio</div>
+      <v-slider
+        v-model="outlineRatio"
+        class="align-center mb-5"
         min="0"
         max="5"
         step="0.1"
-        suffix="%"
-        class="pt-3"
-      />
+        dense
+        hide-details
+      >
+        <template v-slot:prepend>
+          <v-text-field
+            v-model="outlineRatio"
+            class="mt-0 pt-0"
+            dense
+            hide-details
+            single-line
+            type="number"
+            min="0"
+            max="5"
+            step="0.1"
+            suffix="%"
+            style="width: 70px;"
+          />
+        </template>
+      </v-slider>
+
+      <div class="caption">Extended Style</div>
       <v-textarea
         v-model="extendedStyle"
-        :placeholder="placeholder.extendedStyle"
-        label="Extended Style"
+        placeholder='font-family: "Yu Gothic", YuGothic, Meiryo;'
         dense
+        single-line
         rows="1"
         auto-grow
-        class="pt-3"
+        class="mt-1 pt-0"
       />
     </div>
+
     <v-subheader class="mt-5">Behavior</v-subheader>
     <div class="px-4">
-      <v-text-field
+      <div class="caption">Display Time</div>
+      <v-slider
         v-model="displayTime"
-        :placeholder="placeholder.displayTime"
-        label="Display Time"
-        type="number"
-        dense
+        class="align-center mb-5"
         min="1"
         max="10"
         step="0.1"
-        suffix="sec"
-        class="pt-3"
-      />
-      <v-text-field
-        v-model="displays"
-        :placeholder="placeholder.displays"
-        label="Max Displays (Infinite if set to 0)"
-        type="number"
         dense
+        hide-details
+      >
+        <template v-slot:prepend>
+          <v-text-field
+            v-model="displayTime"
+            class="mt-0 pt-0"
+            dense
+            hide-details
+            single-line
+            type="number"
+            min="1"
+            max="10"
+            step="0.1"
+            suffix="sec"
+            style="width: 70px;"
+          />
+        </template>
+      </v-slider>
+
+      <div class="caption">
+        Max Displays (Infinite if set to 0)
+      </div>
+      <v-slider
+        v-model="displays"
+        class="align-center mb-5"
         min="0"
-        class="pt-3"
-      />
+        max="100"
+        dense
+        hide-details
+      >
+        <template v-slot:prepend>
+          <v-text-field
+            v-model="displays"
+            class="mt-0 pt-0"
+            dense
+            hide-details
+            single-line
+            type="number"
+            min="0"
+            max="100"
+            style="width: 70px;"
+          />
+        </template>
+      </v-slider>
+
+      <div class="caption">Stack Directions</div>
       <v-select
         v-model="stackDirection"
         :items="stackDirections"
-        label="Stack Directions"
         dense
-        class="pt-3"
+        single-line
+        class="mt-1 pt-0"
       />
+
+      <div class="caption">Overflow Mode</div>
       <v-select
         v-model="overflow"
         :items="overflows"
-        label="Overflow Mode"
         dense
-        class="pt-3"
+        single-line
+        class="mt-1 pt-0"
       />
+
       <v-btn class="my-4" depressed block @click="onResetClick">
         Reset Settings to Default
       </v-btn>
@@ -117,26 +224,15 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import CardMessageTable from '~/components/CardMessageTable.vue'
-import TextMessageTable from '~/components/TextMessageTable.vue'
+import MessageTable from '~/components/MessageTable.vue'
 import { settingsStore } from '~/store'
 
 @Component({
   components: {
-    CardMessageTable,
-    TextMessageTable,
+    MessageTable,
   },
 })
 export default class MessageTabItem extends Vue {
-  placeholder = {
-    lines: '12',
-    lineHeight: '64',
-    opacity: '0.8',
-    outlineRatio: '2.5',
-    extendedStyle: 'font-family: "Yu Gothic", YuGothic, Meiryo;',
-    speed: '5',
-    displays: '0',
-  }
   heightTypes = [
     { text: 'Flexible', value: 'flexible' },
     { text: 'Fixed', value: 'fixed' },

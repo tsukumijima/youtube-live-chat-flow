@@ -20,6 +20,9 @@ const fixContainedImageHeight = (element: Element, height: number) => {
 }
 
 const getOutlineStyle = (fontColor: string, height: number, outlineRatio: number) => {
+  if (!outlineRatio) {
+    return ''
+  }
   const n = (height * outlineRatio).toFixed(2)
   const c = Color(fontColor).darken(0.6).hex()
   return `
