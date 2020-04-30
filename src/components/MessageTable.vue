@@ -1,68 +1,71 @@
 <template>
-  <v-simple-table dense>
-    <template v-slot:default>
-      <tbody>
-        <tr v-for="authorType in authorTypes" :key="authorType">
-          <td class="text-capitalize">{{ authorType }}</td>
-          <td class="px-0">
-            <v-btn
-              slot="activator"
-              :color="isVisible(authorType) ? 'primary' : 'grey darken-1'"
-              text
-              icon
-              @click="toggleVisible(authorType)"
-            >
-              <v-icon>mdi-eye</v-icon>
-            </v-btn>
-          </td>
-          <td class="px-0">
-            <v-btn
-              slot="activator"
-              :color="getAvatar(authorType) ? 'primary' : 'grey darken-1'"
-              text
-              icon
-              @click="toggleAvatar(authorType)"
-            >
-              <v-icon>mdi-account-circle</v-icon>
-            </v-btn>
-          </td>
-          <td class="px-0">
-            <v-text-field
-              :value="getColor(authorType)"
-              class="color mt-0 pt-0"
-              type="color"
-              hide-details
-              @input="(value) => setColor(authorType, value)"
-            />
-          </td>
-          <td>
-            <v-select
-              :value="getTemplate(authorType)"
-              :items="templates"
-              dense
-              hide-details
-              class="mt-0 pt-0 body-2"
-              @input="(value) => setTemplate(authorType, value)"
-            />
-          </td>
-        </tr>
-        <tr v-for="messageType in messageTypes" :key="messageType">
-          <td class="text-capitalize">{{ title(messageType) }}</td>
-          <td class="px-0" colspan="4">
-            <v-btn
-              slot="activator"
-              :color="isVisible(messageType) ? 'primary' : 'grey darken-1'"
-              text
-              icon
-              @click="toggleVisible(messageType)"
-            >
-              <v-icon>mdi-eye</v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
-    </template>
-  </v-simple-table>
+  <div>
+    <div
+      v-for="authorType in authorTypes"
+      :key="authorType"
+      class="d-flex align-center px-4"
+    >
+      <div class="caption text-capitalize" style="width: 100px;">
+        {{ authorType }}
+      </div>
+      <v-btn
+        slot="activator"
+        :color="isVisible(authorType) ? 'primary' : 'grey darken-1'"
+        text
+        icon
+        @click="toggleVisible(authorType)"
+      >
+        <v-icon>mdi-eye</v-icon>
+      </v-btn>
+      <v-btn
+        slot="activator"
+        :color="getAvatar(authorType) ? 'primary' : 'grey darken-1'"
+        text
+        icon
+        @click="toggleAvatar(authorType)"
+      >
+        <v-icon>mdi-account-circle</v-icon>
+      </v-btn>
+      <div
+        class="color-picker mx-2"
+        :style="{ backgroundColor: getColor(authorType) }"
+      >
+        <v-text-field
+          :value="getColor(authorType)"
+          class="mt-0 pt-0"
+          type="color"
+          hide-details
+          @input="(value) => setColor(authorType, value)"
+        />
+      </div>
+      <v-select
+        :value="getTemplate(authorType)"
+        :items="templates"
+        dense
+        hide-details
+        class="mt-0 pt-0 ml-2 caption flex-grow-1"
+        @input="(value) => setTemplate(authorType, value)"
+      />
+    </div>
+    <div
+      v-for="messageType in messageTypes"
+      :key="messageType"
+      class="d-flex align-center px-4"
+    >
+      <div class="caption text-capitalize" style="width: 100px;">
+        {{ title(messageType) }}
+      </div>
+      <v-btn
+        slot="activator"
+        :color="isVisible(messageType) ? 'primary' : 'grey darken-1'"
+        text
+        icon
+        @click="toggleVisible(messageType)"
+      >
+        <v-icon>mdi-eye</v-icon>
+      </v-btn>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -75,9 +78,9 @@ export default class MessageStyleTable extends Vue {
   authorTypes = ['guest', 'member', 'moderator', 'owner', 'you']
   messageTypes = ['super-chat', 'super-sticker', 'membership']
   templates = [
-    { text: '1 line (without author)', value: 'one-line-without-author' },
-    { text: '1 line (with author)', value: 'one-line-with-author' },
-    { text: '2 lines (with author)', value: 'two-line' },
+    { text: '1 line (without Author)', value: 'one-line-without-author' },
+    { text: '1 line (with Author)', value: 'one-line-with-author' },
+    { text: '2 lines', value: 'two-line' },
   ]
 
   title(messageType: MessageType) {
@@ -119,20 +122,23 @@ export default class MessageStyleTable extends Vue {
 </script>
 
 <style lang="scss" scoped>
-td:first-child {
-  width: 120px;
-}
-.color {
-  width: 30px;
-  ::v-deep {
-    .v-input__slot:before,
-    .v-input__slot:after {
-      border: none !important;
-    }
-    input {
-      cursor: pointer;
-      height: 32px;
-      padding: 0;
+.color-picker {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid grey;
+  position: relative;
+  > .v-text-field {
+    position: absolute;
+    margin: 0 !important;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    ::v-deep {
+      input {
+        cursor: pointer;
+        height: 24px;
+      }
     }
   }
 }

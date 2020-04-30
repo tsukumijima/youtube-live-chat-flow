@@ -1,8 +1,7 @@
 <template>
   <v-card flat>
-    <div class="mt-5">
-      <message-table />
-    </div>
+    <v-subheader>General</v-subheader>
+    <message-table />
 
     <v-subheader class="mt-5">Appearance</v-subheader>
     <div class="px-4">

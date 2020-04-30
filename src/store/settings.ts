@@ -21,7 +21,7 @@ const initialState: Omit<
     member: {
       avatar: true,
       color: '#66ff66',
-      template: 'one-line-with-author',
+      template: 'one-line-without-author',
     },
     moderator: {
       avatar: true,
