@@ -187,17 +187,18 @@ export default class FlowController {
     containerWidth: number,
     settings: Settings
   ) {
-    const millis = settings.displayTime * 1000
+    const displayMillis = settings.displayTime * 1000
+    const delayMillis = settings.delayTime * 1000
     const w = element.offsetWidth
-    const v = (containerWidth + w) / millis
+    const v = (containerWidth + w) / displayMillis
     const t = w / v
     const n = Date.now()
 
     return {
-      willAppear: n,
-      didAppear: n + t,
-      willDisappear: n + millis - t,
-      didDisappear: n + millis,
+      willAppear: n + delayMillis,
+      didAppear: n + t + delayMillis,
+      willDisappear: n + displayMillis - t + delayMillis,
+      didDisappear: n + displayMillis + delayMillis,
     }
   }
 
@@ -206,12 +207,15 @@ export default class FlowController {
     containerWidth: number,
     settings: Settings
   ) {
+    element.style.transform = `translate(${containerWidth}px, 0px)`
+
     const duration = settings.displayTime * 1000
+    const delay = settings.delayTime * 1000
     const keyframes = [
       { transform: `translate(${containerWidth}px, 0px)` },
       { transform: `translate(-${element.offsetWidth}px, 0px)` },
     ]
-    const animation = element.animate(keyframes, { duration })
+    const animation = element.animate(keyframes, { duration, delay })
     animation.pause()
     return animation
   }

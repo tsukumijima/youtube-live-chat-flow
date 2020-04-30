@@ -25,6 +25,7 @@ export default interface Settings {
   outlineRatio: number
   extendedStyle: string
   displayTime: number
+  delayTime: number
   displays: number
   stackDirection: StackDirection
   overflow: Overflow

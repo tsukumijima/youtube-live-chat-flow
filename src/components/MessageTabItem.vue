@@ -42,7 +42,7 @@
                   max="256"
                   step="1"
                   suffix="px"
-                  style="width: 70px;"
+                  style="width: 75px;"
                 />
               </template>
             </v-slider>
@@ -69,7 +69,7 @@
                   min="1"
                   max="64"
                   step="1"
-                  style="width: 70px;"
+                  style="width: 75px;"
                 />
               </template>
             </v-slider>
@@ -98,7 +98,7 @@
             min="0"
             max="1"
             step="0.1"
-            style="width: 70px;"
+            style="width: 75px;"
           />
         </template>
       </v-slider>
@@ -125,7 +125,7 @@
             max="5"
             step="0.1"
             suffix="%"
-            style="width: 70px;"
+            style="width: 75px;"
           />
         </template>
       </v-slider>
@@ -166,7 +166,34 @@
             max="10"
             step="0.1"
             suffix="sec"
-            style="width: 70px;"
+            style="width: 75px;"
+          />
+        </template>
+      </v-slider>
+
+      <div class="caption">Delay Time</div>
+      <v-slider
+        v-model="delayTime"
+        class="align-center mb-5"
+        min="0"
+        max="10"
+        step="0.1"
+        dense
+        hide-details
+      >
+        <template v-slot:prepend>
+          <v-text-field
+            v-model="delayTime"
+            class="mt-0 pt-0"
+            dense
+            hide-details
+            single-line
+            type="number"
+            min="0"
+            max="10"
+            step="0.1"
+            suffix="sec"
+            style="width: 75px;"
           />
         </template>
       </v-slider>
@@ -192,7 +219,7 @@
             type="number"
             min="0"
             max="100"
-            style="width: 70px;"
+            style="width: 75px;"
           />
         </template>
       </v-slider>
@@ -295,6 +322,13 @@ export default class MessageTabItem extends Vue {
   }
   set displayTime(value) {
     settingsStore.setDisplayTime({ displayTime: Number(value) })
+  }
+
+  get delayTime() {
+    return settingsStore.delayTime
+  }
+  set delayTime(value) {
+    settingsStore.setDelayTime({ delayTime: Number(value) })
   }
 
   get displays() {

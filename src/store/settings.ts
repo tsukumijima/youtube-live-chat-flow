@@ -53,9 +53,10 @@ const initialState: Omit<
   lines: 12,
   lineHeight: 64,
   opacity: 0.8,
-  outlineRatio: 0.025,
+  outlineRatio: 0.015,
   extendedStyle: '',
   displayTime: 5,
+  delayTime: 0,
   displays: 0,
   stackDirection: 'top_to_bottom',
   overflow: 'overlay',
@@ -72,6 +73,7 @@ export default class SettingsModule extends VuexModule {
   outlineRatio = initialState.outlineRatio
   extendedStyle = initialState.extendedStyle
   displayTime = initialState.displayTime
+  delayTime = initialState.delayTime
   displays = initialState.displays
   stackDirection = initialState.stackDirection
   overflow = initialState.overflow
@@ -126,6 +128,10 @@ export default class SettingsModule extends VuexModule {
   @Mutation
   setDisplayTime({ displayTime }: { displayTime: number }) {
     this.displayTime = displayTime
+  }
+  @Mutation
+  setDelayTime({ delayTime }: { delayTime: number }) {
+    this.delayTime = delayTime
   }
   @Mutation
   setDisplays({ displays }: { displays: number }) {
