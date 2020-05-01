@@ -32,40 +32,18 @@ export default class Options extends Vue {
 }
 </script>
 
-<style lang="scss">
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-html {
-  overflow-y: hidden;
-}
-</style>
-
 <style lang="scss" scoped>
 .v-application {
-  min-width: 640px;
-  height: 572px;
+  width: 640px;
   .v-tabs {
-    display: flex;
-    flex-direction: column;
     ::v-deep {
       > .v-tabs-bar {
-        flex-grow: 0;
+        position: fixed;
+        width: 100%;
+        z-index: 1;
       }
       > .v-tabs-items {
-        flex-grow: 1;
-        flex-basis: 0;
-        overflow-y: hidden;
-        > .v-window__container {
-          height: 100%;
-          > .v-window-item {
-            height: 100%;
-            overflow-y: auto;
-          }
-        }
+        margin-top: 48px;
       }
     }
   }

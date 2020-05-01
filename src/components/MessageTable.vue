@@ -10,7 +10,7 @@
       </div>
       <v-btn
         slot="activator"
-        :color="isVisible(authorType) ? 'primary' : 'grey darken-1'"
+        :color="isVisible(authorType) ? 'primary' : 'grey'"
         text
         icon
         @click="toggleVisible(authorType)"
@@ -19,7 +19,7 @@
       </v-btn>
       <v-btn
         slot="activator"
-        :color="getAvatar(authorType) ? 'primary' : 'grey darken-1'"
+        :color="getAvatar(authorType) ? 'primary' : 'grey'"
         text
         icon
         @click="toggleAvatar(authorType)"
@@ -57,7 +57,7 @@
       </div>
       <v-btn
         slot="activator"
-        :color="isVisible(messageType) ? 'primary' : 'grey darken-1'"
+        :color="isVisible(messageType) ? 'primary' : 'grey'"
         text
         icon
         @click="toggleVisible(messageType)"
