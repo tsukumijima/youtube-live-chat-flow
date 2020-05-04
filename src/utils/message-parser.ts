@@ -3,9 +3,14 @@ import Message from '~/models/message'
 import { getImageSourceAsync } from './dom-helper'
 
 const getBackgroundColor = (el: HTMLElement, opacity: number) => {
-  const backgroundColor = getComputedStyle(el).backgroundColor
-  const o = new Color(backgroundColor).object()
-  return `rgba(${o.r}, ${o.g}, ${o.b}, ${opacity})`
+  try {
+    const backgroundColor = getComputedStyle(el).backgroundColor
+    const o = new Color(backgroundColor).object()
+    return `rgba(${o.r}, ${o.g}, ${o.b}, ${opacity})`
+  } catch (e) {
+    // parse error by invalid background color
+    return undefined
+  }
 }
 
 const parseCommonElements = async (el: HTMLElement) => {
