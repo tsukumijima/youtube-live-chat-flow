@@ -1,5 +1,23 @@
 import Color from 'color'
 
+// e.g. https://yt3.ggpht.com/-TusVtXdhftI/AAAAAAAAAAI/AAAAAAAAAAA/OCgsPx8gmAk/s32-c-k-no-mo-rj-c0xffffff/photo.jpg
+const resizeAvatarUrl = (url: string, size: number) => {
+  return url.replace(/(\/s)\d+([^/]+\/photo\.jpg)$/, `$1${Math.ceil(size)}$2`)
+}
+
+// e.g. https://yt3.ggpht.com/8ucCFoLkjQ9pVsfaKuFnHqIQqFjSr7Bht0dVuptyntxe-t6uej1BfH_vTk-cn1nsZdXjkjqipg=w24-h24-c-k-nd
+const resizeEmojiUrl = (url: string, size: number) => {
+  return url.replace(
+    /(=w)\d+(-h)\d+([^=]+)$/,
+    `$1${Math.ceil(size)}$2${Math.ceil(size)}$3`
+  )
+}
+
+// e.g. https://lh3.googleusercontent.com/kgcJnLI6rRPD1Jm7xko7FNnl0k9qVFGzNvu8TmtTcAs4vHwigbTfa0N7N98r1TfqUPfHfRRln47UiRbeCr3Z=s40-rp
+const resizeStickerUrl = (url: string, size: number) => {
+  return url.replace(/(=s)\d+([^=]+)$/, `$1${Math.ceil(size)}$2`)
+}
+
 const fixContainedImageHeight = (element: Element, height: number) => {
   const children = element.childNodes
   if (!children) {
@@ -8,10 +26,7 @@ const fixContainedImageHeight = (element: Element, height: number) => {
 
   Array.from(children).map((node) => {
     if (node instanceof HTMLImageElement) {
-      node.src = node.src.replace(
-        /(=w)\d+(-h)\d+/,
-        `$1${Math.ceil(height)}$2${Math.ceil(height)}`
-      )
+      node.src = resizeEmojiUrl(node.src, height)
       node.style.height = `${height}px`
       node.style.verticalAlign = 'bottom'
       return node
@@ -48,7 +63,7 @@ const getOutlineStyle = (
 
 const renderAvatar = (url: string, height: number) => {
   const el = document.createElement('img')
-  el.src = url.replace(/(\/s)\d+/, `$1${Math.ceil(height)}`)
+  el.src = resizeAvatarUrl(url, height)
   el.style.height = `${height}px`
   el.style.borderRadius = '50%'
   el.style.objectFit = 'cover'
@@ -76,7 +91,7 @@ const renderMessage = (html: string, height: number) => {
 
 const renderStickerImage = (url: string, height: number) => {
   const el = document.createElement('img')
-  el.src = url.replace(/(=s)\d+/, `$1${Math.ceil(height)}`)
+  el.src = resizeStickerUrl(url, height)
   el.style.height = `${height}px`
   return el
 }
