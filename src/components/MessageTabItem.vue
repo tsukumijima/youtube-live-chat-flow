@@ -175,8 +175,8 @@
         v-model="delayTime"
         class="align-center mb-5"
         min="0"
-        max="10"
-        step="0.1"
+        max="300"
+        step="1"
         dense
         hide-details
       >
@@ -189,8 +189,8 @@
             single-line
             type="number"
             min="0"
-            max="10"
-            step="0.1"
+            max="300"
+            step="1"
             suffix="sec"
             style="width: 75px;"
           />
