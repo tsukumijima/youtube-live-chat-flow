@@ -5,6 +5,39 @@ import MessageSettings from './message-settings'
 import { parse } from './message-parser'
 import { render } from './message-renderer'
 
+const semaphore = (permits = 1) => {
+  let resources = permits
+  const queues: (() => Promise<void>)[] = []
+  const next = async () => {
+    if (resources > 0 && queues.length > 0) {
+      resources--
+      try {
+        const queue = queues.shift()
+        if (queue) {
+          await queue()
+        }
+      } catch (e) {} // eslint-disable-line no-empty
+      resources++
+      next()
+    }
+  }
+  return {
+    acquire: (cb: () => Promise<void>): Promise<void> => {
+      return new Promise((resolve) => {
+        queues.push(async () => {
+          await cb()
+          resolve()
+        })
+        setTimeout(() => {
+          next()
+        }, 0)
+      })
+    },
+  }
+}
+
+const sem = semaphore()
+
 interface Timeline {
   willAppear: number
   didAppear: number
@@ -19,9 +52,6 @@ export default class FlowController {
   private observer: MutationObserver | undefined
   private followingTimer = -1
   private cleanupTimer = -1
-  private processTimer = -1
-  private processing = false
-  private queues: HTMLElement[] = []
   settings: Settings | undefined
 
   get enabled() {
@@ -59,7 +89,7 @@ export default class FlowController {
     }
   }
 
-  private async flow(element: HTMLElement) {
+  private async proceed(element: HTMLElement) {
     if (!this._enabled || !this.settings) {
       return
     }
@@ -109,36 +139,44 @@ export default class FlowController {
     me.style.display = 'none'
     container.appendChild(me)
     await waitAllImagesLoaded(me)
-    me.style.display = 'flex'
 
-    const messageRows = Math.ceil(me.offsetHeight / Math.ceil(height))
-    const containerWidth = container.offsetWidth
-    const timeline = this.createTimeline(me, containerWidth, this.settings)
+    sem.acquire(async () => {
+      if (!this.settings) {
+        me.remove()
+        return
+      }
 
-    const index = this.getIndex(messageRows, timeline, this.settings)
-    if (index + messageRows > lines && this.settings.overflow === 'hidden') {
-      me.remove()
-      return
-    }
-    this.pushTimeline(timeline, index, messageRows)
+      me.style.display = 'flex'
 
-    const z = Math.floor(index / lines)
-    const y = (index % lines) + (z % 2 > 0 ? 0.5 : 0)
-    const opacity = this.settings.opacity ** (z + 1)
-    const top =
-      this.settings.stackDirection === 'bottom_to_top'
-        ? video.offsetHeight - height * (y + messageRows + 0.1)
-        : height * (y + 0.1)
+      const messageRows = Math.ceil(me.offsetHeight / Math.ceil(height))
+      const containerWidth = container.offsetWidth
+      const timeline = this.createTimeline(me, containerWidth, this.settings)
 
-    me.style.top = `${top}px`
-    me.style.opacity = String(opacity)
-    me.style.zIndex = String(z + 1)
+      const index = this.getIndex(messageRows, timeline, this.settings)
+      if (index + messageRows > lines && this.settings.overflow === 'hidden') {
+        me.remove()
+        return
+      }
+      this.pushTimeline(timeline, index, messageRows)
 
-    const animation = this.createAnimation(me, containerWidth, this.settings)
-    animation.onfinish = () => {
-      me.remove()
-    }
-    animation.play()
+      const z = Math.floor(index / lines)
+      const y = (index % lines) + (z % 2 > 0 ? 0.5 : 0)
+      const opacity = this.settings.opacity ** (z + 1)
+      const top =
+        this.settings.stackDirection === 'bottom_to_top'
+          ? video.offsetHeight - height * (y + messageRows + 0.1)
+          : height * (y + 0.1)
+
+      me.style.top = `${top}px`
+      me.style.opacity = String(opacity)
+      me.style.zIndex = String(z + 1)
+
+      const animation = this.createAnimation(me, containerWidth, this.settings)
+      animation.onfinish = () => {
+        me.remove()
+      }
+      animation.play()
+    })
   }
 
   private getLinesAndHeight(videoHeight: number, settings: Settings) {
@@ -303,7 +341,7 @@ export default class FlowController {
         const nodes = Array.from(mutation.addedNodes)
         nodes.forEach((node: Node) => {
           if (node instanceof HTMLElement) {
-            this.queues.push(node)
+            this.proceed(node)
           }
         })
       })
@@ -318,20 +356,9 @@ export default class FlowController {
         })
       })
     }, 1000)
-
-    this.processTimer = setInterval(async () => {
-      if (this.processing) {
-        return
-      }
-      this.processing = true
-      const node = this.queues.shift()
-      node && (await this.flow(node))
-      this.processing = false
-    }, 10)
   }
 
   disconnect() {
-    clearInterval(this.processTimer)
     clearInterval(this.cleanupTimer)
     this.observer?.disconnect()
   }
