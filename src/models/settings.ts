@@ -3,6 +3,8 @@ export type MessageType = 'super-chat' | 'super-sticker' | 'membership'
 export type HeightType = 'flexible' | 'fixed'
 export type StackDirection = 'top_to_bottom' | 'bottom_to_top'
 export type Overflow = 'overlay' | 'hidden'
+export type Styles = { [authorType in AuthorType]: Style }
+export type Visibilities = { [type in AuthorType | MessageType]: boolean }
 
 export type Template =
   | 'one-line-without-author'
@@ -16,8 +18,8 @@ export type Style = {
 }
 
 export default interface Settings {
-  styles: { [authorType in AuthorType]: Style }
-  visibilities: (AuthorType | MessageType)[]
+  styles: Styles
+  visibilities: Visibilities
   heightType: HeightType
   lines: number
   lineHeight: number

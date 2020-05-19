@@ -86,18 +86,12 @@ export default class MessageStyleTable extends Vue {
   title(messageType: MessageType) {
     return messageType.replace('-', ' ')
   }
-  isVisible(authorType: AuthorType | MessageType) {
-    return settingsStore.visibilities.includes(authorType)
+  isVisible(type: AuthorType | MessageType) {
+    return settingsStore.visibilities[type]
   }
-  toggleVisible(authorType: AuthorType | MessageType) {
-    let visibilities = settingsStore.visibilities
-    const visible = visibilities.includes(authorType)
-    if (visible) {
-      visibilities = visibilities.filter((v) => v !== authorType)
-    } else {
-      visibilities = [...visibilities, authorType]
-    }
-    return settingsStore.setVisibilities({ visibilities })
+  toggleVisible(type: AuthorType | MessageType) {
+    const visibility = !settingsStore.visibilities[type]
+    return settingsStore.setVisibility({ type, visibility })
   }
   getAvatar(authorType: AuthorType) {
     return settingsStore.styles[authorType].avatar

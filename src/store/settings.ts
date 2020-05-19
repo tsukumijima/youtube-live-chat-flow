@@ -39,16 +39,16 @@ const initialState: Omit<
       template: 'one-line-with-author',
     },
   },
-  visibilities: [
-    'guest',
-    'member',
-    'moderator',
-    'owner',
-    'you',
-    'super-chat',
-    'super-sticker',
-    'membership',
-  ],
+  visibilities: {
+    guest: true,
+    member: true,
+    moderator: true,
+    owner: true,
+    you: true,
+    'super-chat': true,
+    'super-sticker': true,
+    membership: true,
+  },
   heightType: 'flexible',
   lines: 12,
   lineHeight: 64,
@@ -94,12 +94,14 @@ export default class SettingsModule extends VuexModule {
     }
   }
   @Mutation
-  setVisibilities({
-    visibilities,
+  setVisibility({
+    type,
+    visibility,
   }: {
-    visibilities: (AuthorType | MessageType)[]
+    type: AuthorType | MessageType
+    visibility: boolean
   }) {
-    this.visibilities = visibilities
+    this.visibilities[type] = visibility
   }
   @Mutation
   setHeightType({ heightType }: { heightType: HeightType }) {

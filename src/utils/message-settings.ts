@@ -55,21 +55,21 @@ export default class MessageSettings {
   get template() {
     switch (this.message.messageType) {
       case 'text-message':
-        return this.settings.visibilities.includes(this.authorType)
+        return this.settings.visibilities[this.authorType]
           ? this.style.template === 'two-line'
             ? 'two-line-message'
             : 'one-line-message'
           : undefined
       case 'paid-message':
-        return this.settings.visibilities.includes('super-chat')
+        return this.settings.visibilities['super-chat']
           ? 'card-message'
           : undefined
       case 'paid-sticker':
-        return this.settings.visibilities.includes('super-sticker')
+        return this.settings.visibilities['super-sticker']
           ? 'sticker'
           : undefined
       case 'membership-item':
-        return this.settings.visibilities.includes('membership')
+        return this.settings.visibilities['membership']
           ? 'card-message'
           : undefined
     }
