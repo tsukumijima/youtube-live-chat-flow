@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
@@ -10,12 +12,12 @@ module.exports = {
   entry: {
     background: './background',
     'content-script': './content-script',
-    options: './options'
+    options: './options',
   },
   output: {
     path: `${__dirname}/app/`,
     filename: '[name].js',
-    publicPath: './'
+    publicPath: './',
   },
   module: {
     rules: [
@@ -23,12 +25,12 @@ module.exports = {
         test: /\.ts$/,
         loader: 'ts-loader',
         options: {
-          appendTsSuffixTo: [/\.vue$/]
-        }
+          appendTsSuffixTo: [/\.vue$/],
+        },
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
       },
       {
         test: /\.s(c|a)ss$/,
@@ -38,55 +40,57 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              implementation: require('sass')
-            }
-          }
-        ]
+              implementation: require('sass'),
+            },
+          },
+        ],
       },
       {
         test: /\.(css|jpg|gif|png|woff|woff2|eot|ttf)$/,
         loader: 'file-loader',
         options: {
-          name: 'assets/[name].[ext]'
-        }
+          name: 'assets/[name].[ext]',
+        },
       },
       {
         test: /\.svg$/,
-        loader: 'svg-inline-loader'
-      }
-    ]
+        loader: 'svg-inline-loader',
+      },
+    ],
   },
   plugins: [
-    new CopyWebpackPlugin([
-      'icon.png',
-      {
-        from: 'manifest.json',
-        transform: function(content) {
-          return Buffer.from(
-            JSON.stringify({
-              ...JSON.parse(content.toString()),
-              name: process.env.npm_package_productName,
-              description: process.env.npm_package_description,
-              version: process.env.npm_package_version
-            })
-          )
-        }
-      }
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        'icon.png',
+        {
+          from: 'manifest.json',
+          transform: function (content) {
+            return Buffer.from(
+              JSON.stringify({
+                ...JSON.parse(content.toString()),
+                name: process.env.npm_package_productName,
+                description: process.env.npm_package_description,
+                version: process.env.npm_package_version,
+              })
+            )
+          },
+        },
+      ],
+    }),
     new HtmlWebpackPlugin({
       template: './options.html',
       filename: './options.html',
-      chunks: ['options']
+      chunks: ['options'],
     }),
     new VueLoaderPlugin(),
-    new VuetifyLoaderPlugin()
+    new VuetifyLoaderPlugin(),
   ],
   resolve: {
     extensions: ['.js', '.ts', '.vue'],
     alias: {
       '~~': `${__dirname}/`,
       '~': `${__dirname}/src/`,
-      vue$: 'vue/dist/vue.esm.js'
-    }
-  }
+      vue$: 'vue/dist/vue.esm.js',
+    },
+  },
 }

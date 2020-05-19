@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    node: true,
   },
   extends: [
     'eslint:recommended',
@@ -13,6 +13,6 @@ module.exports = {
     'prettier/@typescript-eslint',
     '@vue/typescript/recommended',
     '@vue/prettier',
-    '@vue/prettier/@typescript-eslint'
-  ]
+    '@vue/prettier/@typescript-eslint',
+  ],
 }
