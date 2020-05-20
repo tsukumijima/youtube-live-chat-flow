@@ -15,7 +15,8 @@
     }
   ],
   "page_action": {
-    "default_icon": "icon.png"
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
   },
   "options_ui": {
     "page": "options.html",

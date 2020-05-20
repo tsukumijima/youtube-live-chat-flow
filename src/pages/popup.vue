@@ -9,5 +9,5 @@ import App from '~/components/App.vue'
 @Component({
   components: { App },
 })
-export default class Options extends Vue {}
+export default class Popup extends Vue {}
 </script>

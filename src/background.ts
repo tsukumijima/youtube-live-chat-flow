@@ -116,7 +116,3 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
       break
   }
 })
-
-browser.pageAction.onClicked.addListener((tab) => {
-  tab.id && toggleEnabled(tab.id)
-})
