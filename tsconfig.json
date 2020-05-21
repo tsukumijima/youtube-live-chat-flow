@@ -8,10 +8,10 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
-      "~~/*": ["./*"]
+      "~~/*": ["./*"],
     },
     "types": [
-      "vuetify"
+      "vuetify",
     ],
     "esModuleInterop": true,
     "experimentalDecorators": true,
