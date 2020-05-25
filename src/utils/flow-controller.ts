@@ -38,6 +38,12 @@ const semaphore = (permits = 1) => {
 
 const sem = semaphore()
 
+const ClassName = {
+  filterActivated: 'ylcfr-active',
+  filteredMessage: 'ylcfr-filtered-message',
+  deletedMessage: 'ylcfr-deleted-message',
+}
+
 interface Timeline {
   willAppear: number
   didAppear: number
@@ -113,7 +119,8 @@ export default class FlowController {
       this.settings
     )
 
-    if (element.classList.contains('ylcf-deleted-message')) {
+    const deleted = await this.validateDeletedMessage(element)
+    if (deleted) {
       return
     }
 
@@ -189,6 +196,27 @@ export default class FlowController {
       const height = videoHeight / (lines + 0.2)
       return [lines, height]
     }
+  }
+
+  private async validateDeletedMessage(element: HTMLElement) {
+    const active = document.documentElement.classList.contains(
+      ClassName.filterActivated
+    )
+    if (!active) {
+      return false
+    }
+    const deleted = await new Promise<boolean>((resolve) => {
+      const expireTime = Date.now() + 1000
+      const timer = setInterval(() => {
+        const filtered = element.classList.contains(ClassName.filteredMessage)
+        if (filtered || Date.now() > expireTime) {
+          clearInterval(timer)
+          const deleted = element.classList.contains(ClassName.deletedMessage)
+          resolve(deleted)
+        }
+      }, 10)
+    })
+    return deleted
   }
 
   private async createMessageElement(
