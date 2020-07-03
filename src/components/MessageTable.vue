@@ -70,7 +70,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { AuthorType, MessageType, Template } from '~/models/settings'
+import { AuthorType, MessageType, Template } from '~/models'
 import { settingsStore } from '~/store'
 
 @Component

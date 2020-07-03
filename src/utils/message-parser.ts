@@ -1,6 +1,6 @@
 import Color from 'color'
-import Message from '~/models/message'
-import { getImageSourceAsync } from './dom-helper'
+import { Message } from '~/models'
+import { getImageSourceAsync } from '~/utils/dom-helper'
 
 const getBackgroundColor = (el: HTMLElement, opacity: number) => {
   try {

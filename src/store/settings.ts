@@ -1,15 +1,16 @@
 import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
-import Setting, {
+import {
   AuthorType,
-  MessageType,
   HeightType,
-  StackDirection,
+  MessageType,
   Overflow,
+  Settings,
+  StackDirection,
   Style,
-} from '~/models/settings'
+} from '~/models'
 
 const initialState: Omit<
-  Setting,
+  Settings,
   'bottomChatInputEnabled' | 'growBottomChatInputEnabled'
 > = {
   styles: {
@@ -84,7 +85,7 @@ export default class SettingsModule extends VuexModule {
   updateStyle({
     authorType,
     ...params
-  }: { authorType: AuthorType } & Partial<Style>) {
+  }: { authorType: AuthorType } & Partial<Style>): void {
     this.styles = {
       ...this.styles,
       [authorType]: {
@@ -100,55 +101,59 @@ export default class SettingsModule extends VuexModule {
   }: {
     type: AuthorType | MessageType
     visibility: boolean
-  }) {
+  }): void {
     this.visibilities[type] = visibility
   }
   @Mutation
-  setHeightType({ heightType }: { heightType: HeightType }) {
+  setHeightType({ heightType }: { heightType: HeightType }): void {
     this.heightType = heightType
   }
   @Mutation
-  setLines({ lines }: { lines: number }) {
+  setLines({ lines }: { lines: number }): void {
     this.lines = lines
   }
   @Mutation
-  setLineHeight({ lineHeight }: { lineHeight: number }) {
+  setLineHeight({ lineHeight }: { lineHeight: number }): void {
     this.lineHeight = lineHeight
   }
   @Mutation
-  setOpacity({ opacity }: { opacity: number }) {
+  setOpacity({ opacity }: { opacity: number }): void {
     this.opacity = opacity
   }
   @Mutation
-  setOutlineRatio({ outlineRatio }: { outlineRatio: number }) {
+  setOutlineRatio({ outlineRatio }: { outlineRatio: number }): void {
     this.outlineRatio = outlineRatio
   }
   @Mutation
-  setExtendedStyle({ extendedStyle }: { extendedStyle: string }) {
+  setExtendedStyle({ extendedStyle }: { extendedStyle: string }): void {
     this.extendedStyle = extendedStyle
   }
   @Mutation
-  setDisplayTime({ displayTime }: { displayTime: number }) {
+  setDisplayTime({ displayTime }: { displayTime: number }): void {
     this.displayTime = displayTime
   }
   @Mutation
-  setDelayTime({ delayTime }: { delayTime: number }) {
+  setDelayTime({ delayTime }: { delayTime: number }): void {
     this.delayTime = delayTime
   }
   @Mutation
-  setDisplays({ displays }: { displays: number }) {
+  setDisplays({ displays }: { displays: number }): void {
     this.displays = displays
   }
   @Mutation
-  setStackDirection({ stackDirection }: { stackDirection: StackDirection }) {
+  setStackDirection({
+    stackDirection,
+  }: {
+    stackDirection: StackDirection
+  }): void {
     this.stackDirection = stackDirection
   }
   @Mutation
-  setOverflow({ overflow }: { overflow: Overflow }) {
+  setOverflow({ overflow }: { overflow: Overflow }): void {
     this.overflow = overflow
   }
   @Mutation
-  resetState() {
+  resetState(): void {
     for (const [k, v] of Object.entries(initialState)) {
       ;(this as any)[k] = v // eslint-disable-line @typescript-eslint/no-explicit-any
     }
@@ -158,7 +163,7 @@ export default class SettingsModule extends VuexModule {
     bottomChatInputEnabled,
   }: {
     bottomChatInputEnabled: boolean
-  }) {
+  }): void {
     this.bottomChatInputEnabled = bottomChatInputEnabled
   }
   @Mutation
@@ -166,7 +171,7 @@ export default class SettingsModule extends VuexModule {
     growBottomChatInputEnabled,
   }: {
     growBottomChatInputEnabled: boolean
-  }) {
+  }): void {
     this.growBottomChatInputEnabled = growBottomChatInputEnabled
   }
 }

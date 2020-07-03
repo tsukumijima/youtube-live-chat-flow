@@ -1,4 +1,4 @@
-export default interface Message {
+export type Message = {
   author?: string
   authorType?: string
   message?: string

@@ -1,9 +1,8 @@
-import Settings from '~/models/settings'
-import Message from '~/models/message'
-import { querySelectorAsync, waitAllImagesLoaded } from './dom-helper'
-import MessageSettings from './message-settings'
-import { parse } from './message-parser'
-import { render } from './message-renderer'
+import { Message, Settings } from '~/models'
+import { querySelectorAsync, waitAllImagesLoaded } from '~/utils/dom-helper'
+import MessageSettings from '~/utils/message-settings'
+import { parse } from '~/utils/message-parser'
+import { render } from '~/utils/message-renderer'
 
 const semaphore = (permits = 1) => {
   let resources = permits
@@ -60,22 +59,22 @@ export default class FlowController {
   private cleanupTimer = -1
   settings: Settings | undefined
 
-  get enabled() {
+  get enabled(): boolean {
     return this._enabled
   }
 
-  set enabled(value) {
+  set enabled(value: boolean) {
     this._enabled = value
     if (!this._enabled) {
       this.clear()
     }
   }
 
-  get following() {
+  get following(): boolean {
     return this._following
   }
 
-  set following(value) {
+  set following(value: boolean) {
     this._following = value
     if (value) {
       const scrollToBottom = () => {
@@ -356,7 +355,7 @@ export default class FlowController {
       })
   }
 
-  async observe() {
+  async observe(): Promise<void> {
     const items = await querySelectorAsync(
       '#items.yt-live-chat-item-list-renderer'
     )
@@ -386,12 +385,12 @@ export default class FlowController {
     }, 1000)
   }
 
-  disconnect() {
+  disconnect(): void {
     clearInterval(this.cleanupTimer)
     this.observer?.disconnect()
   }
 
-  clear() {
+  clear(): void {
     parent.document.querySelectorAll('.ylcf-flow-message').forEach((e) => {
       e.remove()
     })

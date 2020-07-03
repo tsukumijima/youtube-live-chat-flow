@@ -17,7 +17,7 @@ export type Style = {
   template: Template
 }
 
-export default interface Settings {
+export type Settings = {
   styles: Styles
   visibilities: Visibilities
   heightType: HeightType

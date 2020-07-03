@@ -1,5 +1,5 @@
-import Settings, { AuthorType } from '~/models/settings'
-import Message from '~/models/message'
+import { AuthorType, Message, Settings, Style } from '~/models'
+import { Template } from '~/utils/message-renderer'
 
 export default class MessageSettings {
   private message: Message
@@ -10,7 +10,7 @@ export default class MessageSettings {
     this.settings = settings
   }
 
-  private get yourName() {
+  private get yourName(): string {
     // if input control exists
     const span = document.querySelector('#input-container span#author-name')
     if (span?.textContent) {
@@ -28,10 +28,12 @@ export default class MessageSettings {
       '.html5-video-player .ytp-chrome-top-buttons .ytp-watch-later-button'
     ) as HTMLElement | null
     // TODO: japanese only
-    return button?.getAttribute('title')?.replace(' として後で再生します', '')
+    return (
+      button?.getAttribute('title')?.replace(' として後で再生します', '') ?? ''
+    )
   }
 
-  private get authorType() {
+  private get authorType(): AuthorType {
     const author = this.message.author
     const you = author && author === this.yourName
     const authorType = you ? 'you' : this.message.authorType ?? 'guest'
@@ -42,17 +44,17 @@ export default class MessageSettings {
       : 'guest') as AuthorType
   }
 
-  private get paid() {
+  private get paid(): boolean {
     return ['paid-message', 'paid-sticker', 'membership-item'].includes(
       this.message.messageType ?? ''
     )
   }
 
-  private get style() {
+  private get style(): Style {
     return this.settings.styles[this.authorType]
   }
 
-  get template() {
+  get template(): Template | undefined {
     switch (this.message.messageType) {
       case 'text-message':
         return this.settings.visibilities[this.authorType]
@@ -75,7 +77,7 @@ export default class MessageSettings {
     }
   }
 
-  get author() {
+  get author(): boolean {
     switch (this.message.messageType) {
       case 'text-message':
         return this.style.template !== 'one-line-without-author'
@@ -85,18 +87,20 @@ export default class MessageSettings {
         return true
       case 'membership-item':
         return true
+      default:
+        return false
     }
   }
 
-  get avatar() {
+  get avatar(): boolean {
     return this.paid ? true : this.style.avatar
   }
 
-  get fontColor() {
+  get fontColor(): string {
     return this.paid ? '#ffffff' : this.style.color
   }
 
-  get fontStyle() {
+  get fontStyle(): string {
     return this.settings.extendedStyle
   }
 }
