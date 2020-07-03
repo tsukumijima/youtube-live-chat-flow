@@ -1,39 +1,9 @@
+import { semaphore } from '@fiahfy/semaphore'
 import { Message, Settings } from '~/models'
 import { querySelectorAsync, waitAllImagesLoaded } from '~/utils/dom-helper'
 import MessageSettings from '~/utils/message-settings'
 import { parse } from '~/utils/message-parser'
 import { render } from '~/utils/message-renderer'
-
-const semaphore = (permits = 1) => {
-  let resources = permits
-  const queues: (() => Promise<void>)[] = []
-  const next = async () => {
-    if (resources > 0 && queues.length > 0) {
-      resources--
-      try {
-        const queue = queues.shift()
-        if (queue) {
-          await queue()
-        }
-      } catch (e) {} // eslint-disable-line no-empty
-      resources++
-      next()
-    }
-  }
-  return {
-    acquire: (cb: () => Promise<void>): Promise<void> => {
-      return new Promise((resolve) => {
-        queues.push(async () => {
-          await cb()
-          resolve()
-        })
-        setTimeout(() => {
-          next()
-        }, 0)
-      })
-    },
-  }
-}
 
 const sem = semaphore()
 
