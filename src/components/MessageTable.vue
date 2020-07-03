@@ -13,16 +13,16 @@
         :color="isVisible(authorType) ? 'primary' : 'grey'"
         text
         icon
-        @click="toggleVisible(authorType)"
+        @click="handleClickVisibility(authorType)"
       >
         <v-icon>mdi-eye</v-icon>
       </v-btn>
       <v-btn
         slot="activator"
-        :color="getAvatar(authorType) ? 'primary' : 'grey'"
+        :color="isAvatar(authorType) ? 'primary' : 'grey'"
         text
         icon
-        @click="toggleAvatar(authorType)"
+        @click="handleClickAvatar(authorType)"
       >
         <v-icon>mdi-account-circle</v-icon>
       </v-btn>
@@ -53,14 +53,14 @@
       class="d-flex align-center px-4"
     >
       <div class="caption text-capitalize" style="width: 100px;">
-        {{ title(messageType) }}
+        {{ getTitle(messageType) }}
       </div>
       <v-btn
         slot="activator"
         :color="isVisible(messageType) ? 'primary' : 'grey'"
         text
         icon
-        @click="toggleVisible(messageType)"
+        @click="handleClickVisibility(messageType)"
       >
         <v-icon>mdi-eye</v-icon>
       </v-btn>
@@ -69,50 +69,67 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { defineComponent, computed } from '@vue/composition-api'
 import { AuthorType, MessageType, Template } from '~/models'
 import { settingsStore } from '~/store'
 
-@Component
-export default class MessageStyleTable extends Vue {
-  authorTypes = ['guest', 'member', 'moderator', 'owner', 'you']
-  messageTypes = ['super-chat', 'super-sticker', 'membership']
-  templates = [
-    { text: '1 line (without Author)', value: 'one-line-without-author' },
-    { text: '1 line (with Author)', value: 'one-line-with-author' },
-    { text: '2 lines', value: 'two-line' },
-  ]
+const authorTypes = ['guest', 'member', 'moderator', 'owner', 'you']
+const messageTypes = ['super-chat', 'super-sticker', 'membership']
+const templates = [
+  { text: '1 line (without Author)', value: 'one-line-without-author' },
+  { text: '1 line (with Author)', value: 'one-line-with-author' },
+  { text: '2 lines', value: 'two-line' },
+]
 
-  title(messageType: MessageType) {
-    return messageType.replace('-', ' ')
-  }
-  isVisible(type: AuthorType | MessageType) {
-    return settingsStore.visibilities[type]
-  }
-  toggleVisible(type: AuthorType | MessageType) {
-    const visibility = !settingsStore.visibilities[type]
-    return settingsStore.setVisibility({ type, visibility })
-  }
-  getAvatar(authorType: AuthorType) {
-    return settingsStore.styles[authorType].avatar
-  }
-  toggleAvatar(authorType: AuthorType) {
-    const style = settingsStore.styles[authorType]
-    return settingsStore.updateStyle({ authorType, avatar: !style.avatar })
-  }
-  getColor(authorType: AuthorType) {
-    return settingsStore.styles[authorType].color
-  }
-  setColor(authorType: AuthorType, color: string) {
-    return settingsStore.updateStyle({ authorType, color })
-  }
-  getTemplate(authorType: AuthorType) {
-    return settingsStore.styles[authorType].template
-  }
-  setTemplate(authorType: AuthorType, template: Template) {
-    return settingsStore.updateStyle({ authorType, template })
-  }
-}
+export default defineComponent({
+  setup() {
+    const getColor = (authorType: AuthorType) => {
+      return settingsStore.styles[authorType].color
+    }
+    const setColor = (authorType: AuthorType, color: string) => {
+      return settingsStore.updateStyle({ authorType, color })
+    }
+    const getTemplate = (authorType: AuthorType) => {
+      return settingsStore.styles[authorType].template
+    }
+    const setTemplate = (authorType: AuthorType, template: Template) => {
+      return settingsStore.updateStyle({ authorType, template })
+    }
+    const isVisible = (type: AuthorType | MessageType) => {
+      return settingsStore.visibilities[type]
+    }
+    const isAvatar = (authorType: AuthorType) => {
+      return settingsStore.styles[authorType].avatar
+    }
+    const getTitle = (messageType: MessageType) => {
+      return messageType.replace('-', ' ')
+    }
+
+    const handleClickVisibility = (type: AuthorType | MessageType) => {
+      const visibility = !settingsStore.visibilities[type]
+      return settingsStore.setVisibility({ type, visibility })
+    }
+    const handleClickAvatar = (authorType: AuthorType) => {
+      const style = settingsStore.styles[authorType]
+      return settingsStore.updateStyle({ authorType, avatar: !style.avatar })
+    }
+
+    return {
+      authorTypes,
+      messageTypes,
+      templates,
+      getColor,
+      setColor,
+      getTemplate,
+      setTemplate,
+      isVisible,
+      isAvatar,
+      getTitle,
+      handleClickVisibility,
+      handleClickAvatar,
+    }
+  },
+})
 </script>
 
 <style lang="scss" scoped>

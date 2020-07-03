@@ -241,7 +241,7 @@
         class="mt-1 pt-0"
       />
 
-      <v-btn class="my-4" depressed block @click="onResetClick">
+      <v-btn class="my-4" depressed block @click="handleClickReset">
         Reset Settings to Default
       </v-btn>
     </div>
@@ -249,110 +249,160 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { defineComponent, computed } from '@vue/composition-api'
 import MessageTable from '~/components/MessageTable.vue'
 import { settingsStore } from '~/store'
 
-@Component({
+const heightTypes = [
+  { text: 'Flexible', value: 'flexible' },
+  { text: 'Fixed', value: 'fixed' },
+]
+const stackDirections = [
+  { text: 'Top to Bottom', value: 'top_to_bottom' },
+  { text: 'Bottom to Top', value: 'bottom_to_top' },
+]
+const overflows = [
+  { text: 'Hidden', value: 'hidden' },
+  { text: 'Overlay', value: 'overlay' },
+]
+
+export default defineComponent({
   components: {
     MessageTable,
   },
-})
-export default class MessageTabItem extends Vue {
-  heightTypes = [
-    { text: 'Flexible', value: 'flexible' },
-    { text: 'Fixed', value: 'fixed' },
-  ]
-  stackDirections = [
-    { text: 'Top to Bottom', value: 'top_to_bottom' },
-    { text: 'Bottom to Top', value: 'bottom_to_top' },
-  ]
-  overflows = [
-    { text: 'Hidden', value: 'hidden' },
-    { text: 'Overlay', value: 'overlay' },
-  ]
-
-  get heightType() {
-    return settingsStore.heightType
-  }
-  set heightType(value) {
-    settingsStore.setHeightType({ heightType: value })
-  }
-
-  get lines() {
-    return settingsStore.lines
-  }
-  set lines(value) {
-    settingsStore.setLines({ lines: Number(value) })
-  }
-
-  get lineHeight() {
-    return settingsStore.lineHeight
-  }
-  set lineHeight(value) {
-    settingsStore.setLineHeight({ lineHeight: Number(value) })
-  }
-
-  get opacity() {
-    return settingsStore.opacity
-  }
-  set opacity(value) {
-    settingsStore.setOpacity({ opacity: Number(value) })
-  }
-
-  get outlineRatio() {
-    return (settingsStore.outlineRatio * 1000) / 10
-  }
-  set outlineRatio(value) {
-    settingsStore.setOutlineRatio({ outlineRatio: (Number(value) * 10) / 1000 })
-  }
-
-  get extendedStyle() {
-    return settingsStore.extendedStyle
-  }
-  set extendedStyle(value) {
-    settingsStore.setExtendedStyle({
-      extendedStyle: value,
+  setup() {
+    const heightType = computed({
+      get: () => {
+        return settingsStore.heightType
+      },
+      set: (value) => {
+        settingsStore.setHeightType({
+          heightType: value,
+        })
+      },
     })
-  }
+    const lines = computed({
+      get: () => {
+        return settingsStore.lines
+      },
+      set: (value) => {
+        settingsStore.setLines({
+          lines: Number(value),
+        })
+      },
+    })
+    const lineHeight = computed({
+      get: () => {
+        return settingsStore.lineHeight
+      },
+      set: (value) => {
+        settingsStore.setLineHeight({
+          lineHeight: Number(value),
+        })
+      },
+    })
+    const opacity = computed({
+      get: () => {
+        return settingsStore.opacity
+      },
+      set: (value) => {
+        settingsStore.setOpacity({
+          opacity: Number(value),
+        })
+      },
+    })
+    const outlineRatio = computed({
+      get: () => {
+        return (settingsStore.outlineRatio * 1000) / 10
+      },
+      set: (value) => {
+        settingsStore.setOutlineRatio({
+          outlineRatio: (Number(value) * 10) / 1000,
+        })
+      },
+    })
+    const extendedStyle = computed({
+      get: () => {
+        return settingsStore.extendedStyle
+      },
+      set: (value) => {
+        settingsStore.setExtendedStyle({
+          extendedStyle: value,
+        })
+      },
+    })
+    const displayTime = computed({
+      get: () => {
+        return settingsStore.displayTime
+      },
+      set: (value) => {
+        settingsStore.setDisplayTime({
+          displayTime: Number(value),
+        })
+      },
+    })
+    const delayTime = computed({
+      get: () => {
+        return settingsStore.delayTime
+      },
+      set: (value) => {
+        settingsStore.setDelayTime({
+          delayTime: Number(value),
+        })
+      },
+    })
+    const displays = computed({
+      get: () => {
+        return settingsStore.displays
+      },
+      set: (value) => {
+        settingsStore.setDisplays({
+          displays: Number(value),
+        })
+      },
+    })
+    const stackDirection = computed({
+      get: () => {
+        return settingsStore.stackDirection
+      },
+      set: (value) => {
+        settingsStore.setStackDirection({
+          stackDirection: value,
+        })
+      },
+    })
+    const overflow = computed({
+      get: () => {
+        return settingsStore.overflow
+      },
+      set: (value) => {
+        settingsStore.setOverflow({
+          overflow: value,
+        })
+      },
+    })
 
-  get displayTime() {
-    return settingsStore.displayTime
-  }
-  set displayTime(value) {
-    settingsStore.setDisplayTime({ displayTime: Number(value) })
-  }
+    const handleClickReset = () => {
+      settingsStore.resetState()
+    }
 
-  get delayTime() {
-    return settingsStore.delayTime
-  }
-  set delayTime(value) {
-    settingsStore.setDelayTime({ delayTime: Number(value) })
-  }
-
-  get displays() {
-    return settingsStore.displays
-  }
-  set displays(value) {
-    settingsStore.setDisplays({ displays: Number(value) })
-  }
-
-  get stackDirection() {
-    return settingsStore.stackDirection
-  }
-  set stackDirection(value) {
-    settingsStore.setStackDirection({ stackDirection: value })
-  }
-
-  get overflow() {
-    return settingsStore.overflow
-  }
-  set overflow(value) {
-    settingsStore.setOverflow({ overflow: value })
-  }
-
-  onResetClick() {
-    settingsStore.resetState()
-  }
-}
+    return {
+      heightTypes,
+      stackDirections,
+      overflows,
+      heightType,
+      lines,
+      lineHeight,
+      opacity,
+      outlineRatio,
+      extendedStyle,
+      displayTime,
+      delayTime,
+      displays,
+      stackDirection,
+      overflow,
+      handleClickReset,
+    }
+  },
+})
 </script>

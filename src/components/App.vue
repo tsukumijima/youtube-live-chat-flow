@@ -2,7 +2,7 @@
   <v-app>
     <v-content class="fill-height">
       <v-container class="pa-0" fluid fill-height>
-        <v-tabs v-model="tabIndex" grow class="fill-height">
+        <v-tabs v-model="state.index" grow class="fill-height">
           <v-tab v-for="(tab, index) in tabs" :key="index">
             {{ tab.title }}
           </v-tab>
@@ -16,20 +16,29 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { defineComponent, reactive } from '@vue/composition-api'
 import FilterTabItem from '~/components/FilterTabItem.vue'
 import MessageTabItem from '~/components/MessageTabItem.vue'
 import InputTabItem from '~/components/InputTabItem.vue'
 
-@Component
-export default class App extends Vue {
-  tabIndex = 0
-  tabs = [
-    { title: 'Message', item: MessageTabItem },
-    { title: 'Filter', item: FilterTabItem },
-    { title: 'Input', item: InputTabItem },
-  ]
-}
+const tabs = [
+  { title: 'Message', item: MessageTabItem },
+  { title: 'Filter', item: FilterTabItem },
+  { title: 'Input', item: InputTabItem },
+]
+
+export default defineComponent({
+  setup() {
+    const state = reactive({
+      index: 0,
+    })
+
+    return {
+      tabs,
+      state,
+    }
+  },
+})
 </script>
 
 <style lang="scss" scoped>

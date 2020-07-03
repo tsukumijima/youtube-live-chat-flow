@@ -19,26 +19,36 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { defineComponent, computed } from '@vue/composition-api'
 import { settingsStore } from '~/store'
 
-@Component
-export default class OthersTabItem extends Vue {
-  get bottomChatInputEnabled() {
-    return settingsStore.bottomChatInputEnabled
-  }
-  set bottomChatInputEnabled(value) {
-    settingsStore.setBottomChatInputEnabled({
-      bottomChatInputEnabled: value,
+export default defineComponent({
+  setup() {
+    const bottomChatInputEnabled = computed({
+      get: () => {
+        return settingsStore.bottomChatInputEnabled
+      },
+      set: (value) => {
+        settingsStore.setBottomChatInputEnabled({
+          bottomChatInputEnabled: value,
+        })
+      },
     })
-  }
-  get growBottomChatInputEnabled() {
-    return settingsStore.growBottomChatInputEnabled
-  }
-  set growBottomChatInputEnabled(value) {
-    settingsStore.setGrowBottomChatInputEnabled({
-      growBottomChatInputEnabled: value,
+    const growBottomChatInputEnabled = computed({
+      get: () => {
+        return settingsStore.growBottomChatInputEnabled
+      },
+      set: (value) => {
+        settingsStore.setGrowBottomChatInputEnabled({
+          growBottomChatInputEnabled: value,
+        })
+      },
     })
-  }
-}
+
+    return {
+      bottomChatInputEnabled,
+      growBottomChatInputEnabled,
+    }
+  },
+})
 </script>
