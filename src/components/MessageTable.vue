@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import { AuthorType, MessageType, Template } from '~/models'
 import { settingsStore } from '~/store'
 
