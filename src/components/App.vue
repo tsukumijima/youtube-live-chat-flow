@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content class="fill-height">
+    <v-main class="fill-height">
       <v-container class="pa-0" fluid fill-height>
         <v-tabs v-model="state.index" grow class="fill-height">
           <v-tab v-for="(tab, index) in tabs" :key="index">
@@ -11,7 +11,7 @@
           </v-tab-item>
         </v-tabs>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
