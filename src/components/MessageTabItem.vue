@@ -240,11 +240,19 @@
         single-line
         class="mt-1 pt-0"
       />
-
-      <v-btn class="my-4" depressed block @click="handleClickReset">
-        Reset Settings to Default
-      </v-btn>
     </div>
+
+    <v-subheader class="mt-5">Filter</v-subheader>
+    <div class="px-4">
+      Filter Messages by
+      <a href="#" @click.prevent="handleClickLink">
+        Chat Filter for YouTube Live
+      </a>
+    </div>
+
+    <v-btn class="ma-4" depressed block @click="handleClickReset">
+      Reset Settings to Default
+    </v-btn>
   </v-card>
 </template>
 
@@ -382,6 +390,11 @@ export default defineComponent({
       },
     })
 
+    const handleClickLink = () => {
+      window.open(
+        'https://chrome.google.com/webstore/detail/chat-filter-for-youtube-l/jalcplhakmckbmlbidmbmpaegcpbejog'
+      )
+    }
     const handleClickReset = () => {
       settingsStore.resetState()
     }
@@ -401,6 +414,7 @@ export default defineComponent({
       displays,
       stackDirection,
       overflow,
+      handleClickLink,
       handleClickReset,
     }
   },

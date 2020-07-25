@@ -17,13 +17,11 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
-import FilterTabItem from '~/components/FilterTabItem.vue'
 import MessageTabItem from '~/components/MessageTabItem.vue'
 import InputTabItem from '~/components/InputTabItem.vue'
 
 const tabs = [
   { title: 'Message', item: MessageTabItem },
-  { title: 'Filter', item: FilterTabItem },
   { title: 'Input', item: InputTabItem },
 ]
 
