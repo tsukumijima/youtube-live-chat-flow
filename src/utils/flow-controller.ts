@@ -145,7 +145,7 @@ export default class FlowController {
 
       me.style.top = `${top}px`
       me.style.opacity = String(opacity)
-      me.style.zIndex = String(z + 1)
+      me.style.zIndex = String(z + 1 + 11) // 11 is set to z-index on div.webgl
 
       const animation = this.createAnimation(me, containerWidth, this.settings)
       animation.onfinish = () => {
