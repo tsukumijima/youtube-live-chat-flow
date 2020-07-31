@@ -2,12 +2,15 @@ yt-live-chat-header-renderer > #primary-content {
   min-width: 0;
 }
 
-yt-live-chat-header-renderer > #primary-content > #view-selector > yt-sort-filter-sub-menu-renderer {
+yt-live-chat-header-renderer
+  > #primary-content
+  > #view-selector
+  > yt-sort-filter-sub-menu-renderer {
   width: 100%;
 }
 
 .ylcf-menu-button.ylcf-active-menu-button > button > yt-icon {
-  color: #4387f1!important;
+  color: #4387f1 !important;
 }
 
 .ylcf-menu-button > button > yt-icon > svg {

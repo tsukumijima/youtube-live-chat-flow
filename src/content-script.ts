@@ -175,24 +175,12 @@ const moveChatInputControl = () => {
   // add controls
   const controls = document.createElement('div')
   controls.classList.add('ylcf-controller')
-  controls.style.left = `${leftControls.offsetWidth}px`
-  controls.style.right = `${rightControls.offsetWidth}px`
   controls.append(top)
   controls.append(messageButtons)
   message && controls.append(message)
   rightControls.parentElement?.insertBefore(controls, rightControls)
 
-  // setup resize observers
-  const leftControlsObserver = new ResizeObserver((entries) => {
-    const [entry] = entries
-    controls.style.left = `${entry.contentRect.width}px`
-  })
-  leftControlsObserver.observe(leftControls)
-  const rightControlsObserver = new ResizeObserver((entries) => {
-    const [entry] = entries
-    controls.style.right = `${entry.contentRect.width}px`
-  })
-  rightControlsObserver.observe(rightControls)
+  // setup resize observer
   const controlsObserver = new ResizeObserver((entries) => {
     const [entry] = entries
     if (entry.contentRect.width < 512) {
@@ -202,6 +190,8 @@ const moveChatInputControl = () => {
     }
   })
   controlsObserver.observe(controls)
+
+  parent.document.body.classList.add('ylcf-input-injected')
 
   // setup for grow input
   if (!controller.settings?.growBottomChatInputEnabled) {
@@ -214,6 +204,7 @@ const moveChatInputControl = () => {
 const removeChatInputControl = () => {
   const button = parent.document.querySelector('.ylcf-controller')
   button && button.remove()
+  parent.document.body.classList.remove('ylcf-input-injected')
 }
 
 const addVideoEventListener = () => {
