@@ -26,6 +26,9 @@
   yt-live-chat-author-chip {
   display: none;
 }
+.ylcf-input-injected .ytp-chrome-bottom .ytp-chrome-controls {
+  display: flex;
+}
 .ylcf-input-injected
   .ytp-chrome-bottom
   .ytp-chrome-controls
