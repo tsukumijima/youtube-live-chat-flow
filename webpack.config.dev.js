@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 const WebpackExtensionReloaderPlugin = require('webpack-extension-reloader')
 const config = require('./webpack.config')
 
