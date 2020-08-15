@@ -97,6 +97,14 @@ const addMenuButtons = () => {
   updateMenuButtons()
 }
 
+const updateBody = () => {
+  if (controller.settings?.growBottomChatInputEnabled) {
+    parent.document.body.classList.add('ylcf-grow-input')
+  } else {
+    parent.document.body.classList.remove('ylcf-grow-input')
+  }
+}
+
 const moveChatInputControl = () => {
   if (!controller.settings?.bottomChatInputEnabled) {
     return
@@ -133,18 +141,22 @@ const moveChatInputControl = () => {
   input.addEventListener('keydown', (e) => {
     e.stopPropagation()
     const el = e.target as HTMLElement
-    switch (e.keyCode) {
-      case 13: {
-        if (el.textContent !== '') {
-          const sendButton = messageButtons.querySelector(
-            '#send-button button#button'
-          ) as HTMLButtonElement | null
-          sendButton?.click()
+    switch (e.key) {
+      case 'Enter': {
+        if (!e.isComposing) {
+          if (el.textContent !== '') {
+            const sendButton = messageButtons.querySelector(
+              '#send-button button#button'
+            ) as HTMLButtonElement | null
+            sendButton?.click()
+          } else {
+            el.blur()
+          }
         }
-        el.blur()
         break
       }
-      case 27:
+      case 'Escape':
+      case 'Tab':
         el.blur()
         break
     }
@@ -192,13 +204,6 @@ const moveChatInputControl = () => {
   controlsObserver.observe(controls)
 
   parent.document.body.classList.add('ylcf-input-injected')
-
-  // setup for grow input
-  if (!controller.settings?.growBottomChatInputEnabled) {
-    return
-  }
-
-  parent.document.body.classList.add('ylcf-grow-input')
 }
 
 const removeChatInputControl = () => {
@@ -228,9 +233,6 @@ const addVideoEventListener = () => {
 browser.runtime.onMessage.addListener((message) => {
   const { id, data } = message
   switch (id) {
-    case 'cssInjected':
-      parent.document.body.classList.add('ylcf-css-injected')
-      break
     case 'enabledChanged':
       controller.enabled = data.enabled
       updateControlButton()
@@ -241,17 +243,14 @@ browser.runtime.onMessage.addListener((message) => {
       break
     case 'settingsChanged':
       controller.settings = data.settings
+      updateBody()
       break
   }
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const needCSSInject = !parent.document.body.classList.contains(
-    'ylcf-css-injected'
-  )
   const data = await browser.runtime.sendMessage({
     id: 'contentLoaded',
-    data: { needCSSInject },
   })
 
   controller.enabled = data.enabled
@@ -264,6 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   addVideoEventListener()
   addControlButton()
   addMenuButtons()
+  updateBody()
 
   await controller.observe()
 

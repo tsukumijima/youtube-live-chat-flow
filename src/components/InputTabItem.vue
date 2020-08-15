@@ -11,8 +11,6 @@
       v-model="growBottomChatInputEnabled"
       :disabled="!bottomChatInputEnabled"
       label="Grow Bottom Chat Input"
-      hint="Grow the bottom chat input on focus (Page reload required)"
-      persistent-hint
       dense
     />
   </v-card>

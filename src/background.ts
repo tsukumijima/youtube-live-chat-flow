@@ -2,8 +2,6 @@ import { browser } from 'webextension-polyfill-ts'
 import { readyStore } from '~/store'
 import iconOff from '~/assets/icon-off.png'
 import iconOn from '~/assets/icon-on.png'
-import inject from '~/assets/inject.css'
-import parent from '~/assets/parent.css'
 
 interface TabState {
   enabled: boolean
@@ -23,26 +21,13 @@ const setIcon = async (tabId: number) => {
   await browser.pageAction.setIcon({ tabId, path })
 }
 
-const contentLoaded = async (
-  tabId: number,
-  frameId: number,
-  needCSSInject: boolean
-) => {
+const contentLoaded = async (tabId: number) => {
   const enabled = initialState.enabled
   const following = initialState.following
   tabStates = { ...tabStates, [tabId]: { enabled, following } }
 
   await setIcon(tabId)
   await browser.pageAction.show(tabId)
-
-  // window
-  await browser.tabs.insertCSS(tabId, { frameId, file: inject })
-
-  // window.parent
-  if (needCSSInject) {
-    await browser.tabs.insertCSS(tabId, { file: parent })
-    await browser.tabs.sendMessage(tabId, { id: 'cssInjected' })
-  }
 
   const settings = await getSettings()
 
@@ -96,15 +81,11 @@ const settingsChanged = async () => {
 }
 
 browser.runtime.onMessage.addListener(async (message, sender) => {
-  const { id, data } = message
-  const { tab, frameId } = sender
+  const { id } = message
+  const { tab } = sender
   switch (id) {
     case 'contentLoaded':
-      return (
-        tab?.id &&
-        frameId &&
-        (await contentLoaded(tab.id, frameId, data.needCSSInject))
-      )
+      return tab?.id && (await contentLoaded(tab.id))
     case 'controlButtonClicked':
       tab?.id && (await toggleEnabled(tab.id))
       break
