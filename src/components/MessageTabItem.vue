@@ -102,6 +102,32 @@
         </template>
       </v-slider>
 
+      <div class="caption">Background Opacity (for Paid Messages)</div>
+      <v-slider
+        v-model="backgroundOpacity"
+        class="align-center mb-5"
+        min="0"
+        max="1"
+        step="0.1"
+        dense
+        hide-details
+      >
+        <template v-slot:prepend>
+          <v-text-field
+            v-model="backgroundOpacity"
+            class="mt-0 pt-0"
+            dense
+            hide-details
+            single-line
+            type="number"
+            min="0"
+            max="1"
+            step="0.1"
+            style="width: 75px;"
+          />
+        </template>
+      </v-slider>
+
       <div class="caption">Outline Ratio</div>
       <v-slider
         v-model="outlineRatio"
@@ -319,6 +345,16 @@ export default defineComponent({
         })
       },
     })
+    const backgroundOpacity = computed({
+      get: () => {
+        return settingsStore.backgroundOpacity
+      },
+      set: (value) => {
+        settingsStore.setBackgroundOpacity({
+          backgroundOpacity: Number(value),
+        })
+      },
+    })
     const outlineRatio = computed({
       get: () => {
         return (settingsStore.outlineRatio * 1000) / 10
@@ -407,6 +443,7 @@ export default defineComponent({
       lines,
       lineHeight,
       opacity,
+      backgroundOpacity,
       outlineRatio,
       extendedStyle,
       displayTime,

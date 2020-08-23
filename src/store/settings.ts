@@ -50,10 +50,16 @@ const initialState: Omit<
     'super-sticker': true,
     membership: true,
   },
+  modernStyles: {
+    'super-chat': true,
+    'super-sticker': true,
+    membership: true,
+  },
   heightType: 'flexible',
   lines: 12,
   lineHeight: 64,
   opacity: 0.8,
+  backgroundOpacity: 0.4,
   outlineRatio: 0.015,
   extendedStyle: '',
   displayTime: 5,
@@ -67,10 +73,12 @@ const initialState: Omit<
 export default class SettingsModule extends VuexModule {
   styles = initialState.styles
   visibilities = initialState.visibilities
+  modernStyles = initialState.modernStyles
   heightType = initialState.heightType
   lines = initialState.lines
   lineHeight = initialState.lineHeight
   opacity = initialState.opacity
+  backgroundOpacity = initialState.backgroundOpacity
   outlineRatio = initialState.outlineRatio
   extendedStyle = initialState.extendedStyle
   displayTime = initialState.displayTime
@@ -105,6 +113,16 @@ export default class SettingsModule extends VuexModule {
     this.visibilities[type] = visibility
   }
   @Mutation
+  setModernStyle({
+    messageType,
+    modernStyle,
+  }: {
+    messageType: MessageType
+    modernStyle: boolean
+  }): void {
+    this.modernStyles[messageType] = modernStyle
+  }
+  @Mutation
   setHeightType({ heightType }: { heightType: HeightType }): void {
     this.heightType = heightType
   }
@@ -119,6 +137,14 @@ export default class SettingsModule extends VuexModule {
   @Mutation
   setOpacity({ opacity }: { opacity: number }): void {
     this.opacity = opacity
+  }
+  @Mutation
+  setBackgroundOpacity({
+    backgroundOpacity,
+  }: {
+    backgroundOpacity: number
+  }): void {
+    this.backgroundOpacity = backgroundOpacity
   }
   @Mutation
   setOutlineRatio({ outlineRatio }: { outlineRatio: number }): void {

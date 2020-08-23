@@ -64,6 +64,14 @@
       >
         <v-icon>mdi-eye</v-icon>
       </v-btn>
+      <v-select
+        :value="getStyle(messageType)"
+        :items="styles"
+        dense
+        hide-details
+        class="mt-0 pt-0 ml-2 caption flex-grow-1"
+        @input="(value) => setStyle(messageType, value)"
+      />
     </div>
   </div>
 </template>
@@ -80,6 +88,10 @@ const templates = [
   { text: '1 line (with Author)', value: 'one-line-with-author' },
   { text: '2 lines', value: 'two-line' },
 ]
+const styles = [
+  { text: 'Modern (dense style)', value: 'modern' },
+  { text: 'Legacy', value: 'legacy' },
+]
 
 export default defineComponent({
   setup() {
@@ -94,6 +106,15 @@ export default defineComponent({
     }
     const setTemplate = (authorType: AuthorType, template: Template) => {
       return settingsStore.updateStyle({ authorType, template })
+    }
+    const getStyle = (messageType: MessageType) => {
+      return settingsStore.modernStyles[messageType] ? 'modern' : 'legacy'
+    }
+    const setStyle = (messageType: MessageType, style: 'modern' | 'legacy') => {
+      return settingsStore.setModernStyle({
+        messageType,
+        modernStyle: style === 'modern',
+      })
     }
     const isVisible = (type: AuthorType | MessageType) => {
       return settingsStore.visibilities[type]
@@ -118,10 +139,13 @@ export default defineComponent({
       authorTypes,
       messageTypes,
       templates,
+      styles,
       getColor,
       setColor,
       getTemplate,
       setTemplate,
+      getStyle,
+      setStyle,
       isVisible,
       isAvatar,
       getTitle,

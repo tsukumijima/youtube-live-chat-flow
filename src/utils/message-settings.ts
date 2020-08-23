@@ -1,3 +1,4 @@
+import Color from 'color'
 import { AuthorType, Message, Settings, Style } from '~/models'
 import { Template } from '~/utils/message-renderer'
 
@@ -64,15 +65,21 @@ export default class MessageSettings {
           : undefined
       case 'paid-message':
         return this.settings.visibilities['super-chat']
-          ? 'card-message'
+          ? this.settings.modernStyles['super-chat']
+            ? 'two-line-message'
+            : 'card-message'
           : undefined
       case 'paid-sticker':
         return this.settings.visibilities['super-sticker']
-          ? 'sticker'
+          ? this.settings.modernStyles['membership']
+            ? 'sticker'
+            : 'legacy-sticker'
           : undefined
       case 'membership-item':
         return this.settings.visibilities['membership']
-          ? 'card-message'
+          ? this.settings.modernStyles['membership']
+            ? 'two-line-message'
+            : 'card-message'
           : undefined
     }
   }
@@ -102,5 +109,19 @@ export default class MessageSettings {
 
   get fontStyle(): string {
     return this.settings.extendedStyle
+  }
+
+  get backgroundColor(): string | undefined {
+    if (!this.message.backgroundColor) {
+      return undefined
+    }
+    try {
+      const o = new Color(this.message.backgroundColor).object()
+      const opacity = this.settings.backgroundOpacity
+      return `rgba(${o.r}, ${o.g}, ${o.b}, ${opacity})`
+    } catch (e) {
+      // parse error by invalid background color
+      return undefined
+    }
   }
 }

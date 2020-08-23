@@ -5,6 +5,7 @@ export type StackDirection = 'top_to_bottom' | 'bottom_to_top'
 export type Overflow = 'overlay' | 'hidden'
 export type Styles = { [authorType in AuthorType]: Style }
 export type Visibilities = { [type in AuthorType | MessageType]: boolean }
+export type modernStyles = { [type in MessageType]: boolean }
 
 export type Template =
   | 'one-line-without-author'
@@ -20,10 +21,12 @@ export type Style = {
 export type Settings = {
   styles: Styles
   visibilities: Visibilities
+  modernStyles: modernStyles
   heightType: HeightType
   lines: number
   lineHeight: number
   opacity: number
+  backgroundOpacity: number
   outlineRatio: number
   extendedStyle: string
   displayTime: number

@@ -1,16 +1,8 @@
-import Color from 'color'
 import { Message } from '~/models'
 import { getImageSourceAsync } from '~/utils/dom-helper'
 
-const getBackgroundColor = (el: HTMLElement, opacity: number) => {
-  try {
-    const backgroundColor = getComputedStyle(el).backgroundColor
-    const o = new Color(backgroundColor).object()
-    return `rgba(${o.r}, ${o.g}, ${o.b}, ${opacity})`
-  } catch (e) {
-    // parse error by invalid background color
-    return undefined
-  }
+const getBackgroundColor = (el: HTMLElement) => {
+  return getComputedStyle(el).backgroundColor
 }
 
 const parseCommonElements = async (el: HTMLElement) => {
@@ -40,16 +32,15 @@ const parsePaidMessage = async (el: HTMLElement) => {
   const params = await parseCommonElements(el)
 
   const html = el.querySelector('#message')?.innerHTML
-  const purchaseAmount =
-    el.querySelector('#purchase-amount')?.textContent ?? undefined
+  const subText = el.querySelector('#purchase-amount')?.textContent ?? undefined
   const card = el.querySelector('#card > #header') as HTMLElement | null
-  const backgroundColor = (card && getBackgroundColor(card, 0.8)) ?? undefined
+  const backgroundColor = (card && getBackgroundColor(card)) ?? undefined
 
   return {
     ...params,
     html,
     backgroundColor,
-    purchaseAmount,
+    subText,
     messageType: 'paid-message',
   }
 }
@@ -57,10 +48,9 @@ const parsePaidMessage = async (el: HTMLElement) => {
 const parsePaidSticker = async (el: HTMLElement) => {
   const params = await parseCommonElements(el)
 
-  const purchaseAmount =
-    el.querySelector('#purchase-amount-chip')?.textContent ?? ''
+  const subText = el.querySelector('#purchase-amount-chip')?.textContent ?? ''
   const card = el.querySelector('#card') as HTMLElement | null
-  const backgroundColor = (card && getBackgroundColor(card, 0.8)) ?? undefined
+  const backgroundColor = (card && getBackgroundColor(card)) ?? undefined
   const stickerImage = el.querySelector(
     '#sticker > #img'
   ) as HTMLImageElement | null
@@ -71,7 +61,7 @@ const parsePaidSticker = async (el: HTMLElement) => {
     ...params,
     stickerUrl,
     backgroundColor,
-    purchaseAmount,
+    subText,
     messageType: 'paid-sticker',
   }
 }
@@ -82,8 +72,7 @@ const parseMembershipItem = async (el: HTMLElement) => {
   const detailText =
     el.querySelector('#header-subtext')?.textContent ?? undefined
   const header = el.querySelector('#card > #header') as HTMLElement | null
-  const backgroundColor =
-    (header && getBackgroundColor(header, 0.8)) ?? undefined
+  const backgroundColor = (header && getBackgroundColor(header)) ?? undefined
 
   return {
     ...params,

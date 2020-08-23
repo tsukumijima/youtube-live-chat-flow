@@ -99,23 +99,29 @@ const renderStickerImage = (url: string, height: number) => {
 const renderOneLineMessage = ({
   html,
   author,
+  subText,
   avatarUrl,
   fontColor,
   fontStyle,
+  backgroundColor,
   height,
 }: {
   html?: string
   author?: string
+  subText?: string
   avatarUrl?: string
   fontColor?: string
   fontStyle?: string
+  backgroundColor?: string
   height: number
 }) => {
   const el = document.createElement('div')
   el.style.color = fontColor ?? 'white'
   el.style.fontSize = `${height * 0.8}px`
   el.style.lineHeight = `${height * 0.8}px`
-  el.style.padding = `${height * 0.1}px`
+  el.style.padding = `${height * 0.1}px ${height * 0.2}px`
+  el.style.backgroundColor = backgroundColor ?? 'transparent'
+  el.style.borderRadius = `${height * 0.1}px`
   el.setAttribute('style', el.getAttribute('style') + (fontStyle ?? ''))
 
   if (avatarUrl) {
@@ -124,8 +130,11 @@ const renderOneLineMessage = ({
     el.append(avatar)
   }
 
-  if (author) {
-    const a = renderAuthor(author + ':', height * 0.8)
+  if (author || subText) {
+    const a = renderAuthor(
+      (author ?? '') + (author && subText && ' - ') + (subText ?? '') + ':',
+      height * 0.8
+    )
     a.style.marginRight = `${height * 0.2}px`
     el.append(a)
   }
@@ -137,24 +146,30 @@ const renderOneLineMessage = ({
 const renderTwoLineMessage = ({
   html,
   author,
+  subText,
   avatarUrl,
   fontColor,
   fontStyle,
+  backgroundColor,
   height,
 }: {
   html?: string
   author?: string
+  subText?: string
   avatarUrl?: string
   fontColor?: string
   fontStyle?: string
+  backgroundColor?: string
   height: number
 }) => {
   const el = document.createElement('div')
   el.style.color = fontColor ?? 'white'
   el.style.fontSize = `${height * 0.8}px`
   el.style.lineHeight = `${height * 0.8}px`
-  el.style.padding = `${height * 0.1}px`
+  el.style.padding = `${height * 0.1}px ${height * 0.2}px`
   el.style.alignItems = 'start'
+  el.style.backgroundColor = backgroundColor ?? 'transparent'
+  el.style.borderRadius = `${height * 0.1}px`
   el.setAttribute('style', el.getAttribute('style') + (fontStyle ?? ''))
 
   if (avatarUrl) {
@@ -167,11 +182,17 @@ const renderTwoLineMessage = ({
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
   wrapper.style.alignItems = 'start'
-  wrapper.append(renderAuthor(author ?? '', height * 0.8))
-  const message = renderMessage(html ?? '', height * 0.8)
-  message.style.marginTop = `${height * 0.1}px`
-  wrapper.append(message)
-
+  wrapper.append(
+    renderAuthor(
+      (author ?? '') + (subText ? ` - ${subText}` : ''),
+      height * 0.8
+    )
+  )
+  if (html) {
+    const message = renderMessage(html ?? '', height * 0.8)
+    message.style.marginTop = `${height * 0.1}px`
+    wrapper.append(message)
+  }
   el.append(wrapper)
   return el
 }
@@ -240,7 +261,7 @@ const renderCardMessage = ({
 const renderSticker = ({
   stickerUrl,
   author,
-  purchaseAmount,
+  subText,
   avatarUrl,
   fontColor,
   fontStyle,
@@ -249,7 +270,61 @@ const renderSticker = ({
 }: {
   stickerUrl?: string
   author?: string
-  purchaseAmount?: string
+  subText?: string
+  avatarUrl?: string
+  fontColor?: string
+  fontStyle?: string
+  backgroundColor?: string
+  height: number
+}) => {
+  const el = document.createElement('div')
+  el.style.color = fontColor ?? 'white'
+  el.style.fontSize = `${height * 0.8}px`
+  el.style.lineHeight = `${height * 0.8}px`
+  el.style.padding = `${height * 0.1}px ${height * 0.2}px`
+  el.style.alignItems = 'start'
+  el.style.backgroundColor = backgroundColor ?? 'transparent'
+  el.style.borderRadius = `${height * 0.1}px`
+  el.setAttribute('style', el.getAttribute('style') + (fontStyle ?? ''))
+
+  if (avatarUrl) {
+    const avatar = renderAvatar(avatarUrl, height * 0.8)
+    avatar.style.marginRight = `${height * 0.2}px`
+    el.append(avatar)
+  }
+
+  const wrapper = document.createElement('div')
+  wrapper.style.display = 'flex'
+  wrapper.style.flexDirection = 'column'
+  wrapper.style.alignItems = 'start'
+  wrapper.append(renderAuthor(author ?? '', height * 0.8))
+  const message = renderAuthor(subText ?? '', height * 0.8)
+  message.style.marginTop = `${height * 0.1}px`
+  wrapper.append(message)
+  el.append(wrapper)
+
+  if (stickerUrl) {
+    const sticker = renderStickerImage(stickerUrl, height * 1.7)
+    sticker.style.marginLeft = `${height * 0.2}px`
+    el.append(sticker)
+  }
+
+  return el
+}
+
+const renderLegacySticker = ({
+  stickerUrl,
+  author,
+  subText,
+  avatarUrl,
+  fontColor,
+  fontStyle,
+  backgroundColor,
+  height,
+}: {
+  stickerUrl?: string
+  author?: string
+  subText?: string
   avatarUrl?: string
   fontColor?: string
   fontStyle?: string
@@ -285,7 +360,7 @@ const renderSticker = ({
   wrapper.style.alignItems = 'start'
   wrapper.append(
     renderAuthor(
-      (author ?? '') + (purchaseAmount ? ` - ${purchaseAmount}` : ''),
+      (author ?? '') + (subText ? ` - ${subText}` : ''),
       height * 0.8
     )
   )
@@ -303,11 +378,12 @@ export type Template =
   | 'two-line-message'
   | 'card-message'
   | 'sticker'
+  | 'legacy-sticker'
 
 type Params = {
   html?: string
   author?: string
-  paymentAmount?: string
+  subText?: string
   avatarUrl?: string
   stickerUrl?: string
   fontColor?: string
@@ -340,5 +416,7 @@ export const render = (
       return renderCardMessage(newParams)
     case 'sticker':
       return renderSticker(newParams)
+    case 'legacy-sticker':
+      return renderLegacySticker(newParams)
   }
 }
