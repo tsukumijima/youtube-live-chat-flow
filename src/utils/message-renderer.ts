@@ -132,7 +132,7 @@ const renderOneLineMessage = ({
 
   if (author || subText) {
     const a = renderAuthor(
-      (author ?? '') + (author && subText && ' - ') + (subText ?? '') + ':',
+      (author ?? '') + (author && subText ? ' - ' : '') + (subText ?? '') + ':',
       height * 0.8
     )
     a.style.marginRight = `${height * 0.2}px`
