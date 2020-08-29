@@ -214,7 +214,7 @@ const removeChatInputControl = () => {
 
 const addVideoEventListener = () => {
   const video = parent.document.querySelector(
-    'video.html5-main-video'
+    'ytd-watch-flexy video.html5-main-video'
   ) as HTMLVideoElement | null
   if (!video) {
     return
