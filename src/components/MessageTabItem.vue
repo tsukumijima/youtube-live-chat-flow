@@ -14,7 +14,7 @@
             dense
             single-line
             class="pt-0 mt-1"
-            style="width: 120px;"
+            style="width: 120px"
           />
         </div>
         <div class="flex-grow-1">
@@ -41,7 +41,7 @@
                   max="256"
                   step="1"
                   suffix="px"
-                  style="width: 75px;"
+                  style="width: 75px"
                 />
               </template>
             </v-slider>
@@ -68,7 +68,7 @@
                   min="1"
                   max="64"
                   step="1"
-                  style="width: 75px;"
+                  style="width: 75px"
                 />
               </template>
             </v-slider>
@@ -97,7 +97,7 @@
             min="0"
             max="1"
             step="0.1"
-            style="width: 75px;"
+            style="width: 75px"
           />
         </template>
       </v-slider>
@@ -123,7 +123,7 @@
             min="0"
             max="1"
             step="0.1"
-            style="width: 75px;"
+            style="width: 75px"
           />
         </template>
       </v-slider>
@@ -150,7 +150,7 @@
             max="5"
             step="0.1"
             suffix="%"
-            style="width: 75px;"
+            style="width: 75px"
           />
         </template>
       </v-slider>
@@ -191,7 +191,7 @@
             max="10"
             step="0.1"
             suffix="sec"
-            style="width: 75px;"
+            style="width: 75px"
           />
         </template>
       </v-slider>
@@ -218,14 +218,12 @@
             max="300"
             step="1"
             suffix="sec"
-            style="width: 75px;"
+            style="width: 75px"
           />
         </template>
       </v-slider>
 
-      <div class="caption">
-        Max Displays (Infinite if set to 0)
-      </div>
+      <div class="caption">Max Displays (Infinite if set to 0)</div>
       <v-slider
         v-model="displays"
         class="align-center mb-5"
@@ -244,7 +242,7 @@
             type="number"
             min="0"
             max="100"
-            style="width: 75px;"
+            style="width: 75px"
           />
         </template>
       </v-slider>

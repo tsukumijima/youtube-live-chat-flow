@@ -5,7 +5,7 @@
       :key="authorType"
       class="d-flex align-center px-4"
     >
-      <div class="caption text-capitalize" style="width: 100px;">
+      <div class="caption text-capitalize" style="width: 100px">
         {{ authorType }}
       </div>
       <v-btn
@@ -52,7 +52,7 @@
       :key="messageType"
       class="d-flex align-center px-4"
     >
-      <div class="caption text-capitalize" style="width: 100px;">
+      <div class="caption text-capitalize" style="width: 100px">
         {{ getTitle(messageType) }}
       </div>
       <v-btn
