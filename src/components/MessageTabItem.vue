@@ -29,7 +29,7 @@
               dense
               hide-details
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <v-text-field
                   v-model="lineHeight"
                   class="mt-0 pt-0"
@@ -57,7 +57,7 @@
               dense
               hide-details
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <v-text-field
                   v-model="lines"
                   class="mt-0 pt-0"
@@ -86,7 +86,7 @@
         dense
         hide-details
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-text-field
             v-model="opacity"
             class="mt-0 pt-0"
@@ -112,7 +112,7 @@
         dense
         hide-details
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-text-field
             v-model="backgroundOpacity"
             class="mt-0 pt-0"
@@ -138,7 +138,7 @@
         dense
         hide-details
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-text-field
             v-model="outlineRatio"
             class="mt-0 pt-0"
@@ -179,7 +179,7 @@
         dense
         hide-details
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-text-field
             v-model="displayTime"
             class="mt-0 pt-0"
@@ -206,7 +206,7 @@
         dense
         hide-details
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-text-field
             v-model="delayTime"
             class="mt-0 pt-0"
@@ -232,7 +232,7 @@
         dense
         hide-details
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-text-field
             v-model="displays"
             class="mt-0 pt-0"
