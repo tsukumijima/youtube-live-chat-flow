@@ -58,7 +58,7 @@
     "dev": "webpack -w --config webpack.config.dev.js",
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "lint:eslint": "eslint -f codeframe --ext .js,.ts,.vue --ignore-path .gitignore .",
-    "lint:prettier": "prettier -c --ignore-path .gitignore **/*.{js,ts,vue}",
+    "lint:prettier": "prettier -c --ignore-path .gitignore .",
     "package": "npm run build -- --mode=production && mkdir -p dist && zip -r dist/archive.zip app",
     "test": "npm run lint"
   }

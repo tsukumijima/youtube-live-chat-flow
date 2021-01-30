@@ -354,7 +354,9 @@ export default class FlowController {
   async observe(): Promise<void> {
     await this.observeMessages()
 
-    const itemList = await querySelectorAsync('#item-list.yt-live-chat-renderer')
+    const itemList = await querySelectorAsync(
+      '#item-list.yt-live-chat-renderer'
+    )
     if (!itemList) {
       return
     }
