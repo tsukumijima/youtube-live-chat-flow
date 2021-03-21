@@ -2,8 +2,10 @@ import { browser } from 'webextension-polyfill-ts'
 import FlowController from '~/utils/flow-controller'
 import message from '~/assets/message.svg'
 import downArrow from '~/assets/down-arrow.svg'
+import { querySelectorAsync } from '~/utils/dom-helper'
 
 const controller = new FlowController()
+let observer: MutationObserver | undefined
 
 const menuButtonConfigs = [
   {
@@ -20,7 +22,14 @@ const updateControlButton = () => {
   button && button.setAttribute('aria-pressed', String(controller.enabled))
 }
 
+const removeControlButton = () => {
+  const button = parent.document.querySelector('.ylcf-control-button')
+  button && button.remove()
+}
+
 const addControlButton = () => {
+  removeControlButton()
+
   const controls = parent.document.querySelector(
     '.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls'
   )
@@ -43,11 +52,6 @@ const addControlButton = () => {
   controls.prepend(button)
 
   updateControlButton()
-}
-
-const removeControlButton = () => {
-  const button = parent.document.querySelector('.ylcf-control-button')
-  button && button.remove()
 }
 
 const updateMenuButtons = () => {
@@ -105,7 +109,15 @@ const updateBody = () => {
   }
 }
 
+const removeChatInputControl = () => {
+  const button = parent.document.querySelector('.ylcf-controller')
+  button && button.remove()
+  parent.document.body.classList.remove('ylcf-input-injected')
+}
+
 const moveChatInputControl = () => {
+  removeChatInputControl()
+
   if (!controller.settings?.bottomChatInputEnabled) {
     return
   }
@@ -208,12 +220,6 @@ const moveChatInputControl = () => {
   parent.document.body.classList.add('ylcf-input-injected')
 }
 
-const removeChatInputControl = () => {
-  const button = parent.document.querySelector('.ylcf-controller')
-  button && button.remove()
-  parent.document.body.classList.remove('ylcf-input-injected')
-}
-
 const addVideoEventListener = () => {
   const video = parent.document.querySelector(
     'ytd-watch-flexy video.html5-main-video'
@@ -230,6 +236,26 @@ const addVideoEventListener = () => {
   } else {
     moveChatInputControl()
   }
+}
+
+const observe = async () => {
+  await controller.observe()
+
+  const itemList = await querySelectorAsync('#item-list.yt-live-chat-renderer')
+  if (!itemList) {
+    return
+  }
+
+  observer = new MutationObserver(async (aa) => {
+    moveChatInputControl()
+    await controller.observe()
+  })
+  observer.observe(itemList, { childList: true })
+}
+
+const disconnect = () => {
+  controller.disconnect()
+  observer?.disconnect()
 }
 
 browser.runtime.onMessage.addListener((message) => {
@@ -259,19 +285,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   controller.following = data.following
   controller.settings = data.settings
 
-  removeChatInputControl()
   removeControlButton()
+  removeChatInputControl()
 
   addVideoEventListener()
   addControlButton()
   addMenuButtons()
   updateBody()
 
-  await controller.observe()
+  await observe()
 
   window.addEventListener('unload', () => {
+    disconnect()
     controller.clear()
-    controller.disconnect()
     removeControlButton()
     removeChatInputControl()
   })

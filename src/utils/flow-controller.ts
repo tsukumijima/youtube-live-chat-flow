@@ -24,7 +24,6 @@ export default class FlowController {
   private _enabled = false
   private _following = false
   private timelines: Timeline[][] = []
-  private wrapperObserver: MutationObserver | undefined
   private observer: MutationObserver | undefined
   private followingTimer = -1
   private cleanupTimer = -1
@@ -327,7 +326,7 @@ export default class FlowController {
       })
   }
 
-  private async observeMessages(): Promise<void> {
+  async observe(): Promise<void> {
     this.observer?.disconnect()
 
     const items = await querySelectorAsync(
@@ -347,23 +346,7 @@ export default class FlowController {
         })
       })
     })
-
     this.observer.observe(items, { childList: true })
-  }
-
-  async observe(): Promise<void> {
-    await this.observeMessages()
-
-    const itemList = await querySelectorAsync(
-      '#item-list.yt-live-chat-renderer'
-    )
-    if (!itemList) {
-      return
-    }
-    this.wrapperObserver = new MutationObserver(async () => {
-      await this.observeMessages()
-    })
-    this.wrapperObserver.observe(itemList, { childList: true })
 
     this.cleanupTimer = setInterval(() => {
       this.timelines = this.timelines.map((timelines) => {
