@@ -100,6 +100,31 @@
         </template>
       </v-slider>
 
+      <div class="caption">Max Width (Infinite if set to 0)</div>
+      <v-slider
+        v-model="maxWidth"
+        class="align-center mb-5"
+        min="0"
+        max="300"
+        dense
+        hide-details
+      >
+        <template #prepend>
+          <v-text-field
+            v-model="maxWidth"
+            class="mt-0 pt-0"
+            dense
+            hide-details
+            single-line
+            type="number"
+            min="0"
+            max="300"
+            suffix="%"
+            style="width: 75px"
+          />
+        </template>
+      </v-slider>
+
       <div class="caption">Opacity</div>
       <v-slider
         v-model="opacity"
@@ -357,6 +382,16 @@ export default defineComponent({
         })
       },
     })
+    const maxWidth = computed({
+      get: () => {
+        return settingsStore.maxWidth
+      },
+      set: (value) => {
+        settingsStore.setMaxWidth({
+          maxWidth: Number(value),
+        })
+      },
+    })
     const lineHeight = computed({
       get: () => {
         return settingsStore.lineHeight
@@ -474,6 +509,7 @@ export default defineComponent({
       heightType,
       lines,
       maxLines,
+      maxWidth,
       lineHeight,
       opacity,
       backgroundOpacity,

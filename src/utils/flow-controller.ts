@@ -117,7 +117,7 @@ export default class FlowController {
     await waitAllImagesLoaded(me)
 
     sem.acquire(async () => {
-      if (!this.settings) {
+      if (!this.settings || video.paused) {
         me.remove()
         return
       }
@@ -207,6 +207,7 @@ export default class FlowController {
       fontStyle: ms.fontStyle,
       backgroundColor: ms.backgroundColor,
       height,
+      width: settings.maxWidth,
       outlineRatio: settings.outlineRatio,
     })
 
@@ -356,6 +357,18 @@ export default class FlowController {
   disconnect(): void {
     clearInterval(this.cleanupTimer)
     this.observer?.disconnect()
+  }
+
+  play(): void {
+    parent.document.querySelectorAll('.ylcf-flow-message').forEach((e) => {
+      e.getAnimations().forEach((a) => a.play())
+    })
+  }
+
+  pause(): void {
+    parent.document.querySelectorAll('.ylcf-flow-message').forEach((e) => {
+      e.getAnimations().forEach((a) => a.pause())
+    })
   }
 
   clear(): void {

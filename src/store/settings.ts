@@ -50,14 +50,10 @@ const initialState: Omit<
     'super-sticker': true,
     membership: true,
   },
-  modernStyles: {
-    'super-chat': true,
-    'super-sticker': true,
-    membership: true,
-  },
   heightType: 'flexible',
   lines: 12,
   maxLines: 0,
+  maxWidth: 100,
   lineHeight: 64,
   opacity: 0.8,
   backgroundOpacity: 0.4,
@@ -74,10 +70,10 @@ const initialState: Omit<
 export default class SettingsModule extends VuexModule {
   styles = initialState.styles
   visibilities = initialState.visibilities
-  modernStyles = initialState.modernStyles
   heightType = initialState.heightType
   lines = initialState.lines
   maxLines = initialState.maxLines
+  maxWidth = initialState.maxWidth
   lineHeight = initialState.lineHeight
   opacity = initialState.opacity
   backgroundOpacity = initialState.backgroundOpacity
@@ -115,16 +111,6 @@ export default class SettingsModule extends VuexModule {
     this.visibilities[type] = visibility
   }
   @Mutation
-  setModernStyle({
-    messageType,
-    modernStyle,
-  }: {
-    messageType: MessageType
-    modernStyle: boolean
-  }): void {
-    this.modernStyles[messageType] = modernStyle
-  }
-  @Mutation
   setHeightType({ heightType }: { heightType: HeightType }): void {
     this.heightType = heightType
   }
@@ -135,6 +121,10 @@ export default class SettingsModule extends VuexModule {
   @Mutation
   setMaxLines({ maxLines }: { maxLines: number }): void {
     this.maxLines = maxLines
+  }
+  @Mutation
+  setMaxWidth({ maxWidth }: { maxWidth: number }): void {
+    this.maxWidth = maxWidth
   }
   @Mutation
   setLineHeight({ lineHeight }: { lineHeight: number }): void {

@@ -228,6 +228,9 @@ const addVideoEventListener = () => {
     return
   }
 
+  video.addEventListener('play', () => controller.play())
+  video.addEventListener('pause', () => controller.pause())
+
   if (video.readyState === 0) {
     // wait until video is started
     video.addEventListener('loadeddata', () => {
@@ -246,7 +249,7 @@ const observe = async () => {
     return
   }
 
-  observer = new MutationObserver(async (aa) => {
+  observer = new MutationObserver(async () => {
     moveChatInputControl()
     await controller.observe()
   })
