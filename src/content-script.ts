@@ -193,14 +193,16 @@ const moveChatInputControl = () => {
   rightControls.parentElement?.insertBefore(controls, rightControls)
 
   // setup resize observer
-  const controlsObserver = new ResizeObserver((entries) => {
-    const [entry] = entries
-    if (entry.contentRect.width < 512) {
-      parent.document.body.classList.add('ylcf-small-input')
-    } else {
-      parent.document.body.classList.remove('ylcf-small-input')
+  const controlsObserver = new ResizeObserver(
+    (entries: ResizeObserverEntry[]) => {
+      const [entry] = entries
+      if (entry.contentRect.width < 512) {
+        parent.document.body.classList.add('ylcf-small-input')
+      } else {
+        parent.document.body.classList.remove('ylcf-small-input')
+      }
     }
-  })
+  )
   controlsObserver.observe(controls)
 
   parent.document.body.classList.add('ylcf-input-injected')
