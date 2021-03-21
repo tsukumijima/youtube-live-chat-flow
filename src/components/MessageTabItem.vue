@@ -76,6 +76,30 @@
         </div>
       </div>
 
+      <div class="caption">Max Lines</div>
+      <v-slider
+        v-model="maxLines"
+        :max="lines"
+        class="align-center mb-5"
+        min="0"
+        dense
+        hide-details
+      >
+        <template #prepend>
+          <v-text-field
+            v-model="maxLines"
+            :max="lines"
+            class="mt-0 pt-0"
+            dense
+            hide-details
+            single-line
+            type="number"
+            min="0"
+            style="width: 75px"
+          />
+        </template>
+      </v-slider>
+
       <div class="caption">Opacity</div>
       <v-slider
         v-model="opacity"
@@ -323,6 +347,16 @@ export default defineComponent({
         })
       },
     })
+    const maxLines = computed({
+      get: () => {
+        return settingsStore.maxLines
+      },
+      set: (value) => {
+        settingsStore.setMaxLines({
+          maxLines: Number(value),
+        })
+      },
+    })
     const lineHeight = computed({
       get: () => {
         return settingsStore.lineHeight
@@ -439,6 +473,7 @@ export default defineComponent({
       overflows,
       heightType,
       lines,
+      maxLines,
       lineHeight,
       opacity,
       backgroundOpacity,

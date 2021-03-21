@@ -128,7 +128,7 @@ export default class FlowController {
       const containerWidth = container.offsetWidth
       const timeline = this.createTimeline(me, containerWidth, this.settings)
 
-      const index = this.getIndex(messageRows, timeline, this.settings)
+      const index = this.getIndex(lines, messageRows, timeline)
       if (index + messageRows > lines && this.settings.overflow === 'hidden') {
         me.remove()
         return
@@ -156,15 +156,16 @@ export default class FlowController {
   }
 
   private getLinesAndHeight(videoHeight: number, settings: Settings) {
+    let lines, height
     if (settings.heightType === 'fixed') {
-      const height = settings.lineHeight
-      const lines = Math.floor((videoHeight - height * 0.2) / height)
-      return [lines, height]
+      height = settings.lineHeight
+      lines = Math.floor((videoHeight - height * 0.2) / height)
     } else {
-      const lines = settings.lines
-      const height = videoHeight / (lines + 0.2)
-      return [lines, height]
+      lines = settings.lines
+      height = videoHeight / (lines + 0.2)
     }
+    lines = settings.maxLines > 0 ? Math.min(settings.maxLines, lines) : lines
+    return [lines, height]
   }
 
   private async validateDeletedMessage(element: HTMLElement) {
@@ -267,12 +268,7 @@ export default class FlowController {
     }, 0)
   }
 
-  private getIndex(
-    messageRows: number,
-    timeline: Timeline,
-    settings: Settings
-  ) {
-    const lines = settings.lines
+  private getIndex(lines: number, messageRows: number, timeline: Timeline) {
     let index = this.timelines.findIndex((_, i, timelines) => {
       const mod = (i + messageRows) % lines
       if (mod > 0 && mod < messageRows) {

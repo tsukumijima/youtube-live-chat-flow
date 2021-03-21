@@ -24,6 +24,7 @@ export type Settings = {
   modernStyles: modernStyles
   heightType: HeightType
   lines: number
+  maxLines: number
   lineHeight: number
   opacity: number
   backgroundOpacity: number

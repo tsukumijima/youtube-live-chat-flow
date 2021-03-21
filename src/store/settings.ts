@@ -57,6 +57,7 @@ const initialState: Omit<
   },
   heightType: 'flexible',
   lines: 12,
+  maxLines: 0,
   lineHeight: 64,
   opacity: 0.8,
   backgroundOpacity: 0.4,
@@ -76,6 +77,7 @@ export default class SettingsModule extends VuexModule {
   modernStyles = initialState.modernStyles
   heightType = initialState.heightType
   lines = initialState.lines
+  maxLines = initialState.maxLines
   lineHeight = initialState.lineHeight
   opacity = initialState.opacity
   backgroundOpacity = initialState.backgroundOpacity
@@ -129,6 +131,10 @@ export default class SettingsModule extends VuexModule {
   @Mutation
   setLines({ lines }: { lines: number }): void {
     this.lines = lines
+  }
+  @Mutation
+  setMaxLines({ maxLines }: { maxLines: number }): void {
+    this.maxLines = maxLines
   }
   @Mutation
   setLineHeight({ lineHeight }: { lineHeight: number }): void {
