@@ -144,7 +144,7 @@ const moveChatInputControl = () => {
     switch (e.key) {
       case 'Enter': {
         if (!e.isComposing) {
-          if (el.textContent !== '') {
+          if (el.innerHTML !== '') {
             const sendButton = messageButtons.querySelector(
               '#send-button button#button'
             ) as HTMLButtonElement | null
