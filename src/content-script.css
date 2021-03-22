@@ -91,6 +91,7 @@
   min-width: 0;
   align-items: center !important;
   height: 100%;
+  margin: 0 8px 0 0 !important;
 }
 .ylcf-controller > #top > yt-img-shadow#avatar {
   border-radius: 50%;
@@ -131,7 +132,6 @@
   min-width: 0;
   align-items: center;
   height: 100%;
-  margin-right: 8px;
   margin-top: 0;
 }
 .ylcf-controller
@@ -165,7 +165,7 @@
   flex: 1;
   min-width: 0;
   height: 66%;
-  line-height: 24px;
+  line-height: 26px;
   border: 1px solid #eee;
   border-radius: 4px;
   padding: 0 4px;
@@ -227,29 +227,10 @@
   display: none;
 }
 .ylcf-controller > #message-buttons > #countdown {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  opacity: 0;
-  transition: opacity 0.5s;
-  pointer-events: none;
+  left: unset;
+  right: 24px;
 }
-.ylcf-controller > #message-buttons > #countdown[countdown-active] {
-  opacity: 1;
-}
-.ylcf-controller > #message-buttons > #countdown > circle {
-  fill: none;
-  stroke-linecap: square;
-  stroke-width: 2;
-  stroke: currentColor;
-}
-.ylcf-controller > #message-buttons > #countdown > #countdown-background {
-  opacity: 0.3;
-}
-.ylcf-controller > #message-buttons > #countdown > #countdown-line {
-  stroke-dasharray: 62.8318;
-  transform: translate(0, 24px) rotateZ(-90deg);
-}
+
 /* .ylcf-controller > #interaction-message */
 .ylcf-controller > #interaction-message {
   display: none;
@@ -292,6 +273,9 @@
 }
 
 /* .ylcf-controller for fullscreen */
+.html5-video-player.ytp-fullscreen .ylcf-controller > #top {
+  margin: 0 16px 0 0 !important;
+}
 .html5-video-player.ytp-fullscreen
   .ylcf-controller
   > #top
@@ -340,6 +324,12 @@
 .html5-video-player.ytp-fullscreen
   .ylcf-controller
   > #message-buttons
+  > #count {
+  margin-right: 16px;
+}
+.html5-video-player.ytp-fullscreen
+  .ylcf-controller
+  > #message-buttons
   > #send-button
   > yt-button-renderer
   yt-icon-button#button {
@@ -352,7 +342,7 @@
   > #countdown {
   width: 36px;
   height: 36px;
-  right: 0;
+  right: 36px;
 }
 .html5-video-player.ytp-fullscreen
   .ylcf-controller
