@@ -26,6 +26,7 @@ export type Settings = {
   maxWidth: number
   lineHeight: number
   opacity: number
+  backgroundColor: string
   backgroundOpacity: number
   outlineRatio: number
   extendedStyle: string

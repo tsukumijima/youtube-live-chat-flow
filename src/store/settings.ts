@@ -56,6 +56,7 @@ const initialState: Omit<
   maxWidth: 100,
   lineHeight: 64,
   opacity: 0.8,
+  backgroundColor: 'transparent',
   backgroundOpacity: 0.4,
   outlineRatio: 0.015,
   extendedStyle: '',
@@ -76,6 +77,7 @@ export default class SettingsModule extends VuexModule {
   maxWidth = initialState.maxWidth
   lineHeight = initialState.lineHeight
   opacity = initialState.opacity
+  backgroundColor = initialState.backgroundColor
   backgroundOpacity = initialState.backgroundOpacity
   outlineRatio = initialState.outlineRatio
   extendedStyle = initialState.extendedStyle
@@ -133,6 +135,10 @@ export default class SettingsModule extends VuexModule {
   @Mutation
   setOpacity({ opacity }: { opacity: number }): void {
     this.opacity = opacity
+  }
+  @Mutation
+  setBackgroundColor({ backgroundColor }: { backgroundColor: string }): void {
+    this.backgroundColor = backgroundColor
   }
   @Mutation
   setBackgroundOpacity({

@@ -151,6 +151,15 @@
         </template>
       </v-slider>
 
+      <div class="caption">Background Color</div>
+      <v-text-field
+        v-model="backgroundColor"
+        class="align-center mb-5"
+        dense
+        hide-details
+        single-line
+      />
+
       <div class="caption">Background Opacity (for Paid Messages)</div>
       <v-slider
         v-model="backgroundOpacity"
@@ -412,6 +421,16 @@ export default defineComponent({
         })
       },
     })
+    const backgroundColor = computed({
+      get: () => {
+        return settingsStore.backgroundColor
+      },
+      set: (value) => {
+        settingsStore.setBackgroundColor({
+          backgroundColor: value,
+        })
+      },
+    })
     const backgroundOpacity = computed({
       get: () => {
         return settingsStore.backgroundOpacity
@@ -512,6 +531,7 @@ export default defineComponent({
       maxWidth,
       lineHeight,
       opacity,
+      backgroundColor,
       backgroundOpacity,
       outlineRatio,
       extendedStyle,

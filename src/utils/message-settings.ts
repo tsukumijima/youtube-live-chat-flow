@@ -107,7 +107,7 @@ export default class MessageSettings {
 
   get backgroundColor(): string | undefined {
     if (!this.message.backgroundColor) {
-      return undefined
+      return this.settings.backgroundColor
     }
     try {
       const o = new Color(this.message.backgroundColor).object()
