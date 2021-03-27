@@ -106,11 +106,18 @@ export default class MessageSettings {
   }
 
   get backgroundColor(): string | undefined {
-    if (!this.message.backgroundColor) {
-      return this.settings.backgroundColor
+    const backgroundColor = this.paid
+      ? this.message.backgroundColor
+      : this.settings.background
+      ? 'black'
+      : undefined
+
+    if (!backgroundColor) {
+      return undefined
     }
+
     try {
-      const o = new Color(this.message.backgroundColor).object()
+      const o = new Color(backgroundColor).object()
       const opacity = this.settings.backgroundOpacity
       return `rgba(${o.r}, ${o.g}, ${o.b}, ${opacity})`
     } catch (e) {
