@@ -21,7 +21,13 @@ const setIcon = async (tabId: number) => {
   await browser.pageAction.setIcon({ tabId, path })
 }
 
-const contentLoaded = async (tabId: number) => {
+const contentLoaded = async () => {
+  const settings = await getSettings()
+
+  return { settings }
+}
+
+const iframeLoaded = async (tabId: number) => {
   const enabled = initialState.enabled
   const following = initialState.following
   tabStates = { ...tabStates, [tabId]: { enabled, following } }
@@ -80,12 +86,21 @@ const settingsChanged = async () => {
   }
 }
 
+browser.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
+  if (changeInfo.url) {
+    const settings = await getSettings()
+    browser.tabs.sendMessage(tabId, { id: 'urlChanged', data: { settings } })
+  }
+})
+
 browser.runtime.onMessage.addListener(async (message, sender) => {
   const { id } = message
   const { tab } = sender
   switch (id) {
     case 'contentLoaded':
-      return tab?.id && (await contentLoaded(tab.id))
+      return tab?.id && (await contentLoaded())
+    case 'iframeLoaded':
+      return tab?.id && (await iframeLoaded(tab.id))
     case 'controlButtonClicked':
       tab?.id && (await toggleEnabled(tab.id))
       break

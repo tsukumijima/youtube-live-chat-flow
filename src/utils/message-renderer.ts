@@ -1,4 +1,5 @@
 import Color from 'color'
+import { EmojiStyle } from '~/models'
 
 // e.g. https://yt3.ggpht.com/-TusVtXdhftI/AAAAAAAAAAI/AAAAAAAAAAA/OCgsPx8gmAk/s32-c-k-no-mo-rj-c0xffffff/photo.jpg
 const resizeAvatarUrl = (url: string, size: number) => {
@@ -86,13 +87,27 @@ const renderAuthor = (author: string, height: number) => {
   return el
 }
 
-const renderMessage = (html: string, height: number) => {
+const renderMessage = (
+  html: string,
+  height: number,
+  emojiStyle: EmojiStyle
+) => {
   const el = document.createElement('span')
   el.style.minWidth = '0'
   el.style.overflow = 'hidden'
   el.style.textOverflow = 'ellipsis'
   el.style.maxWidth = '100%'
   el.innerHTML = html
+  if (emojiStyle == 'text') {
+    Array.from(el.querySelectorAll('img')).forEach((e) => {
+      let alt = e.getAttribute('alt') ?? ''
+      if (alt.length > 2) {
+        alt = `:${alt}:`
+      }
+      const text = document.createTextNode(alt)
+      e.parentElement?.replaceChild(text, e)
+    })
+  }
   fixContainedImageHeight(el, height)
   return el
 }
@@ -114,6 +129,7 @@ const renderOneLineMessage = ({
   backgroundColor,
   height,
   width,
+  emojiStyle,
 }: {
   html?: string
   author?: string
@@ -124,6 +140,7 @@ const renderOneLineMessage = ({
   backgroundColor?: string
   height: number
   width: number
+  emojiStyle: EmojiStyle
 }) => {
   const el = document.createElement('div')
   el.style.color = fontColor ?? 'white'
@@ -154,7 +171,7 @@ const renderOneLineMessage = ({
     el.append(colon)
   }
 
-  el.append(renderMessage(html ?? '', height * 0.8))
+  el.append(renderMessage(html ?? '', height * 0.8, emojiStyle))
   return el
 }
 
@@ -168,6 +185,7 @@ const renderTwoLineMessage = ({
   backgroundColor,
   height,
   width,
+  emojiStyle,
 }: {
   html?: string
   author?: string
@@ -178,6 +196,7 @@ const renderTwoLineMessage = ({
   backgroundColor?: string
   height: number
   width: number
+  emojiStyle: EmojiStyle
 }) => {
   const el = document.createElement('div')
   el.style.color = fontColor ?? 'white'
@@ -208,7 +227,7 @@ const renderTwoLineMessage = ({
     )
   )
   if (html) {
-    const message = renderMessage(html ?? '', height * 0.8)
+    const message = renderMessage(html ?? '', height * 0.8, emojiStyle)
     message.style.marginTop = `${height * 0.1}px`
     wrapper.append(message)
   }
@@ -284,6 +303,7 @@ type Params = {
   height: number
   width: number
   outlineRatio: number
+  emojiStyle: EmojiStyle
 }
 
 export const render = (

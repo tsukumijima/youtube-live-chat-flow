@@ -1,12 +1,12 @@
-export const querySelectorAsync = (
+export const querySelectorAsync = <T extends Element = Element>(
   selector: string,
   interval = 100,
   timeout = 1000
-): Promise<Element | null> => {
+): Promise<T | null> => {
   return new Promise((resolve) => {
     const expireTime = Date.now() + timeout
     const timer = setInterval(() => {
-      const e = document.querySelector(selector)
+      const e = document.querySelector<T>(selector)
       if (e || Date.now() > expireTime) {
         clearInterval(timer)
         resolve(e)

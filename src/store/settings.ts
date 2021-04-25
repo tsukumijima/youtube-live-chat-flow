@@ -1,6 +1,7 @@
 import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
 import {
   AuthorType,
+  EmojiStyle,
   HeightType,
   MessageType,
   Overflow,
@@ -13,8 +14,10 @@ const initialState: Settings = {
   background: false,
   backgroundOpacity: 0.4,
   bottomChatInputEnabled: true,
+  chatVisible: true,
   delayTime: 0,
   displayTime: 5,
+  emojiStyle: 'image',
   extendedStyle: '',
   growBottomChatInputEnabled: false,
   heightType: 'flexible',
@@ -71,8 +74,10 @@ export default class SettingsModule extends VuexModule {
   background = initialState.background
   backgroundOpacity = initialState.backgroundOpacity
   bottomChatInputEnabled = true
+  chatVisible = true
   delayTime = initialState.delayTime
   displayTime = initialState.displayTime
+  emojiStyle = initialState.emojiStyle
   extendedStyle = initialState.extendedStyle
   growBottomChatInputEnabled = false
   heightType = initialState.heightType
@@ -132,12 +137,20 @@ export default class SettingsModule extends VuexModule {
     this.bottomChatInputEnabled = bottomChatInputEnabled
   }
   @Mutation
+  setChatVisible({ chatVisible }: { chatVisible: boolean }): void {
+    this.chatVisible = chatVisible
+  }
+  @Mutation
   setDelayTime({ delayTime }: { delayTime: number }): void {
     this.delayTime = delayTime
   }
   @Mutation
   setDisplayTime({ displayTime }: { displayTime: number }): void {
     this.displayTime = displayTime
+  }
+  @Mutation
+  setEmojiStyle({ emojiStyle }: { emojiStyle: EmojiStyle }): void {
+    this.emojiStyle = emojiStyle
   }
   @Mutation
   setExtendedStyle({ extendedStyle }: { extendedStyle: string }): void {

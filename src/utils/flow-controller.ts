@@ -209,6 +209,7 @@ export default class FlowController {
       height,
       width: settings.maxWidth,
       outlineRatio: settings.outlineRatio,
+      emojiStyle: settings.emojiStyle,
     })
 
     if (!element) {

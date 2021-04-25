@@ -178,6 +178,15 @@
       </template>
     </v-slider>
 
+    <div class="caption">Emoji Style</div>
+    <v-select
+      v-model="emojiStyle"
+      :items="emojiStyles"
+      dense
+      single-line
+      class="mt-1 pt-0"
+    />
+
     <div class="caption">Extended Style</div>
     <v-textarea
       v-model="extendedStyle"
@@ -200,6 +209,11 @@ const heightTypes = [
   { text: 'Fixed', value: 'fixed' },
 ]
 
+const emojiStyles = [
+  { text: 'Image', value: 'image' },
+  { text: 'Alternative Text', value: 'text' },
+]
+
 export default defineComponent({
   setup() {
     const background = computed({
@@ -219,6 +233,16 @@ export default defineComponent({
       set: (value) => {
         settingsStore.setBackgroundOpacity({
           backgroundOpacity: Number(value),
+        })
+      },
+    })
+    const emojiStyle = computed({
+      get: () => {
+        return settingsStore.emojiStyle
+      },
+      set: (value) => {
+        settingsStore.setEmojiStyle({
+          emojiStyle: value,
         })
       },
     })
@@ -296,6 +320,8 @@ export default defineComponent({
     return {
       background,
       backgroundOpacity,
+      emojiStyle,
+      emojiStyles,
       extendedStyle,
       heightType,
       heightTypes,

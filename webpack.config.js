@@ -10,6 +10,7 @@ module.exports = {
   entry: {
     background: './background',
     'content-script': './content-script',
+    'content-script-iframe': './content-script-iframe',
     options: './options',
     popup: './popup',
   },
