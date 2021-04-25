@@ -18,23 +18,23 @@ export type Style = {
 }
 
 export type Settings = {
-  styles: Styles
-  visibilities: Visibilities
-  heightType: HeightType
-  lines: number
-  maxLines: number
-  maxWidth: number
-  lineHeight: number
-  opacity: number
   background: boolean
   backgroundOpacity: number
-  outlineRatio: number
-  extendedStyle: string
-  displayTime: number
-  delayTime: number
-  displays: number
-  stackDirection: StackDirection
-  overflow: Overflow
   bottomChatInputEnabled: boolean
+  delayTime: number
+  displayTime: number
+  extendedStyle: string
   growBottomChatInputEnabled: boolean
+  heightType: HeightType
+  lineHeight: number
+  lines: number
+  maxDisplays: number
+  maxLines: number
+  maxWidth: number
+  opacity: number
+  outlineRatio: number
+  overflow: Overflow
+  stackDirection: StackDirection
+  styles: Styles
+  visibilities: Visibilities
 }

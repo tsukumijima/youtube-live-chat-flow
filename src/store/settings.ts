@@ -9,10 +9,24 @@ import {
   Style,
 } from '~/models'
 
-const initialState: Omit<
-  Settings,
-  'bottomChatInputEnabled' | 'growBottomChatInputEnabled'
-> = {
+const initialState: Settings = {
+  background: false,
+  backgroundOpacity: 0.4,
+  bottomChatInputEnabled: true,
+  delayTime: 0,
+  displayTime: 5,
+  extendedStyle: '',
+  growBottomChatInputEnabled: false,
+  heightType: 'flexible',
+  lineHeight: 64,
+  lines: 12,
+  maxDisplays: 0,
+  maxLines: 0,
+  maxWidth: 100,
+  opacity: 0.8,
+  outlineRatio: 0.015,
+  overflow: 'overlay',
+  stackDirection: 'top_to_bottom',
   styles: {
     guest: {
       avatar: false,
@@ -21,22 +35,22 @@ const initialState: Omit<
     },
     member: {
       avatar: true,
-      color: '#66ff66',
+      color: '#ccffcc',
       template: 'one-line-without-author',
     },
     moderator: {
       avatar: true,
-      color: '#6666ff',
+      color: '#ccccff',
       template: 'two-line',
     },
     owner: {
       avatar: true,
-      color: '#ffff66',
+      color: '#ffffcc',
       template: 'two-line',
     },
     you: {
       avatar: true,
-      color: '#ff6666',
+      color: '#ffcccc',
       template: 'one-line-with-author',
     },
   },
@@ -50,44 +64,29 @@ const initialState: Omit<
     'super-sticker': true,
     membership: true,
   },
-  heightType: 'flexible',
-  lines: 12,
-  maxLines: 0,
-  maxWidth: 100,
-  lineHeight: 64,
-  opacity: 0.8,
-  background: false,
-  backgroundOpacity: 0.4,
-  outlineRatio: 0.015,
-  extendedStyle: '',
-  displayTime: 5,
-  delayTime: 0,
-  displays: 0,
-  stackDirection: 'top_to_bottom',
-  overflow: 'overlay',
 }
 
 @Module({ name: 'settings' })
 export default class SettingsModule extends VuexModule {
-  styles = initialState.styles
-  visibilities = initialState.visibilities
-  heightType = initialState.heightType
-  lines = initialState.lines
-  maxLines = initialState.maxLines
-  maxWidth = initialState.maxWidth
-  lineHeight = initialState.lineHeight
-  opacity = initialState.opacity
   background = initialState.background
   backgroundOpacity = initialState.backgroundOpacity
-  outlineRatio = initialState.outlineRatio
-  extendedStyle = initialState.extendedStyle
-  displayTime = initialState.displayTime
-  delayTime = initialState.delayTime
-  displays = initialState.displays
-  stackDirection = initialState.stackDirection
-  overflow = initialState.overflow
   bottomChatInputEnabled = true
+  delayTime = initialState.delayTime
+  displayTime = initialState.displayTime
+  extendedStyle = initialState.extendedStyle
   growBottomChatInputEnabled = false
+  heightType = initialState.heightType
+  lineHeight = initialState.lineHeight
+  lines = initialState.lines
+  maxDisplays = initialState.maxDisplays
+  maxLines = initialState.maxLines
+  maxWidth = initialState.maxWidth
+  opacity = initialState.opacity
+  outlineRatio = initialState.outlineRatio
+  overflow = initialState.overflow
+  stackDirection = initialState.stackDirection
+  styles = initialState.styles
+  visibilities = initialState.visibilities
 
   @Mutation
   updateStyle({
@@ -113,30 +112,6 @@ export default class SettingsModule extends VuexModule {
     this.visibilities[type] = visibility
   }
   @Mutation
-  setHeightType({ heightType }: { heightType: HeightType }): void {
-    this.heightType = heightType
-  }
-  @Mutation
-  setLines({ lines }: { lines: number }): void {
-    this.lines = lines
-  }
-  @Mutation
-  setMaxLines({ maxLines }: { maxLines: number }): void {
-    this.maxLines = maxLines
-  }
-  @Mutation
-  setMaxWidth({ maxWidth }: { maxWidth: number }): void {
-    this.maxWidth = maxWidth
-  }
-  @Mutation
-  setLineHeight({ lineHeight }: { lineHeight: number }): void {
-    this.lineHeight = lineHeight
-  }
-  @Mutation
-  setOpacity({ opacity }: { opacity: number }): void {
-    this.opacity = opacity
-  }
-  @Mutation
   setBackground({ background }: { background: boolean }): void {
     this.background = background
   }
@@ -149,24 +124,68 @@ export default class SettingsModule extends VuexModule {
     this.backgroundOpacity = backgroundOpacity
   }
   @Mutation
-  setOutlineRatio({ outlineRatio }: { outlineRatio: number }): void {
-    this.outlineRatio = outlineRatio
-  }
-  @Mutation
-  setExtendedStyle({ extendedStyle }: { extendedStyle: string }): void {
-    this.extendedStyle = extendedStyle
-  }
-  @Mutation
-  setDisplayTime({ displayTime }: { displayTime: number }): void {
-    this.displayTime = displayTime
+  setBottomChatInputEnabled({
+    bottomChatInputEnabled,
+  }: {
+    bottomChatInputEnabled: boolean
+  }): void {
+    this.bottomChatInputEnabled = bottomChatInputEnabled
   }
   @Mutation
   setDelayTime({ delayTime }: { delayTime: number }): void {
     this.delayTime = delayTime
   }
   @Mutation
-  setDisplays({ displays }: { displays: number }): void {
-    this.displays = displays
+  setDisplayTime({ displayTime }: { displayTime: number }): void {
+    this.displayTime = displayTime
+  }
+  @Mutation
+  setExtendedStyle({ extendedStyle }: { extendedStyle: string }): void {
+    this.extendedStyle = extendedStyle
+  }
+  @Mutation
+  setGrowBottomChatInputEnabled({
+    growBottomChatInputEnabled,
+  }: {
+    growBottomChatInputEnabled: boolean
+  }): void {
+    this.growBottomChatInputEnabled = growBottomChatInputEnabled
+  }
+  @Mutation
+  setHeightType({ heightType }: { heightType: HeightType }): void {
+    this.heightType = heightType
+  }
+  @Mutation
+  setLineHeight({ lineHeight }: { lineHeight: number }): void {
+    this.lineHeight = lineHeight
+  }
+  @Mutation
+  setLines({ lines }: { lines: number }): void {
+    this.lines = lines
+  }
+  @Mutation
+  setMaxDisplays({ maxDisplays }: { maxDisplays: number }): void {
+    this.maxDisplays = maxDisplays
+  }
+  @Mutation
+  setMaxLines({ maxLines }: { maxLines: number }): void {
+    this.maxLines = maxLines
+  }
+  @Mutation
+  setMaxWidth({ maxWidth }: { maxWidth: number }): void {
+    this.maxWidth = maxWidth
+  }
+  @Mutation
+  setOpacity({ opacity }: { opacity: number }): void {
+    this.opacity = opacity
+  }
+  @Mutation
+  setOutlineRatio({ outlineRatio }: { outlineRatio: number }): void {
+    this.outlineRatio = outlineRatio
+  }
+  @Mutation
+  setOverflow({ overflow }: { overflow: Overflow }): void {
+    this.overflow = overflow
   }
   @Mutation
   setStackDirection({
@@ -177,29 +196,9 @@ export default class SettingsModule extends VuexModule {
     this.stackDirection = stackDirection
   }
   @Mutation
-  setOverflow({ overflow }: { overflow: Overflow }): void {
-    this.overflow = overflow
-  }
-  @Mutation
   resetState(): void {
     for (const [k, v] of Object.entries(initialState)) {
       ;(this as any)[k] = v // eslint-disable-line @typescript-eslint/no-explicit-any
     }
-  }
-  @Mutation
-  setBottomChatInputEnabled({
-    bottomChatInputEnabled,
-  }: {
-    bottomChatInputEnabled: boolean
-  }): void {
-    this.bottomChatInputEnabled = bottomChatInputEnabled
-  }
-  @Mutation
-  setGrowBottomChatInputEnabled({
-    growBottomChatInputEnabled,
-  }: {
-    growBottomChatInputEnabled: boolean
-  }): void {
-    this.growBottomChatInputEnabled = growBottomChatInputEnabled
   }
 }

@@ -1,7 +1,8 @@
 <template>
-  <v-card class="pa-5" flat>
+  <div class="others-section">
     <v-switch
       v-model="bottomChatInputEnabled"
+      class="mt-0 pt-0"
       label="Bottom Chat Input"
       hint="Move the chat input to the bottom controls on video (Page reload required)"
       persistent-hint
@@ -10,10 +11,11 @@
     <v-switch
       v-model="growBottomChatInputEnabled"
       :disabled="!bottomChatInputEnabled"
+      class="mt-3 pt-0"
       label="Grow Bottom Chat Input"
       dense
     />
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">

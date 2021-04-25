@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="general-section">
     <div
       v-for="authorType in authorTypes"
       :key="authorType"
-      class="d-flex align-center px-4"
+      class="d-flex align-center"
     >
       <div class="caption text-capitalize" style="width: 100px">
         {{ authorType }}
@@ -50,7 +50,7 @@
     <div
       v-for="messageType in messageTypes"
       :key="messageType"
-      class="d-flex align-center px-4"
+      class="d-flex align-center"
     >
       <div class="caption text-capitalize" style="width: 100px">
         {{ getTitle(messageType) }}
