@@ -25,7 +25,7 @@ const initialState: Settings = {
   lines: 12,
   maxDisplays: 0,
   maxLines: 0,
-  maxWidth: 100,
+  maxWidth: 200,
   opacity: 0.8,
   outlineRatio: 0.015,
   overflow: 'overlay',

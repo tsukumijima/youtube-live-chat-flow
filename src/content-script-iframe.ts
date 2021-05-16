@@ -2,6 +2,7 @@ import { browser } from 'webextension-polyfill-ts'
 import FlowController from '~/utils/flow-controller'
 import message from '~/assets/message.svg'
 import downArrow from '~/assets/down-arrow.svg'
+import refresh from '~/assets/refresh.svg'
 import { querySelectorAsync } from '~/utils/dom-helper'
 
 const controller = new FlowController()
@@ -14,6 +15,13 @@ const menuButtonConfigs = [
     className: 'ylcf-follow-button',
     onclick: () => browser.runtime.sendMessage({ id: 'menuButtonClicked' }),
     isActive: () => controller.following,
+  },
+  {
+    svg: refresh,
+    title: 'Reload Frame',
+    className: 'ylcf-reload-button',
+    onclick: () => window.location.reload(),
+    isActive: () => false,
   },
 ]
 

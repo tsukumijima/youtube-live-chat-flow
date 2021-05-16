@@ -20,14 +20,34 @@ interface Timeline {
   didDisappear: number
 }
 
+class Limiter {
+  private limits: number
+  private count = 0
+  private expireTime = Date.now()
+
+  constructor(limits: number) {
+    this.limits = limits
+  }
+
+  isOver() {
+    const now = Date.now()
+    if (now > this.expireTime) {
+      this.count = 0
+      this.expireTime = now + 1000
+    }
+    return ++this.count > this.limits
+  }
+}
+
 export default class FlowController {
   private _enabled = false
   private _following = false
+  private _settings: Settings | undefined
   private timelines: Timeline[][] = []
   private observer: MutationObserver | undefined
   private followingTimer = -1
   private cleanupTimer = -1
-  settings: Settings | undefined
+  private limiter: Limiter | undefined
 
   get enabled(): boolean {
     return this._enabled
@@ -62,6 +82,15 @@ export default class FlowController {
     } else {
       clearInterval(this.followingTimer)
     }
+  }
+
+  get settings(): Settings | undefined {
+    return this._settings
+  }
+
+  set settings(value: Settings | undefined) {
+    this._settings = value
+    this.limiter = new Limiter(value?.maxDisplays ?? 0)
   }
 
   private async proceed(element: HTMLElement) {
@@ -101,9 +130,7 @@ export default class FlowController {
     const infoIcon = element.querySelector('.ylcf-info-icon')
     infoIcon && infoIcon.remove()
 
-    const maxDisplays = this.settings.maxDisplays
-    const messages = this.getMessages()
-    if (maxDisplays > 0 && maxDisplays <= messages) {
+    if (this.settings.maxDisplays > 0 && this.limiter?.isOver()) {
       return
     }
 
@@ -262,12 +289,6 @@ export default class FlowController {
   private isDeniedIndex(index: number, lines: number) {
     // e.g. if lines value is "12", denied index is "23", "47", "71" ...
     return index % (lines * 2) === lines * 2 - 1
-  }
-
-  private getMessages() {
-    return this.timelines.reduce((carry, timelines) => {
-      return carry + timelines.length
-    }, 0)
   }
 
   private getIndex(lines: number, messageRows: number, timeline: Timeline) {

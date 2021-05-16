@@ -78,12 +78,12 @@
       </template>
     </v-slider>
 
-    <div class="caption">Max Displays (Infinite if set to 0)</div>
+    <div class="caption">Max Displays per second (Infinite if set to 0)</div>
     <v-slider
       v-model="maxDisplays"
       class="align-center mb-5"
       min="0"
-      max="100"
+      max="10"
       dense
       hide-details
     >
