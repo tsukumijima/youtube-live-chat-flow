@@ -38,11 +38,11 @@ export default class MessageSettings {
     const author = this.message.author
     const you = author && author === this.yourName
     const authorType = you ? 'you' : this.message.authorType ?? 'guest'
-    return (['guest', 'member', 'moderator', 'owner', 'you'].includes(
-      authorType
-    )
-      ? authorType
-      : 'guest') as AuthorType
+    return (
+      ['guest', 'member', 'moderator', 'owner', 'you'].includes(authorType)
+        ? authorType
+        : 'guest'
+    ) as AuthorType
   }
 
   private get paid(): boolean {
