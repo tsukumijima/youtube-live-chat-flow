@@ -16,7 +16,7 @@
     {
       "run_at": "document_start",
       "matches": ["https://www.youtube.com/*"],
-      "all_frames": true,
+      "all_frames": false,
       "js": ["content-script.js"],
       "css": ["content-script.css"]
     }

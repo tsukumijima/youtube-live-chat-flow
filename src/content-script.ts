@@ -6,6 +6,20 @@ let settings: Settings
 
 const isVideoUrl = () => new URL(location.href).pathname === '/watch'
 
+const waitCollapsed = async () => {
+  const iframe = await querySelectorAsync('ytd-live-chat-frame')
+  return new Promise<boolean>((resolve) => {
+    const expireTime = Date.now() + 1000
+    const timer = setInterval(async () => {
+      const collapsed = iframe?.hasAttribute('collapsed') ?? false
+      if (collapsed || Date.now() > expireTime) {
+        clearInterval(timer)
+        resolve(collapsed)
+      }
+    }, 100)
+  })
+}
+
 const init = async (): Promise<void> => {
   if (!isVideoUrl()) {
     return
@@ -15,8 +29,7 @@ const init = async (): Promise<void> => {
     return
   }
 
-  const iframe = await querySelectorAsync('ytd-live-chat-frame')
-  const collapsed = iframe?.hasAttribute('collapsed') ?? false
+  const collapsed = await waitCollapsed()
   if (!collapsed) {
     return
   }
