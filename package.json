@@ -1,6 +1,6 @@
 {
   "name": "youtube-live-chat-flow",
-  "description": "Chrome Extension for Flowing Chat Messages on YouTube Live",
+  "description": "Chrome Extension for Flow Chat Messages on YouTube Live",
   "version": "0.0.48",
   "author": {
     "name": "fiahfy",
@@ -48,7 +48,7 @@
     "youtube"
   ],
   "private": true,
-  "productName": "YouTube Live Chat Flow",
+  "productName": "Flow Chat for YouTube Live",
   "repository": {
     "type": "git",
     "url": "https://github.com/fiahfy/youtube-live-chat-flow"
