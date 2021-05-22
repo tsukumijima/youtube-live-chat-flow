@@ -11,7 +11,8 @@
       "run_at": "document_start",
       "matches": ["https://www.youtube.com/live_chat*"],
       "all_frames": true,
-      "js": ["content-script-iframe.js"]
+      "js": ["content-script-iframe.js"],
+      "css": ["content-script-iframe.css"]
     },
     {
       "run_at": "document_start",

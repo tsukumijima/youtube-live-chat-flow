@@ -75,6 +75,7 @@ module.exports = {
             )
           },
         },
+        'content-script-iframe.css',
         'content-script.css',
       ],
     }),
