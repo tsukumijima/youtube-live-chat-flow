@@ -212,6 +212,7 @@ const heightTypes = [
 const emojiStyles = [
   { text: 'Image', value: 'image' },
   { text: 'Alternative Text', value: 'text' },
+  { text: 'None', value: 'none' },
 ]
 
 export default defineComponent({

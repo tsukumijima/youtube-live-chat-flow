@@ -19,26 +19,6 @@ const resizeStickerUrl = (url: string, size: number) => {
   return url.replace(/(=s)\d+([^=]+)$/, `$1${Math.ceil(size)}$2`)
 }
 
-const fixContainedImageHeight = (element: Element, height: number) => {
-  const children = element.childNodes
-  if (!children) {
-    return
-  }
-
-  Array.from(children).map((node) => {
-    if (node instanceof HTMLImageElement) {
-      node.src = resizeEmojiUrl(node.src, height)
-      node.style.height = `${height}px`
-      node.style.verticalAlign = 'bottom'
-      return node
-    }
-    if (node instanceof HTMLElement) {
-      fixContainedImageHeight(node, height)
-    }
-    return node
-  })
-}
-
 const getOutlineStyle = (
   fontColor: string,
   height: number,
@@ -98,17 +78,35 @@ const renderMessage = (
   el.style.textOverflow = 'ellipsis'
   el.style.maxWidth = '100%'
   el.innerHTML = html
-  if (emojiStyle == 'text') {
-    Array.from(el.querySelectorAll('img')).forEach((e) => {
-      let alt = e.getAttribute('alt') ?? ''
-      if (alt.length > 2) {
-        alt = `:${alt}:`
+
+  switch (emojiStyle) {
+    case 'image':
+      Array.from(el.querySelectorAll('img')).forEach((e) => {
+        e.src = resizeEmojiUrl(e.src, height)
+        e.style.height = `${height}px`
+        e.style.verticalAlign = 'bottom'
+      })
+      break
+    case 'text':
+      Array.from(el.querySelectorAll('img')).forEach((e) => {
+        let alt = e.getAttribute('alt') ?? ''
+        if (alt.length > 2) {
+          alt = `:${alt}:`
+        }
+        const text = document.createTextNode(alt)
+        e.parentElement?.replaceChild(text, e)
+      })
+      break
+    case 'none':
+      Array.from(el.querySelectorAll('img')).forEach((e) => {
+        e.remove()
+      })
+      if (!el.textContent?.trim()) {
+        return null
       }
-      const text = document.createTextNode(alt)
-      e.parentElement?.replaceChild(text, e)
-    })
+      break
   }
-  fixContainedImageHeight(el, height)
+
   return el
 }
 
@@ -171,7 +169,15 @@ const renderOneLineMessage = ({
     el.append(colon)
   }
 
-  el.append(renderMessage(html ?? '', height * 0.8, emojiStyle))
+  const message = renderMessage(html ?? '', height * 0.8, emojiStyle)
+  if (message) {
+    el.append(message)
+  }
+
+  if (!message && !subText) {
+    return null
+  }
+
   return el
 }
 
@@ -226,11 +232,20 @@ const renderTwoLineMessage = ({
       height * 0.8
     )
   )
+
+  let message
   if (html) {
-    const message = renderMessage(html ?? '', height * 0.8, emojiStyle)
-    message.style.marginTop = `${height * 0.1}px`
-    wrapper.append(message)
+    message = renderMessage(html ?? '', height * 0.8, emojiStyle)
+    if (message) {
+      message.style.marginTop = `${height * 0.1}px`
+      wrapper.append(message)
+    }
   }
+
+  if (!message && !subText) {
+    return null
+  }
+
   el.append(wrapper)
   return el
 }
@@ -309,7 +324,7 @@ type Params = {
 export const render = (
   template: Template,
   params: Params
-): HTMLElement | undefined => {
+): HTMLElement | null => {
   const newParams = {
     ...params,
     fontStyle:

@@ -1,6 +1,6 @@
 export type AuthorType = 'guest' | 'member' | 'moderator' | 'owner' | 'you'
 export type MessageType = 'super-chat' | 'super-sticker' | 'membership'
-export type EmojiStyle = 'image' | 'text'
+export type EmojiStyle = 'image' | 'text' | 'none'
 export type HeightType = 'flexible' | 'fixed'
 export type StackDirection = 'top_to_bottom' | 'bottom_to_top'
 export type Overflow = 'overlay' | 'hidden'
