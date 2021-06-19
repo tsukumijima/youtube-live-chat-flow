@@ -10,7 +10,7 @@ const waitCollapsed = async () => {
   const iframe = await querySelectorAsync('ytd-live-chat-frame')
   return new Promise<boolean>((resolve) => {
     const expireTime = Date.now() + 1000
-    const timer = setInterval(async () => {
+    const timer = window.setInterval(async () => {
       const collapsed = iframe?.hasAttribute('collapsed') ?? false
       if (collapsed || Date.now() > expireTime) {
         clearInterval(timer)

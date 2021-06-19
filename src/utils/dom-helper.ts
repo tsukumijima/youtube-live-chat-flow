@@ -5,7 +5,7 @@ export const querySelectorAsync = <T extends Element = Element>(
 ): Promise<T | null> => {
   return new Promise((resolve) => {
     const expireTime = Date.now() + timeout
-    const timer = setInterval(() => {
+    const timer = window.setInterval(() => {
       const e = document.querySelector<T>(selector)
       if (e || Date.now() > expireTime) {
         clearInterval(timer)
@@ -22,7 +22,7 @@ export const getImageSourceAsync = (
 ): Promise<string> => {
   return new Promise((resolve) => {
     const expireTime = Date.now() + timeout
-    const timer = setInterval(() => {
+    const timer = window.setInterval(() => {
       if (img.src || Date.now() > expireTime) {
         clearInterval(timer)
         resolve(img.src)
@@ -38,7 +38,7 @@ export const waitImageLoaded = (
 ): Promise<string> => {
   return new Promise((resolve) => {
     const expireTime = Date.now() + timeout
-    const timer = setInterval(() => {
+    const timer = window.setInterval(() => {
       if ((img.complete && img.naturalWidth) || Date.now() > expireTime) {
         clearInterval(timer)
         resolve(img.src)

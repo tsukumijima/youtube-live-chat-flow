@@ -31,7 +31,8 @@ const vuexPersist = new VuexPersistence({
 })
 
 const createStore = () =>
-  new Vuex.Store({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  new Vuex.Store<any>({
     state: {},
     modules: {
       settings,
@@ -53,7 +54,7 @@ export function readyStore(): Promise<Store<any>> {
     // wait for async storage restore
     // @see https://github.com/championswimmer/vuex-persist/issues/15
     const timeout = Date.now() + 1000
-    const timer = setInterval(() => {
+    const timer = window.setInterval(() => {
       if (store.state.__storageReady || Date.now() > timeout) {
         clearInterval(timer)
         resolve(store)

@@ -204,7 +204,7 @@ export default class FlowController {
     }
     const deleted = await new Promise<boolean>((resolve) => {
       const expireTime = Date.now() + 1000
-      const timer = setInterval(() => {
+      const timer = window.setInterval(() => {
         const filtered = element.classList.contains(ClassName.filteredMessage)
         if (filtered || Date.now() > expireTime) {
           clearInterval(timer)
@@ -367,7 +367,7 @@ export default class FlowController {
     })
     this.observer.observe(items, { childList: true })
 
-    this.cleanupTimer = setInterval(() => {
+    this.cleanupTimer = window.setInterval(() => {
       this.timelines = this.timelines.map((timelines) => {
         return timelines.filter((timeline) => {
           return timeline.didDisappear > Date.now()
