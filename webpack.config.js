@@ -75,8 +75,8 @@ module.exports = {
             )
           },
         },
-        'content-script-iframe.css',
         'content-script.css',
+        'content-script-iframe.css',
       ],
     }),
     new HtmlWebpackPlugin({
