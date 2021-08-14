@@ -1,4 +1,4 @@
-import { browser } from 'webextension-polyfill-ts'
+import browser from 'webextension-polyfill'
 import FlowController from '~/utils/flow-controller'
 import message from '~/assets/message.svg'
 import downArrow from '~/assets/down-arrow.svg'

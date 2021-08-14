@@ -1,4 +1,4 @@
-import { browser } from 'webextension-polyfill-ts'
+import browser from 'webextension-polyfill'
 import { Settings } from '~/models'
 import { querySelectorAsync } from '~/utils/dom-helper'
 

@@ -1,4 +1,4 @@
-import { browser } from 'webextension-polyfill-ts'
+import browser from 'webextension-polyfill'
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 import VuexPersistence from 'vuex-persist'
