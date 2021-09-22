@@ -69,15 +69,22 @@ const parsePaidSticker = async (el: HTMLElement) => {
 const parseMembershipItem = async (el: HTMLElement) => {
   const params = await parseCommonElements(el)
 
-  const html = el.querySelector('#message')?.innerHTML
-  const subText = el.querySelector('#header-subtext')?.textContent ?? undefined
+  let html = el.querySelector('#message')?.innerHTML
+  let subText = undefined
+  if (html) {
+    // milestone chat
+    subText = el.querySelector('#header-primary-text')?.textContent ?? undefined
+  } else {
+    html = el.querySelector('#header-subtext')?.textContent ?? undefined
+  }
   const card = el.querySelector('#card > #header') as HTMLElement | null
   const backgroundColor = (card && getBackgroundColor(card)) ?? undefined
 
   return {
     ...params,
-    html: html || subText,
+    html,
     backgroundColor,
+    subText,
     messageType: 'membership-item',
   }
 }
