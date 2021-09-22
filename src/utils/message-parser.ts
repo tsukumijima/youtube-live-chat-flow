@@ -69,14 +69,14 @@ const parsePaidSticker = async (el: HTMLElement) => {
 const parseMembershipItem = async (el: HTMLElement) => {
   const params = await parseCommonElements(el)
 
-  const detailText =
-    el.querySelector('#header-subtext')?.textContent ?? undefined
-  const header = el.querySelector('#card > #header') as HTMLElement | null
-  const backgroundColor = (header && getBackgroundColor(header)) ?? undefined
+  const html = el.querySelector('#message')?.innerHTML
+  const subText = el.querySelector('#header-subtext')?.textContent ?? undefined
+  const card = el.querySelector('#card > #header') as HTMLElement | null
+  const backgroundColor = (card && getBackgroundColor(card)) ?? undefined
 
   return {
     ...params,
-    html: detailText,
+    html: html || subText,
     backgroundColor,
     messageType: 'membership-item',
   }
