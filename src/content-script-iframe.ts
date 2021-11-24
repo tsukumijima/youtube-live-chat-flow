@@ -55,7 +55,11 @@ const addControlButton = () => {
 
   // Change SVG viewBox
   const svg = button.querySelector('svg')
-  svg?.setAttribute('viewBox', '-8 -8 40 40')
+  if (svg) {
+    svg.setAttribute('viewBox', '-8 -8 40 40')
+    svg.setAttribute('height', '100%')
+    svg.setAttribute('width', '100%')
+  }
 
   controls.prepend(button)
 
@@ -130,6 +134,26 @@ const moveChatInputControl = () => {
     return
   }
 
+  // if no channels
+  const interaction = document.querySelector(
+    'yt-live-chat-message-input-renderer #interaction-message'
+  )
+  if (interaction?.children.length) {
+    return
+  }
+
+  // check inputs
+  const top = document.querySelector(
+    'yt-live-chat-message-input-renderer #container #top'
+  )
+  const buttons = document.querySelector(
+    'yt-live-chat-message-input-renderer #container #buttons.yt-live-chat-message-input-renderer'
+  )
+  if (!top || !buttons) {
+    return
+  }
+
+  // check toolbar
   const leftControls = parent.document.querySelector(
     '.ytp-chrome-bottom .ytp-chrome-controls .ytp-left-controls'
   ) as HTMLElement | null
@@ -137,19 +161,6 @@ const moveChatInputControl = () => {
     '.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls'
   ) as HTMLElement | null
   if (!leftControls || !rightControls) {
-    return
-  }
-
-  const top = document.querySelector(
-    'yt-live-chat-message-input-renderer #container #top'
-  )
-  const buttons = document.querySelector(
-    'yt-live-chat-message-input-renderer #container #buttons.yt-live-chat-message-input-renderer'
-  )
-  const message = document.querySelector(
-    'yt-live-chat-message-input-renderer #interaction-message'
-  ) as HTMLElement | null
-  if (!top || !buttons) {
     return
   }
 
@@ -209,7 +220,6 @@ const moveChatInputControl = () => {
   controls.classList.add('ylcf-controller')
   controls.append(top)
   controls.append(messageButtons)
-  message && controls.append(message)
   rightControls.parentElement?.insertBefore(controls, rightControls)
 
   // setup resize observer

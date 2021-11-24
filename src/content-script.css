@@ -82,7 +82,6 @@
   flex: 1;
   display: flex;
   align-items: center;
-  padding: 0 8px;
 }
 /* .ylcf-controller > #top */
 .ylcf-controller > #top {
@@ -95,9 +94,13 @@
 }
 .ylcf-controller > #top > yt-img-shadow#avatar {
   border-radius: 50%;
-  margin-right: 8px;
+  margin: 0 8px;
   margin-bottom: 1px;
   overflow: hidden;
+}
+.ylcf-controller > #top > yt-img-shadow#avatar > img {
+  width: 28px;
+  height: 28px;
 }
 .ylcf-controller > #top > #input-container {
   display: flex;
@@ -164,8 +167,8 @@
   > #input {
   flex: 1;
   min-width: 0;
-  height: 66%;
-  line-height: 26px;
+  height: 32px;
+  line-height: 32px;
   border: 1px solid #eee;
   border-radius: 4px;
   padding: 0 4px;
@@ -192,7 +195,7 @@
   line-height: initial;
 }
 .ylcf-controller > #message-buttons > #count {
-  margin-right: 8px;
+  margin-right: 0;
   color: inherit;
   user-select: none;
 }
@@ -203,7 +206,18 @@
   > #message-buttons
   > #send-button
   > yt-button-renderer
-  yt-icon-button#button {
+  > .yt-button-renderer {
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+}
+.ylcf-controller
+  > #message-buttons
+  > #send-button
+  > yt-button-renderer
+  > .yt-button-renderer
+  > yt-icon-button#button {
   color: inherit;
   display: block;
   height: 24px;
@@ -214,7 +228,8 @@
   > #message-buttons
   > #send-button
   > yt-button-renderer
-  yt-icon-button#button[disabled] {
+  > .yt-button-renderer
+  > yt-icon-button#button[disabled] {
   cursor: initial;
   opacity: 0.5;
 }
@@ -222,54 +237,18 @@
   > #message-buttons
   > #send-button
   > yt-button-renderer
-  yt-icon-button#button
+  > .yt-button-renderer
+  > yt-icon-button#button
   paper-ripple {
   display: none;
 }
 .ylcf-controller > #message-buttons > #countdown {
-  left: unset;
-  right: 24px;
-}
-
-/* .ylcf-controller > #interaction-message */
-.ylcf-controller > #interaction-message {
-  display: none;
   position: absolute;
-  left: 8px;
-  right: 8px;
-  height: 100%;
-}
-.ylcf-controller > #interaction-message:not(:empty) {
-  display: block;
-}
-.ylcf-controller > #interaction-message > yt-live-chat-message-renderer {
-  opacity: 1;
-  padding-left: 0;
-  padding-right: 0;
-  background: transparent;
-}
-.ylcf-controller
-  > #interaction-message
-  > yt-live-chat-message-renderer
-  > #subtext {
-  display: none;
-}
-.ylcf-controller
-  > #interaction-message
-  > yt-live-chat-message-renderer
-  > #button
-  > yt-button-renderer {
-  width: 100%;
-  margin: 4px 0;
-}
-.ylcf-controller
-  > #interaction-message
-  > yt-live-chat-message-renderer
-  > #button
-  paper-button#button {
-  font-size: 10px;
-  padding: 0 8px;
-  height: 28px;
+  margin-right: 0;
+  left: unset;
+  right: calc((48px - 24px) / 2);
+  width: 24px;
+  height: 24px;
 }
 
 /* .ylcf-controller for fullscreen */
@@ -280,15 +259,15 @@
   .ylcf-controller
   > #top
   > yt-img-shadow#avatar {
-  margin-right: 16px;
+  margin: 0 16px;
 }
 .html5-video-player.ytp-fullscreen
   .ylcf-controller
   > #top
   > yt-img-shadow#avatar
   > img {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
 }
 .html5-video-player.ytp-fullscreen
   .ylcf-controller
@@ -318,21 +297,26 @@
   > #input-container
   > yt-live-chat-text-input-field-renderer
   > #input {
+  height: 36px;
   line-height: 36px;
   padding: 0 8px;
 }
 .html5-video-player.ytp-fullscreen
   .ylcf-controller
   > #message-buttons
-  > #count {
-  margin-right: 16px;
+  > #send-button
+  > yt-button-renderer
+  > .yt-button-renderer {
+  width: 54px;
+  height: 54px;
 }
 .html5-video-player.ytp-fullscreen
   .ylcf-controller
   > #message-buttons
   > #send-button
   > yt-button-renderer
-  yt-icon-button#button {
+  > .yt-button-renderer
+  > yt-icon-button#button {
   width: 36px;
   height: 36px;
 }
@@ -340,16 +324,7 @@
   .ylcf-controller
   > #message-buttons
   > #countdown {
+  right: calc((54px - 36px) / 2);
   width: 36px;
   height: 36px;
-  right: 36px;
-}
-.html5-video-player.ytp-fullscreen
-  .ylcf-controller
-  > #interaction-message
-  > yt-live-chat-message-renderer
-  > #button
-  paper-button#button {
-  height: 40px;
-  font-size: 14px;
 }
