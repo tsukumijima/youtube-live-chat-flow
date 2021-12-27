@@ -127,9 +127,6 @@ export default class FlowController {
       return
     }
 
-    const infoIcon = element.querySelector('.ylcf-info-icon')
-    infoIcon && infoIcon.remove()
-
     if (this.settings.maxDisplays > 0 && this.limiter?.isOver()) {
       return
     }

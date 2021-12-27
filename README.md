@@ -10,7 +10,6 @@
 - Change color, size and speed for messages.
 - Show author and avatar on messages.
 - Show super chats and super stickers.
-- Filter banned words.
 - Move the chat input to bottom controls on the video.
 - Add helper menu buttons on the chat list.
 

@@ -57,7 +57,6 @@
     <div class="caption">Max Lines</div>
     <v-slider
       v-model="maxLines"
-      :max="lines"
       class="align-center mb-5"
       min="0"
       dense
@@ -66,7 +65,6 @@
       <template #prepend>
         <v-text-field
           v-model="maxLines"
-          :max="lines"
           class="mt-0 pt-0"
           dense
           hide-details

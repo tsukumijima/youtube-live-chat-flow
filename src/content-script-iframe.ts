@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill'
 import FlowController from '~/utils/flow-controller'
-import message from '~/assets/message.svg'
+import chat from '~/assets/chat.svg'
 import downArrow from '~/assets/down-arrow.svg'
 import refresh from '~/assets/refresh.svg'
 import { querySelectorAsync } from '~/utils/dom-helper'
@@ -51,7 +51,7 @@ const addControlButton = () => {
   button.onclick = () => {
     browser.runtime.sendMessage({ id: 'controlButtonClicked' })
   }
-  button.innerHTML = message
+  button.innerHTML = chat
 
   // Change SVG viewBox
   const svg = button.querySelector('svg')
