@@ -154,17 +154,17 @@ const moveChatInputControl = () => {
   }
 
   // check toolbar
-  const leftControls = parent.document.querySelector(
+  const leftControls = parent.document.querySelector<HTMLInputElement>(
     '.ytp-chrome-bottom .ytp-chrome-controls .ytp-left-controls'
-  ) as HTMLElement | null
-  const rightControls = parent.document.querySelector(
+  )
+  const rightControls = parent.document.querySelector<HTMLInputElement>(
     '.ytp-chrome-bottom .ytp-chrome-controls .ytp-right-controls'
-  ) as HTMLElement | null
+  )
   if (!leftControls || !rightControls) {
     return
   }
 
-  const input = top.querySelector('div#input') as HTMLInputElement | null
+  const input = top.querySelector<HTMLInputElement>('div#input')
   const messageButtons = buttons.querySelector('#message-buttons')
   if (!input || !messageButtons) {
     return
@@ -176,9 +176,9 @@ const moveChatInputControl = () => {
       case 'Enter': {
         if (!e.isComposing) {
           if (el.innerHTML !== '') {
-            const sendButton = messageButtons.querySelector(
+            const sendButton = messageButtons.querySelector<HTMLButtonElement>(
               '#send-button button#button'
-            ) as HTMLButtonElement | null
+            )
             sendButton?.click()
           } else {
             el.blur()
@@ -239,9 +239,9 @@ const moveChatInputControl = () => {
 }
 
 const addVideoEventListener = () => {
-  const video = parent.document.querySelector(
+  const video = parent.document.querySelector<HTMLVideoElement>(
     'ytd-watch-flexy video.html5-main-video'
-  ) as HTMLVideoElement | null
+  )
   if (!video) {
     return
   }

@@ -8,7 +8,7 @@ const getBackgroundColor = (el: HTMLElement) => {
 const parseCommonElements = async (el: HTMLElement) => {
   const author = el.querySelector('#author-name')?.textContent ?? undefined
   const authorType = el.getAttribute('author-type') ?? undefined
-  const avatorImage = el.querySelector('#img') as HTMLImageElement | null
+  const avatorImage = el.querySelector<HTMLImageElement>('#img')
   const avatarUrl =
     (avatorImage && (await getImageSourceAsync(avatorImage))) ?? undefined
   const message = el.querySelector('#message')?.textContent ?? undefined
@@ -33,7 +33,7 @@ const parsePaidMessage = async (el: HTMLElement) => {
 
   const html = el.querySelector('#message')?.innerHTML
   const subText = el.querySelector('#purchase-amount')?.textContent ?? undefined
-  const card = el.querySelector('#card > #header') as HTMLElement | null
+  const card = el.querySelector<HTMLElement>('#card > #header')
   const backgroundColor = (card && getBackgroundColor(card)) ?? undefined
 
   return {
@@ -49,11 +49,9 @@ const parsePaidSticker = async (el: HTMLElement) => {
   const params = await parseCommonElements(el)
 
   const subText = el.querySelector('#purchase-amount-chip')?.textContent ?? ''
-  const card = el.querySelector('#card') as HTMLElement | null
+  const card = el.querySelector<HTMLElement>('#card')
   const backgroundColor = (card && getBackgroundColor(card)) ?? undefined
-  const stickerImage = el.querySelector(
-    '#sticker > #img'
-  ) as HTMLImageElement | null
+  const stickerImage = el.querySelector<HTMLImageElement>('#sticker > #img')
   const stickerUrl =
     (stickerImage && (await getImageSourceAsync(stickerImage))) ?? undefined
 
@@ -77,7 +75,7 @@ const parseMembershipItem = async (el: HTMLElement) => {
   } else {
     html = el.querySelector('#header-subtext')?.textContent ?? undefined
   }
-  const card = el.querySelector('#card > #header') as HTMLElement | null
+  const card = el.querySelector<HTMLElement>('#card > #header')
   const backgroundColor = (card && getBackgroundColor(card)) ?? undefined
 
   return {

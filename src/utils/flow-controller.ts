@@ -98,16 +98,16 @@ export default class FlowController {
       return
     }
 
-    const video = parent.document.querySelector(
+    const video = parent.document.querySelector<HTMLVideoElement>(
       'ytd-watch-flexy video.html5-main-video'
-    ) as HTMLVideoElement | null
+    )
     if (!video || video.paused) {
       return
     }
 
-    const container = parent.document.querySelector(
+    const container = parent.document.querySelector<HTMLElement>(
       '.html5-video-container'
-    ) as HTMLElement | null
+    )
     if (!container) {
       return
     }

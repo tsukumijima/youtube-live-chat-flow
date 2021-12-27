@@ -25,9 +25,9 @@ export default class MessageSettings {
       return movedSpan.textContent
     }
     // otherwise
-    const button = parent.document.querySelector(
+    const button = parent.document.querySelector<HTMLElement>(
       '.html5-video-player .ytp-chrome-top-buttons .ytp-watch-later-button'
-    ) as HTMLElement | null
+    )
     // TODO: japanese only
     return (
       button?.getAttribute('title')?.replace(' として後で再生します', '') ?? ''
