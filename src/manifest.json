@@ -1,10 +1,10 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "icons": {
     "128": "icon.png"
   },
   "background": {
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -22,7 +22,7 @@
       "css": ["content-script-iframe.css"]
     }
   ],
-  "page_action": {
+  "action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
   },
@@ -30,6 +30,6 @@
     "page": "options.html",
     "open_in_tab": false
   },
-  "permissions": ["storage", "https://www.youtube.com/*"],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "permissions": ["storage"],
+  "host_permissions": ["https://www.youtube.com/*"]
 }

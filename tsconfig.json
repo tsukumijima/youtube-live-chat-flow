@@ -10,7 +10,7 @@
       "~/*": ["./src/*"],
       "~~/*": ["./*"]
     },
-    "types": ["vuetify"],
+    "types": ["chrome", "vuetify"],
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true

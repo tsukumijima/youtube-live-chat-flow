@@ -1,4 +1,3 @@
-import browser from 'webextension-polyfill'
 import FlowController from '~/utils/flow-controller'
 import chat from '~/assets/chat.svg'
 import downArrow from '~/assets/down-arrow.svg'
@@ -13,7 +12,8 @@ const menuButtonConfigs = [
     svg: downArrow,
     title: 'Follow New Messages',
     className: 'ylcf-follow-button',
-    onclick: () => browser.runtime.sendMessage({ id: 'menuButtonClicked' }),
+    onclick: async () =>
+      await chrome.runtime.sendMessage({ id: 'menu-button-clicked' }),
     isActive: () => controller.following,
   },
   {
@@ -48,9 +48,8 @@ const addControlButton = () => {
   const button = document.createElement('button')
   button.classList.add('ytp-button', 'ylcf-control-button')
   button.title = 'Flow messages'
-  button.onclick = () => {
-    browser.runtime.sendMessage({ id: 'controlButtonClicked' })
-  }
+  button.onclick = async () =>
+    await chrome.runtime.sendMessage({ id: 'control-button-clicked' })
   button.innerHTML = chat
 
   // Change SVG viewBox
@@ -293,30 +292,34 @@ const init = async () => {
   await observe()
 }
 
-browser.runtime.onMessage.addListener(async (message) => {
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   const { id, data } = message
   switch (id) {
-    case 'urlChanged':
-      await init()
-      break
-    case 'enabledChanged':
+    case 'url-changed':
+      init().then(() => sendResponse())
+      return true
+    case 'enabled-changed':
       controller.enabled = data.enabled
       updateControlButton()
-      break
-    case 'followingChanged':
+      sendResponse()
+      return
+    case 'following-changed':
       controller.following = data.following
       updateMenuButtons()
-      break
-    case 'settingsChanged':
+      sendResponse()
+      return
+    case 'settings-changed':
       controller.settings = data.settings
       updateBody()
-      break
+      sendResponse()
+      return
   }
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const data = await browser.runtime.sendMessage({
-    id: 'iframeLoaded',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data: any = await chrome.runtime.sendMessage({
+    id: 'iframe-loaded',
   })
 
   controller.enabled = data.enabled

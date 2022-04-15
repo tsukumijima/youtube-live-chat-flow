@@ -1,4 +1,3 @@
-import browser from 'webextension-polyfill'
 import { readyStore } from '~/store'
 import iconOff from '~/assets/icon-off.png'
 import iconOn from '~/assets/icon-on.png'
@@ -18,7 +17,7 @@ const getSettings = async () => {
 
 const setIcon = async (tabId: number) => {
   const path = tabStates[tabId] && tabStates[tabId].enabled ? iconOn : iconOff
-  await browser.pageAction.setIcon({ tabId, path })
+  await chrome.action.setIcon({ tabId, path })
 }
 
 const contentLoaded = async () => {
@@ -33,7 +32,6 @@ const iframeLoaded = async (tabId: number) => {
   tabStates = { ...tabStates, [tabId]: { enabled, following } }
 
   await setIcon(tabId)
-  await browser.pageAction.show(tabId)
 
   const settings = await getSettings()
 
@@ -50,8 +48,8 @@ const toggleEnabled = async (tabId: number) => {
 
   await setIcon(tabId)
 
-  await browser.tabs.sendMessage(tabId, {
-    id: 'enabledChanged',
+  await chrome.tabs.sendMessage(tabId, {
+    id: 'enabled-changed',
     data: { enabled },
   })
 }
@@ -66,49 +64,66 @@ const toggleFollowing = async (tabId: number) => {
 
   await setIcon(tabId)
 
-  await browser.tabs.sendMessage(tabId, {
-    id: 'followingChanged',
+  await chrome.tabs.sendMessage(tabId, {
+    id: 'following-changed',
     data: { following },
   })
 }
 
 const settingsChanged = async () => {
   const settings = await getSettings()
-  const tabs = await browser.tabs.query({})
+  const tabs = await chrome.tabs.query({})
   for (const tab of tabs) {
     try {
       tab.id &&
-        (await browser.tabs.sendMessage(tab.id, {
-          id: 'settingsChanged',
+        (await chrome.tabs.sendMessage(tab.id, {
+          id: 'settings-changed',
           data: { settings },
         }))
     } catch (e) {} // eslint-disable-line no-empty
   }
 }
 
-browser.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
   if (changeInfo.url) {
     const settings = await getSettings()
-    browser.tabs.sendMessage(tabId, { id: 'urlChanged', data: { settings } })
+    await chrome.tabs.sendMessage(tabId, {
+      id: 'url-changed',
+      data: { settings },
+    })
   }
 })
 
-browser.runtime.onMessage.addListener(async (message, sender) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const { id } = message
   const { tab } = sender
   switch (id) {
-    case 'contentLoaded':
-      return tab?.id && (await contentLoaded())
-    case 'iframeLoaded':
-      return tab?.id && (await iframeLoaded(tab.id))
-    case 'controlButtonClicked':
-      tab?.id && (await toggleEnabled(tab.id))
-      break
-    case 'menuButtonClicked':
-      tab?.id && (await toggleFollowing(tab.id))
-      break
-    case 'settingsChanged':
-      await settingsChanged()
-      break
+    case 'content-loaded':
+      if (tab?.id) {
+        contentLoaded().then((data) => sendResponse(data))
+        return true
+      }
+      return
+    case 'iframe-loaded':
+      if (tab?.id) {
+        iframeLoaded(tab.id).then((data) => sendResponse(data))
+        return true
+      }
+      return
+    case 'control-button-clicked':
+      if (tab?.id) {
+        toggleEnabled(tab.id).then(() => sendResponse())
+        return true
+      }
+      return
+    case 'menu-button-clicked':
+      if (tab?.id) {
+        toggleFollowing(tab.id).then(() => sendResponse())
+        return true
+      }
+      return
+    case 'settings-changed':
+      settingsChanged().then(() => sendResponse())
+      return true
   }
 })

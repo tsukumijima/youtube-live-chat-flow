@@ -5,7 +5,6 @@ import vuetify from '~/plugins/vuetify'
 
 new Vue({
   el: '#app',
-  components: { App },
-  template: '<App />',
+  render: (createElement) => createElement(App),
   vuetify,
 })

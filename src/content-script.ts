@@ -1,4 +1,3 @@
-import browser from 'webextension-polyfill'
 import { Settings } from '~/models'
 import { querySelectorAsync } from '~/utils/dom-helper'
 
@@ -40,17 +39,21 @@ const init = async (): Promise<void> => {
   button && button.click()
 }
 
-browser.runtime.onMessage.addListener(async (message) => {
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   const { id, data } = message
   switch (id) {
-    case 'urlChanged':
+    case 'url-changed':
       settings = data.settings
-      return await init()
+      init().then(() => sendResponse())
+      return true
   }
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const data = await browser.runtime.sendMessage({ id: 'contentLoaded' })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data: any = await chrome.runtime.sendMessage({
+    id: 'content-loaded',
+  })
   settings = data.settings
   await init()
 })
