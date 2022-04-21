@@ -2,11 +2,6 @@
   "name": "youtube-live-chat-flow",
   "description": "Chrome Extension for Flow Chat Messages on YouTube Live",
   "version": "0.1.0",
-  "author": {
-    "name": "fiahfy",
-    "email": "d.fiahfy@gmail.com",
-    "url": "https://fiahfy.github.io/"
-  },
   "dependencies": {
     "@fiahfy/semaphore": "^0.0.2",
     "@vue/composition-api": "^1.4.9",
@@ -41,19 +36,8 @@
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2"
   },
-  "keywords": [
-    "chrome extension",
-    "vue",
-    "vuetify",
-    "webpack",
-    "youtube"
-  ],
   "private": true,
   "productName": "Flow Chat for YouTube Live",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fiahfy/youtube-live-chat-flow"
-  },
   "scripts": {
     "build": "webpack",
     "dev": "concurrently npm:watch:*",
