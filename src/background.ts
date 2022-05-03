@@ -49,7 +49,7 @@ const toggleEnabled = async (tabId: number) => {
   await setIcon(tabId)
 
   await chrome.tabs.sendMessage(tabId, {
-    id: 'enabled-changed',
+    type: 'enabled-changed',
     data: { enabled },
   })
 }
@@ -65,7 +65,7 @@ const toggleFollowing = async (tabId: number) => {
   await setIcon(tabId)
 
   await chrome.tabs.sendMessage(tabId, {
-    id: 'following-changed',
+    type: 'following-changed',
     data: { following },
   })
 }
@@ -77,7 +77,7 @@ const settingsChanged = async () => {
     try {
       tab.id &&
         (await chrome.tabs.sendMessage(tab.id, {
-          id: 'settings-changed',
+          type: 'settings-changed',
           data: { settings },
         }))
     } catch (e) {} // eslint-disable-line no-empty
@@ -86,18 +86,14 @@ const settingsChanged = async () => {
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
   if (changeInfo.url) {
-    const settings = await getSettings()
-    await chrome.tabs.sendMessage(tabId, {
-      id: 'url-changed',
-      data: { settings },
-    })
+    await chrome.tabs.sendMessage(tabId, { type: 'url-changed' })
   }
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  const { id } = message
+  const { type } = message
   const { tab } = sender
-  switch (id) {
+  switch (type) {
     case 'content-loaded':
       if (tab?.id) {
         contentLoaded().then((data) => sendResponse(data))

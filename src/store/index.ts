@@ -41,7 +41,7 @@ const createStore = () =>
       (store) => {
         store.subscribe(
           async () =>
-            await chrome.runtime.sendMessage({ id: 'settings-changed' })
+            await chrome.runtime.sendMessage({ type: 'settings-changed' })
         )
       },
     ],

@@ -13,7 +13,7 @@ const menuButtonConfigs = [
     title: 'Follow New Messages',
     className: 'ylcf-follow-button',
     onclick: async () =>
-      await chrome.runtime.sendMessage({ id: 'menu-button-clicked' }),
+      await chrome.runtime.sendMessage({ type: 'menu-button-clicked' }),
     isActive: () => controller.following,
   },
   {
@@ -49,7 +49,7 @@ const addControlButton = () => {
   button.classList.add('ytp-button', 'ylcf-control-button')
   button.title = 'Flow messages'
   button.onclick = async () =>
-    await chrome.runtime.sendMessage({ id: 'control-button-clicked' })
+    await chrome.runtime.sendMessage({ type: 'control-button-clicked' })
   button.innerHTML = chat
 
   // Change SVG viewBox
@@ -293,8 +293,8 @@ const init = async () => {
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  const { id, data } = message
-  switch (id) {
+  const { type, data } = message
+  switch (type) {
     case 'url-changed':
       init().then(() => sendResponse())
       return true
@@ -317,9 +317,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await chrome.runtime.sendMessage({
-    id: 'iframe-loaded',
+  const data = await chrome.runtime.sendMessage({
+    type: 'iframe-loaded',
   })
 
   controller.enabled = data.enabled

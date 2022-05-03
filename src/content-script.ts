@@ -40,19 +40,17 @@ const init = async (): Promise<void> => {
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  const { id, data } = message
-  switch (id) {
+  const { type } = message
+  switch (type) {
     case 'url-changed':
-      settings = data.settings
       init().then(() => sendResponse())
       return true
   }
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await chrome.runtime.sendMessage({
-    id: 'content-loaded',
+  const data = await chrome.runtime.sendMessage({
+    type: 'content-loaded',
   })
   settings = data.settings
   await init()
