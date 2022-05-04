@@ -1,6 +1,5 @@
 import Color from 'color'
-import { AuthorType, Message, Settings, Style } from '~/models'
-import { Template } from '~/utils/message-renderer'
+import { AuthorType, Message, Settings } from '~/models'
 
 export default class MessageSettings {
   private message: Message
@@ -11,7 +10,7 @@ export default class MessageSettings {
     this.settings = settings
   }
 
-  private get yourName(): string {
+  private get yourName() {
     // if input control exists
     const span = document.querySelector('#input-container span#author-name')
     if (span?.textContent) {
@@ -34,7 +33,7 @@ export default class MessageSettings {
     )
   }
 
-  private get authorType(): AuthorType {
+  private get authorType() {
     const author = this.message.author
     const you = author && author === this.yourName
     const authorType = you ? 'you' : this.message.authorType ?? 'guest'
@@ -45,17 +44,17 @@ export default class MessageSettings {
     ) as AuthorType
   }
 
-  private get paid(): boolean {
+  private get paid() {
     return ['paid-message', 'paid-sticker', 'membership-item'].includes(
       this.message.messageType ?? ''
     )
   }
 
-  private get style(): Style {
+  private get style() {
     return this.settings.styles[this.authorType]
   }
 
-  get template(): Template | undefined {
+  get template() {
     switch (this.message.messageType) {
       case 'text-message':
         return this.settings.visibilities[this.authorType]
@@ -78,7 +77,7 @@ export default class MessageSettings {
     }
   }
 
-  get author(): boolean {
+  get author() {
     switch (this.message.messageType) {
       case 'text-message':
         return this.style.template !== 'one-line-without-author'
@@ -93,19 +92,19 @@ export default class MessageSettings {
     }
   }
 
-  get avatar(): boolean {
+  get avatar() {
     return this.paid ? true : this.style.avatar
   }
 
-  get fontColor(): string {
+  get fontColor() {
     return this.paid ? '#ffffff' : this.style.color
   }
 
-  get fontStyle(): string {
+  get fontStyle() {
     return this.settings.extendedStyle
   }
 
-  get backgroundColor(): string | undefined {
+  get backgroundColor() {
     const backgroundColor = this.paid
       ? this.message.backgroundColor
       : this.settings.background

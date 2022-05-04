@@ -19,7 +19,7 @@ const waitCollapsed = async () => {
   })
 }
 
-const init = async (): Promise<void> => {
+const init = async () => {
   if (!isVideoUrl()) {
     return
   }
@@ -49,9 +49,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const data = await chrome.runtime.sendMessage({
-    type: 'content-loaded',
-  })
+  const data = await chrome.runtime.sendMessage({ type: 'content-loaded' })
   settings = data.settings
   await init()
 })

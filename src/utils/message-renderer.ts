@@ -321,10 +321,7 @@ type Params = {
   emojiStyle: EmojiStyle
 }
 
-export const render = (
-  template: Template,
-  params: Params
-): HTMLElement | null => {
+export const render = (template: Template, params: Params) => {
   const newParams = {
     ...params,
     fontStyle:

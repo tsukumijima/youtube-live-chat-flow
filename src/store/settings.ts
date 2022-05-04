@@ -97,7 +97,7 @@ export default class SettingsModule extends VuexModule {
   updateStyle({
     authorType,
     ...params
-  }: { authorType: AuthorType } & Partial<Style>): void {
+  }: { authorType: AuthorType } & Partial<Style>) {
     this.styles = {
       ...this.styles,
       [authorType]: {
@@ -113,19 +113,15 @@ export default class SettingsModule extends VuexModule {
   }: {
     type: AuthorType | MessageType
     visibility: boolean
-  }): void {
+  }) {
     this.visibilities[type] = visibility
   }
   @Mutation
-  setBackground({ background }: { background: boolean }): void {
+  setBackground({ background }: { background: boolean }) {
     this.background = background
   }
   @Mutation
-  setBackgroundOpacity({
-    backgroundOpacity,
-  }: {
-    backgroundOpacity: number
-  }): void {
+  setBackgroundOpacity({ backgroundOpacity }: { backgroundOpacity: number }) {
     this.backgroundOpacity = backgroundOpacity
   }
   @Mutation
@@ -133,27 +129,27 @@ export default class SettingsModule extends VuexModule {
     bottomChatInputEnabled,
   }: {
     bottomChatInputEnabled: boolean
-  }): void {
+  }) {
     this.bottomChatInputEnabled = bottomChatInputEnabled
   }
   @Mutation
-  setChatVisible({ chatVisible }: { chatVisible: boolean }): void {
+  setChatVisible({ chatVisible }: { chatVisible: boolean }) {
     this.chatVisible = chatVisible
   }
   @Mutation
-  setDelayTime({ delayTime }: { delayTime: number }): void {
+  setDelayTime({ delayTime }: { delayTime: number }) {
     this.delayTime = delayTime
   }
   @Mutation
-  setDisplayTime({ displayTime }: { displayTime: number }): void {
+  setDisplayTime({ displayTime }: { displayTime: number }) {
     this.displayTime = displayTime
   }
   @Mutation
-  setEmojiStyle({ emojiStyle }: { emojiStyle: EmojiStyle }): void {
+  setEmojiStyle({ emojiStyle }: { emojiStyle: EmojiStyle }) {
     this.emojiStyle = emojiStyle
   }
   @Mutation
-  setExtendedStyle({ extendedStyle }: { extendedStyle: string }): void {
+  setExtendedStyle({ extendedStyle }: { extendedStyle: string }) {
     this.extendedStyle = extendedStyle
   }
   @Mutation
@@ -161,55 +157,51 @@ export default class SettingsModule extends VuexModule {
     growBottomChatInputEnabled,
   }: {
     growBottomChatInputEnabled: boolean
-  }): void {
+  }) {
     this.growBottomChatInputEnabled = growBottomChatInputEnabled
   }
   @Mutation
-  setHeightType({ heightType }: { heightType: HeightType }): void {
+  setHeightType({ heightType }: { heightType: HeightType }) {
     this.heightType = heightType
   }
   @Mutation
-  setLineHeight({ lineHeight }: { lineHeight: number }): void {
+  setLineHeight({ lineHeight }: { lineHeight: number }) {
     this.lineHeight = lineHeight
   }
   @Mutation
-  setLines({ lines }: { lines: number }): void {
+  setLines({ lines }: { lines: number }) {
     this.lines = lines
   }
   @Mutation
-  setMaxDisplays({ maxDisplays }: { maxDisplays: number }): void {
+  setMaxDisplays({ maxDisplays }: { maxDisplays: number }) {
     this.maxDisplays = maxDisplays
   }
   @Mutation
-  setMaxLines({ maxLines }: { maxLines: number }): void {
+  setMaxLines({ maxLines }: { maxLines: number }) {
     this.maxLines = maxLines
   }
   @Mutation
-  setMaxWidth({ maxWidth }: { maxWidth: number }): void {
+  setMaxWidth({ maxWidth }: { maxWidth: number }) {
     this.maxWidth = maxWidth
   }
   @Mutation
-  setOpacity({ opacity }: { opacity: number }): void {
+  setOpacity({ opacity }: { opacity: number }) {
     this.opacity = opacity
   }
   @Mutation
-  setOutlineRatio({ outlineRatio }: { outlineRatio: number }): void {
+  setOutlineRatio({ outlineRatio }: { outlineRatio: number }) {
     this.outlineRatio = outlineRatio
   }
   @Mutation
-  setOverflow({ overflow }: { overflow: Overflow }): void {
+  setOverflow({ overflow }: { overflow: Overflow }) {
     this.overflow = overflow
   }
   @Mutation
-  setStackDirection({
-    stackDirection,
-  }: {
-    stackDirection: StackDirection
-  }): void {
+  setStackDirection({ stackDirection }: { stackDirection: StackDirection }) {
     this.stackDirection = stackDirection
   }
   @Mutation
-  resetState(): void {
+  resetState() {
     for (const [k, v] of Object.entries(initialState)) {
       ;(this as any)[k] = v // eslint-disable-line @typescript-eslint/no-explicit-any
     }

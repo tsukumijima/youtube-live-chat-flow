@@ -49,7 +49,7 @@ export default class FlowController {
   private cleanupTimer = -1
   private limiter: Limiter | undefined
 
-  get enabled(): boolean {
+  get enabled() {
     return this._enabled
   }
 
@@ -60,7 +60,7 @@ export default class FlowController {
     }
   }
 
-  get following(): boolean {
+  get following() {
     return this._following
   }
 
@@ -84,7 +84,7 @@ export default class FlowController {
     }
   }
 
-  get settings(): Settings | undefined {
+  get settings() {
     return this._settings
   }
 
@@ -342,7 +342,7 @@ export default class FlowController {
       })
   }
 
-  async observe(): Promise<void> {
+  async observe() {
     this.observer?.disconnect()
 
     const items = await querySelectorAsync(
@@ -373,24 +373,24 @@ export default class FlowController {
     }, 1000)
   }
 
-  disconnect(): void {
+  disconnect() {
     clearInterval(this.cleanupTimer)
     this.observer?.disconnect()
   }
 
-  play(): void {
+  play() {
     parent.document.querySelectorAll('.ylcf-flow-message').forEach((e) => {
       e.getAnimations().forEach((a) => a.play())
     })
   }
 
-  pause(): void {
+  pause() {
     parent.document.querySelectorAll('.ylcf-flow-message').forEach((e) => {
       e.getAnimations().forEach((a) => a.pause())
     })
   }
 
-  clear(): void {
+  clear() {
     parent.document.querySelectorAll('.ylcf-flow-message').forEach((e) => {
       e.remove()
     })

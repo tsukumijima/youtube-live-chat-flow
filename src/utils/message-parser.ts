@@ -1,4 +1,3 @@
-import { Message } from '~/models'
 import { getImageSourceAsync } from '~/utils/dom-helper'
 
 const getBackgroundColor = (el: HTMLElement) => {
@@ -87,7 +86,7 @@ const parseMembershipItem = async (el: HTMLElement) => {
   }
 }
 
-export const parse = async (el: HTMLElement): Promise<Message | undefined> => {
+export const parse = async (el: HTMLElement) => {
   const tagName = el.tagName.toLowerCase()
   switch (tagName) {
     case 'yt-live-chat-text-message-renderer':

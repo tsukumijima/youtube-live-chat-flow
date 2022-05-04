@@ -317,9 +317,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const data = await chrome.runtime.sendMessage({
-    type: 'iframe-loaded',
-  })
+  const data = await chrome.runtime.sendMessage({ type: 'iframe-loaded' })
 
   controller.enabled = data.enabled
   controller.following = data.following
