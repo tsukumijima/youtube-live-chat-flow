@@ -76,10 +76,10 @@ const settingsChanged = async () => {
   for (const tab of tabs) {
     try {
       tab.id &&
-        (await chrome.tabs.sendMessage(tab.id, {
+        chrome.tabs.sendMessage(tab.id, {
           type: 'settings-changed',
           data: { settings },
-        }))
+        })
     } catch (e) {} // eslint-disable-line no-empty
   }
 }
@@ -95,11 +95,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const { tab } = sender
   switch (type) {
     case 'content-loaded':
-      if (tab?.id) {
-        contentLoaded().then((data) => sendResponse(data))
-        return true
-      }
-      return
+      contentLoaded().then((data) => sendResponse(data))
+      return true
     case 'iframe-loaded':
       if (tab?.id) {
         iframeLoaded(tab.id).then((data) => sendResponse(data))

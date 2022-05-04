@@ -301,18 +301,15 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     case 'enabled-changed':
       controller.enabled = data.enabled
       updateControlButton()
-      sendResponse()
-      return
+      return sendResponse()
     case 'following-changed':
       controller.following = data.following
       updateMenuButtons()
-      sendResponse()
-      return
+      return sendResponse()
     case 'settings-changed':
       controller.settings = data.settings
       updateBody()
-      sendResponse()
-      return
+      return sendResponse()
   }
 })
 
