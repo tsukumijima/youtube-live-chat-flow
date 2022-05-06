@@ -1,19 +1,16 @@
 {
+  "extends": "@fiahfy/tsconfig/tsconfig",
   "compilerOptions": {
     "target": "es2019",
     "module": "esnext",
     "sourceMap": true,
-    "strict": true,
-    "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
       "~~/*": ["./*"]
     },
     "types": ["chrome", "vuetify"],
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true
+    "experimentalDecorators": true
   },
   "include": ["src"]
 }
